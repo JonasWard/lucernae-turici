@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/para-slim-shady/static/css/main.e85a6628.css",
+    "main.js": "/para-slim-shady/static/js/main.c6bad116.js",
+    "index.html": "/para-slim-shady/index.html",
+    "main.e85a6628.css.map": "/para-slim-shady/static/css/main.e85a6628.css.map",
+    "main.c6bad116.js.map": "/para-slim-shady/static/js/main.c6bad116.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e85a6628.css",
+    "static/js/main.c6bad116.js"
+  ]
+}

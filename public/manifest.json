@@ -1,0 +1,25 @@
+{
+  "short_name": "Para Slim Shady",
+  "name": "Para Slim Shady, your on-line architectural lamp configurator",
+  "icons": [
+    {
+      "src": "para-slim-shady.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "chocolatechaud192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "chocolatechaud.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

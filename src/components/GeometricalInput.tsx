@@ -149,9 +149,10 @@ const ProcessingMethodRenderer: React.FC<{ method: ProcessingMethods; updateMeth
       return (
         <Form>
           <div key='incrementMethod'>
-            <span>{'Inset Bottom'}</span>
+            <UpdateProcessingMethodTypeComponent type={method.type} updateType={updateType} />
+            <span>{'Total Height'}</span>
             <Switch value={method.total} onChange={setTotal} />
-            <span>{'Inset Bottom'}</span>
+            <span>{'Angle'}</span>
             <SliderWrapper value={method.angle} onChange={setAngle} min={defaulttotal.min} max={defaulttotal.max} step={defaulttotal.step} />
           </div>
         </Form>
@@ -162,24 +163,26 @@ const ProcessingMethodRenderer: React.FC<{ method: ProcessingMethods; updateMeth
       const setperiod = (value: number) => updateMethod({ ...method, period: value });
       const setphaseShift = (value: number) => updateMethod({ ...method, phaseShift: value });
 
-      <Form>
-        <div key='incrementMethod'>
-          <span>max</span>
-          <SliderWrapper value={method.max} onChange={setmax} min={defaultmax.min} max={defaultmax.max} step={defaultmax.step} />
-          <span>min</span>
-          <SliderWrapper value={method.min} onChange={setmin} min={defaultmin.min} max={defaultmin.max} step={defaultmin.step} />
-          <span>period</span>
-          <SliderWrapper value={method.period} onChange={setperiod} min={defaultperiod.min} max={defaultperiod.max} step={defaultperiod.step} />
-          <span>phaseShift</span>
-          <SliderWrapper
-            value={method.phaseShift}
-            onChange={setphaseShift}
-            min={defaultphaseShift.min}
-            max={defaultphaseShift.max}
-            step={defaultphaseShift.step}
-          />
-        </div>
-      </Form>;
+      return (
+        <Form>
+          <div key='incrementMethod'>
+            <UpdateProcessingMethodTypeComponent type={method.type} updateType={updateType} />
+            <SliderWrapper value={method.max} onChange={setmax} min={defaultmax.min} max={defaultmax.max} step={defaultmax.step} />
+            <span>min</span>
+            <SliderWrapper value={method.min} onChange={setmin} min={defaultmin.min} max={defaultmin.max} step={defaultmin.step} />
+            <span>period</span>
+            <SliderWrapper value={method.period} onChange={setperiod} min={defaultperiod.min} max={defaultperiod.max} step={defaultperiod.step} />
+            <span>phaseShift</span>
+            <SliderWrapper
+              value={method.phaseShift}
+              onChange={setphaseShift}
+              min={defaultphaseShift.min}
+              max={defaultphaseShift.max}
+              step={defaultphaseShift.step}
+            />
+          </div>
+        </Form>
+      );
   }
 };
 
@@ -521,9 +524,7 @@ const RandomNumberGenerator: React.FC<IInputProps> = ({ extrusionProfile, malcol
 
     setExtrusionProfile(extrusionProfileCopy);
   };
-
-  <Button onClick={generateAndSetWithRandomNumber}>Generate Random Number</Button>;
-
+  return null; // random generation doesn't work properly right now
   return (
     <Button style={inputButtonStyle} onClick={generateAndSetWithRandomNumber}>
       Generate
@@ -532,7 +533,7 @@ const RandomNumberGenerator: React.FC<IInputProps> = ({ extrusionProfile, malcol
 };
 
 export const InputRenderer: React.FC<IInputProps> = (props) => {
-  const [fullControl, activateFullControl] = useState<boolean>(false);
+  const [fullControl, activateFullControl] = useState<boolean>(true);
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
 
   console.log(props);

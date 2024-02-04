@@ -73,15 +73,15 @@ export const DEFAULT_GEOMETRY_TYPES = {
     offsetB: -10,
     innerRadius: 20,
     heights: {
-      storyCount: 4,
+      storyCount: 6,
       baseHeight: 100,
       method: {
         type: ProcessingMethodType.None,
       },
     } as HeightGenerator,
     postProcessing: {
-      twist: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.None],
-      skew: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.None],
+      twist: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.Sin],
+      skew: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.IncrementalMethod],
     },
   },
 };
@@ -133,7 +133,7 @@ const defaultmax = { min: 0.1, max: 3, step: 0.01, int: false };
 const defaultmin = { min: 0.1, max: 2, step: 0.01, int: false };
 const defaultperiod = { min: 0.1, max: 10, step: 0.1, int: false };
 const defaultphaseShift = { min: 10, max: 100, step: 0.1, int: false };
-const defaultstoryCount = { min: 1, max: 10, step: 1, int: true };
+const defaultstoryCount = { min: 1, max: 12, step: 1, int: true };
 const defaultbaseHeight = { min: 20, max: 200, step: 1, int: false };
 
 const ProcessingMethodRenderer: React.FC<{ method: ProcessingMethods; updateMethod: (newMethod: ProcessingMethods) => void }> = ({ method, updateMethod }) => {

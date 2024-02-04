@@ -60,8 +60,8 @@ export const DEFAULT_PROCESSING_METHODS = {
   } as NoneMethod,
   [ProcessingMethodType.IncrementalMethod]: {
     type: ProcessingMethodType.IncrementalMethod,
-    total: true,
-    angle: 5,
+    total: false,
+    angle: 1.3,
   } as IncrementalMethod,
   [ProcessingMethodType.Sin]: {
     type: ProcessingMethodType.Sin,

@@ -35,15 +35,13 @@ const App: React.FC = () => {
   };
 
   const onSceneReady = (scene: any) => {
-    const camera = new ArcRotateCamera('camera1', 0.2, 0.3, 5, new Vector3(0, 1.2, 0), scene);
-    camera.position = new Vector3(0, 1.2, -5);
+    const camera = new ArcRotateCamera('camera1', 0.2, 1.2, 5, new Vector3(0, 1.2, 0), scene);
     camera.lowerRadiusLimit = 2;
     camera.upperRadiusLimit = 8.0;
     camera.panningSensibility = 0;
 
     const canvas = scene.getEngine().getRenderingCanvas();
 
-    camera.setTarget(Vector3.Zero());
     camera.attachControl(canvas, true);
     const light = new HemisphericLight('light', new Vector3(0, 1, 0), scene);
     light.intensity = 0.2;

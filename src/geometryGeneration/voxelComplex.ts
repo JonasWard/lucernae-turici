@@ -65,8 +65,8 @@ export const DEFAULT_PROCESSING_METHODS = {
   } as IncrementalMethod,
   [ProcessingMethodType.Sin]: {
     type: ProcessingMethodType.Sin,
-    max: 3,
-    min: 3,
+    max: 0.5,
+    min: 1.5,
     period: 3,
     phaseShift: 3,
   } as SinMethod,
@@ -74,7 +74,7 @@ export const DEFAULT_PROCESSING_METHODS = {
 
 export const DEFAULT_HEIGHT_GENERATORS = {
   [ProcessingMethodType.None]: {
-    storyCount: 5,
+    storyCount: 4,
     baseHeight: 100,
     method: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.None],
   },
@@ -111,7 +111,7 @@ const getHeights = (heightGenerator: HeightGenerator): number[] => {
       break;
     case ProcessingMethodType.IncrementalMethod:
       const incrementalMethod = getIncrementalMethod(heightGenerator.method);
-      heights.push(...Array.from({ length: heightGenerator.storyCount }, (_, i) => incrementalMethod(i) * heightGenerator.baseHeight));
+      heights.push(...Array.from({ length: heightGenerator.storyCount }, (_, i) => incrementalMethod(i) + heightGenerator.baseHeight));
       break;
     case ProcessingMethodType.Sin:
       const sineMethod = getSineMethod(heightGenerator.method);

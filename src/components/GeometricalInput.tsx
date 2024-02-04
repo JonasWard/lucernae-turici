@@ -57,11 +57,11 @@ export const DEFAULT_PROFILE_TYPES = {
   } as SquareExtrusionProfile,
 };
 
-const defaultInsetBottom = { min: 10, max: 500, int: false, step: 1 };
-const defaultInsetTop = { min: 10, max: 500, int: false, step: 1 };
-const defaultInsetSides = { min: 10, max: 500, int: false, step: 1 };
-const defaultRadiusTop = { min: 10, max: 500, int: false, step: 1 };
-const defaultRadius = { min: 10, max: 500, int: false, step: 1 };
+const defaultInsetBottom = { min: 1, max: 40, int: false, step: 1 };
+const defaultInsetTop = { min: 1, max: 40, int: false, step: 1 };
+const defaultInsetSides = { min: 1, max: 40, int: false, step: 1 };
+const defaultRadiusTop = { min: 1, max: 40, int: false, step: 1 };
+const defaultRadius = { min: 1, max: 40, int: false, step: 1 };
 
 export const DEFAULT_GEOMETRY_TYPES = {
   [Malculmiuses.One]: {
@@ -128,10 +128,10 @@ const UpdateProcessingMethodTypeComponent: React.FC<{ type: ProcessingMethodType
   </Select>
 );
 
-const defaulttotal = { min: 0, max: 100, step: 0.1, int: false };
+const defaulttotal = { min: 0, max: 20, step: 0.1, int: false };
 const defaultmax = { min: 0.1, max: 3, step: 0.01, int: false };
 const defaultmin = { min: 0.1, max: 2, step: 0.01, int: false };
-const defaultperiod = { min: 10, max: 100, step: 0.1, int: false };
+const defaultperiod = { min: 0.1, max: 10, step: 0.1, int: false };
 const defaultphaseShift = { min: 10, max: 100, step: 0.1, int: false };
 const defaultstoryCount = { min: 1, max: 10, step: 1, int: true };
 const defaultbaseHeight = { min: 20, max: 200, step: 1, int: false };

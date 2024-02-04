@@ -67,7 +67,7 @@ export const DEFAULT_PROCESSING_METHODS = {
     type: ProcessingMethodType.Sin,
     max: 0.5,
     min: 1.5,
-    period: 3,
+    period: 2,
     phaseShift: 3,
   } as SinMethod,
 };
@@ -99,8 +99,19 @@ const getSineMethod =
 const getIncrementalMethod =
   (incrementalSettings: IncrementalMethod, total?: number) =>
   (angle: number): number => {
-    return incrementalSettings.total && total ? (angle * total) / 1000 : incrementalSettings.angle * angle;
+    return incrementalSettings.total && total ? 1 + angle * total : 1 + angle * incrementalSettings.angle;
   };
+
+const getBaseMethod = (method: ProcessingMethods, total?: number): ((angle: number) => number) => {
+  switch (method.type) {
+    case ProcessingMethodType.None:
+      return () => 1;
+    case ProcessingMethodType.IncrementalMethod:
+      return getIncrementalMethod(method, total);
+    case ProcessingMethodType.Sin:
+      return getSineMethod(method);
+  }
+};
 
 const getHeights = (heightGenerator: HeightGenerator): number[] => {
   const heights: number[] = [];
@@ -223,12 +234,34 @@ const createVoxelComplex = (polygons: Vector3[][], heightMap: number[], extrusio
   return joinMeshes(meshes);
 };
 
+export const twistAndSkewVertex = (v: Vector3, twistMethod: (angle: number) => number, skewMethod: (angle: number) => number, angle: number): Vector3 => {
+  const twistAngle = twistMethod(v.z);
+  const skew = 0.5 + skewMethod(v.z) * 0.5;
+
+  const cos = Math.cos(twistAngle) * skew;
+  const sin = Math.sin(twistAngle) * skew;
+
+  return new Vector3(v.x * cos - v.y * sin, v.x * sin + v.y * cos, v.z);
+};
+
 export const createMalculmiusGeometry = (geometry: MalculmiusGeometry, origin: Vector3 = new Vector3(0, 0, 0), extrusionProfile: ExtrusionProfile): Mesh => {
   // creating the base profile
   const heightMap = getHeights(geometry.heights);
 
+  let mesh: Mesh = {
+    faces: [],
+    vertices: [],
+  };
+
   switch (geometry.type) {
     case Malculmiuses.One:
-      return createVoxelComplex(createShardOfMalculmiusOne(geometry, origin, 0), heightMap, extrusionProfile);
+      mesh = createVoxelComplex(createShardOfMalculmiusOne(geometry, origin, 0), heightMap, extrusionProfile);
   }
+
+  // get post processing methods
+  const twistMethod = getBaseMethod(geometry.postProcessing.twist, heightMap[heightMap.length - 1]);
+  const skewMethod = getBaseMethod(geometry.postProcessing.skew, heightMap[heightMap.length - 1]);
+
+  mesh.vertices = mesh.vertices.map((v) => twistAndSkewVertex(v, twistMethod, skewMethod, v.z));
+  return mesh;
 };

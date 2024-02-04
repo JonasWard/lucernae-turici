@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/para-slim-shady/static/css/main.e85a6628.css",
-    "main.js": "/para-slim-shady/static/js/main.92154eac.js",
+    "main.js": "/para-slim-shady/static/js/main.0ae681ad.js",
     "index.html": "/para-slim-shady/index.html",
     "main.e85a6628.css.map": "/para-slim-shady/static/css/main.e85a6628.css.map",
-    "main.92154eac.js.map": "/para-slim-shady/static/js/main.92154eac.js.map"
+    "main.0ae681ad.js.map": "/para-slim-shady/static/js/main.0ae681ad.js.map"
   },
   "entrypoints": [
     "static/css/main.e85a6628.css",
-    "static/js/main.92154eac.js"
+    "static/js/main.0ae681ad.js"
   ]
 }

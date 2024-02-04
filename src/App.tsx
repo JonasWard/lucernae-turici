@@ -35,7 +35,7 @@ const App: React.FC = () => {
   };
 
   const onSceneReady = (scene: any) => {
-    const camera = new ArcRotateCamera('camera1', 0.2, 1.2, 5, new Vector3(0, 1.2, 0), scene);
+    const camera = new ArcRotateCamera('camera1', 0.2, 1.2, 5, new Vector3(0, 1.0, 0), scene);
     camera.lowerRadiusLimit = 2;
     camera.upperRadiusLimit = 8.0;
     camera.panningSensibility = 0;

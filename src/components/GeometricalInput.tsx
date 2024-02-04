@@ -134,7 +134,7 @@ const defaultmin = { min: 0.1, max: 2, step: 0.01, int: false };
 const defaultperiod = { min: 10, max: 100, step: 0.1, int: false };
 const defaultphaseShift = { min: 10, max: 100, step: 0.1, int: false };
 const defaultstoryCount = { min: 1, max: 10, step: 1, int: true };
-const defaultbaseHeight = { min: 20, max: 100, step: 1, int: false };
+const defaultbaseHeight = { min: 20, max: 200, step: 1, int: false };
 
 const ProcessingMethodRenderer: React.FC<{ method: ProcessingMethods; updateMethod: (newMethod: ProcessingMethods) => void }> = ({ method, updateMethod }) => {
   const updateType = (type: ProcessingMethodType) => updateMethod({ ...method, ...DEFAULT_PROCESSING_METHODS[type] } as ProcessingMethods);

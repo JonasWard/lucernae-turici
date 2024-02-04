@@ -99,7 +99,7 @@ const getSineMethod =
 const getIncrementalMethod =
   (incrementalSettings: IncrementalMethod, total?: number) =>
   (angle: number): number => {
-    return incrementalSettings.total && total ? (angle * total) / 1000 : incrementalSettings.angle;
+    return incrementalSettings.total && total ? (angle * total) / 1000 : incrementalSettings.angle * angle;
   };
 
 const getHeights = (heightGenerator: HeightGenerator): number[] => {

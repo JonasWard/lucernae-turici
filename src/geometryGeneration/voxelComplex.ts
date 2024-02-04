@@ -13,6 +13,121 @@ export type MalculmiusOneGeometry = {
   offsetA: number;
   offsetB: number;
   innerRadius: number;
+  postProcessing: PostProcessingMethods;
+  heights: HeightGenerator;
+};
+
+export enum ProcessingMethodType {
+  None = 'None',
+  IncrementalMethod = 'IncrementalMethod',
+  Sin = 'Sin',
+}
+
+export type NoneMethod = {
+  type: ProcessingMethodType.None;
+};
+
+export type IncrementalMethod = {
+  type: ProcessingMethodType.IncrementalMethod;
+  total: boolean;
+  angle: number;
+};
+
+export type SinMethod = {
+  type: ProcessingMethodType.Sin;
+  max: number;
+  min: number;
+  period: number;
+  phaseShift: number;
+};
+
+export type ProcessingMethods = NoneMethod | IncrementalMethod | SinMethod;
+
+export type PostProcessingMethods = {
+  twist: ProcessingMethods;
+  skew: ProcessingMethods;
+};
+
+export type HeightGenerator = {
+  storyCount: number;
+  baseHeight: number;
+  method: ProcessingMethods;
+};
+
+export const DEFAULT_PROCESSING_METHODS = {
+  [ProcessingMethodType.None]: {
+    type: ProcessingMethodType.None,
+  } as NoneMethod,
+  [ProcessingMethodType.IncrementalMethod]: {
+    type: ProcessingMethodType.IncrementalMethod,
+    total: true,
+    angle: 5,
+  } as IncrementalMethod,
+  [ProcessingMethodType.Sin]: {
+    type: ProcessingMethodType.Sin,
+    max: 3,
+    min: 3,
+    period: 3,
+    phaseShift: 3,
+  } as SinMethod,
+};
+
+export const DEFAULT_HEIGHT_GENERATORS = {
+  [ProcessingMethodType.None]: {
+    storyCount: 5,
+    baseHeight: 100,
+    method: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.None],
+  },
+  [ProcessingMethodType.IncrementalMethod]: {
+    storyCount: 0,
+    baseHeight: 0,
+    method: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.None],
+  },
+  [ProcessingMethodType.Sin]: {
+    storyCount: 0,
+    baseHeight: 0,
+    method: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.None],
+  },
+};
+
+const getSineMethod =
+  (sineSettings: SinMethod) =>
+  (angle: number): number => {
+    return sineSettings.min + (sineSettings.max - sineSettings.min) * (Math.sin(sineSettings.period * angle + sineSettings.phaseShift) * 0.5 + 0.5);
+  };
+
+const getIncrementalMethod =
+  (incrementalSettings: IncrementalMethod, total?: number) =>
+  (angle: number): number => {
+    return incrementalSettings.total && total ? (angle * total) / 1000 : incrementalSettings.angle;
+  };
+
+const getHeights = (heightGenerator: HeightGenerator): number[] => {
+  const heights: number[] = [];
+
+  switch (heightGenerator.method.type) {
+    case ProcessingMethodType.None:
+      heights.push(...Array.from({ length: heightGenerator.storyCount }, () => heightGenerator.baseHeight));
+      break;
+    case ProcessingMethodType.IncrementalMethod:
+      const incrementalMethod = getIncrementalMethod(heightGenerator.method);
+      heights.push(...Array.from({ length: heightGenerator.storyCount }, (_, i) => incrementalMethod(i) * heightGenerator.baseHeight));
+      break;
+    case ProcessingMethodType.Sin:
+      const sineMethod = getSineMethod(heightGenerator.method);
+      heights.push(...Array.from({ length: heightGenerator.storyCount }, (_, i) => sineMethod(i) * heightGenerator.baseHeight));
+      break;
+  }
+
+  let height = 0;
+  const incrementalHeights = [0];
+
+  heights.forEach((h) => {
+    height += h;
+    incrementalHeights.push(height);
+  });
+
+  return incrementalHeights;
 };
 
 export type MalculmiusGeometryType = Malculmiuses.One;
@@ -108,13 +223,10 @@ const createVoxelComplex = (polygons: Vector3[][], heightMap: number[], extrusio
   return joinMeshes(meshes);
 };
 
-export const createMalculmiusGeometry = (
-  geometry: MalculmiusGeometry,
-  origin: Vector3 = new Vector3(0, 0, 0),
-  heightMap: number[],
-  extrusionProfile: ExtrusionProfile
-): Mesh => {
+export const createMalculmiusGeometry = (geometry: MalculmiusGeometry, origin: Vector3 = new Vector3(0, 0, 0), extrusionProfile: ExtrusionProfile): Mesh => {
   // creating the base profile
+  const heightMap = getHeights(geometry.heights);
+
   switch (geometry.type) {
     case Malculmiuses.One:
       return createVoxelComplex(createShardOfMalculmiusOne(geometry, origin, 0), heightMap, extrusionProfile);

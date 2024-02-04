@@ -16,7 +16,6 @@ const App: React.FC = () => {
   let model: any;
   const [scene, setScene] = useState<null | Scene>(null);
 
-  const [heightMap, setHeightMap] = useState<number[]>([0, 200]);
   const [geometry, setGeometry] = useState<MalculmiusOneGeometry>(DEFAULT_GEOMETRY_TYPES[Malculmiuses.One]);
   const [profile, setProfile] = useState<ExtrusionProfile>(DEFAULT_PROFILE_TYPES[ExtrusionProfileType.Arc]);
 
@@ -62,7 +61,7 @@ const App: React.FC = () => {
     //   baseProfile: [new Vector3(0, 0, 0), new Vector3(100, 0, 0), new Vector3(100, 100, 0), new Vector3(0, 100, 0)],
     //   height: 100,
     // };
-    const mesh = createMalculmiusGeometry(geometry, new Vector3(0, 0, 0), heightMap, profile);
+    const mesh = createMalculmiusGeometry(geometry, new Vector3(0, 0, 0), profile);
     // const mesh
     // const mesh = voxelToMesh(voxel, profile);
 
@@ -81,7 +80,7 @@ const App: React.FC = () => {
     // remove the old mesh
     scene.meshes.forEach((m) => m.name === MALCULMIUS_MESH_NAME && m.dispose());
 
-    const mesh = createMalculmiusGeometry(geometry, new Vector3(0, 0, 0), heightMap, profile);
+    const mesh = createMalculmiusGeometry(geometry, new Vector3(0, 0, 0), profile);
     meshToBabylonMesh(mesh, scene, new Vector3(0, 0, 0));
   };
 

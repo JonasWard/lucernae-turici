@@ -5,7 +5,15 @@ import {
   ExtrusionProfileType,
   SquareExtrusionProfile,
 } from '../geometryGeneration/baseGeometry';
-import { MalculmiusGeometry, MalculmiusGeometryType, Malculmiuses } from '../geometryGeneration/voxelComplex';
+import {
+  DEFAULT_PROCESSING_METHODS,
+  HeightGenerator,
+  MalculmiusGeometry,
+  MalculmiusGeometryType,
+  Malculmiuses,
+  ProcessingMethodType,
+  ProcessingMethods,
+} from '../geometryGeneration/voxelComplex';
 import { useState } from 'react';
 import { Drawer, Form, Slider, Select, Button, Switch } from 'antd';
 
@@ -64,6 +72,17 @@ export const DEFAULT_GEOMETRY_TYPES = {
     offsetA: 10,
     offsetB: -10,
     innerRadius: 20,
+    heights: {
+      storyCount: 10,
+      baseHeight: 100,
+      method: {
+        type: ProcessingMethodType.None,
+      },
+    } as HeightGenerator,
+    postProcessing: {
+      twist: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.None],
+      skew: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.None],
+    },
   },
 };
 
@@ -96,11 +115,79 @@ const UpdateGeometryTypeComponent: React.FC<{ type: MalculmiusGeometryType; upda
   </Select>
 );
 
+const UpdateProcessingMethodTypeComponent: React.FC<{ type: ProcessingMethodType; updateType: (type: ProcessingMethodType) => void }> = ({
+  type,
+  updateType,
+}) => (
+  <Select onChange={updateType} style={{ width: '100%' }} value={type}>
+    {[ProcessingMethodType.None, ProcessingMethodType.IncrementalMethod, ProcessingMethodType.Sin].map((v) => (
+      <Select.Option key={v} value={v}>
+        {v}
+      </Select.Option>
+    ))}
+  </Select>
+);
+
+const defaulttotal = { min: 0, max: 100, step: 0.1, int: false };
+const defaultmax = { min: 0, max: 100, step: 0.1, int: false };
+const defaultmin = { min: 10, max: 100, step: 0.1, int: false };
+const defaultperiod = { min: 10, max: 100, step: 0.1, int: false };
+const defaultphaseShift = { min: 10, max: 100, step: 0.1, int: false };
+const defaultstoryCount = { min: 1, max: 20, step: 1, int: true };
+const defaultbaseHeight = { min: 20, max: 100, step: 1, int: false };
+
+const ProcessingMethodRenderer: React.FC<{ method: ProcessingMethods; updateMethod: (newMethod: ProcessingMethods) => void }> = ({ method, updateMethod }) => {
+  const updateType = (type: ProcessingMethodType) => updateMethod({ ...method, ...DEFAULT_PROCESSING_METHODS[type] } as ProcessingMethods);
+
+  switch (method.type) {
+    case ProcessingMethodType.None:
+      return <UpdateProcessingMethodTypeComponent type={method.type} updateType={updateType} />;
+    case ProcessingMethodType.IncrementalMethod:
+      const setTotal = () => updateMethod({ ...method, total: !method.total });
+      const setAngle = (value: number) => updateMethod({ ...method, angle: value });
+
+      return (
+        <Form>
+          <div key='incrementMethod'>
+            <span>{'Inset Bottom'}</span>
+            <Switch value={method.total} onChange={setTotal} />
+            <span>{'Inset Bottom'}</span>
+            <SliderWrapper value={method.angle} onChange={setAngle} min={defaulttotal.min} max={defaulttotal.max} step={defaulttotal.step} />
+          </div>
+        </Form>
+      );
+    case ProcessingMethodType.Sin:
+      const setmax = (value: number) => updateMethod({ ...method, max: value });
+      const setmin = (value: number) => updateMethod({ ...method, min: value });
+      const setperiod = (value: number) => updateMethod({ ...method, period: value });
+      const setphaseShift = (value: number) => updateMethod({ ...method, phaseShift: value });
+
+      <Form>
+        <div key='incrementMethod'>
+          <span>max</span>
+          <SliderWrapper value={method.max} onChange={setmax} min={defaultmax.min} max={defaultmax.max} step={defaultmax.step} />
+          <span>min</span>
+          <SliderWrapper value={method.min} onChange={setmin} min={defaultmin.min} max={defaultmin.max} step={defaultmin.step} />
+          <span>period</span>
+          <SliderWrapper value={method.period} onChange={setperiod} min={defaultperiod.min} max={defaultperiod.max} step={defaultperiod.step} />
+          <span>phaseShift</span>
+          <SliderWrapper
+            value={method.phaseShift}
+            onChange={setphaseShift}
+            min={defaultphaseShift.min}
+            max={defaultphaseShift.max}
+            step={defaultphaseShift.step}
+          />
+        </div>
+      </Form>;
+  }
+};
+
 const ExtrusionRenderer: React.FC<IExtrusionProfileInputProps> = ({ extrusionProfile, setExtrusionProfile }) => {
   const setInsetBottom = (value: number) => setExtrusionProfile({ ...extrusionProfile, insetBottom: value });
   const setInsetTop = (value: number) => setExtrusionProfile({ ...extrusionProfile, insetTop: value });
   const setInsetSides = (value: number) => setExtrusionProfile({ ...extrusionProfile, insetSides: value });
-  const updateType = (type: ExtrusionProfileType) => setExtrusionProfile({ ...[type], ...extrusionProfile, type } as ExtrusionProfile);
+  const updateType = (type: ExtrusionProfileType) => setExtrusionProfile({ ...DEFAULT_PROFILE_TYPES[type], ...extrusionProfile, type } as ExtrusionProfile);
 
   switch (extrusionProfile.type) {
     case ExtrusionProfileType.Arc:
@@ -231,6 +318,64 @@ const ExtrusionRenderer: React.FC<IExtrusionProfileInputProps> = ({ extrusionPro
   }
 };
 
+const HeightsRenderer: React.FC<{ heights: HeightGenerator; setHeights: (heights: HeightGenerator) => void }> = ({ heights, setHeights }) => {
+  const setStoryCount = (value: number) => setHeights({ ...heights, storyCount: value });
+  const setBaseHeight = (value: number) => setHeights({ ...heights, baseHeight: value });
+  const setMethod = (method: ProcessingMethods) => setHeights({ ...heights, method: { ...heights.method, ...method } as ProcessingMethods });
+
+  return (
+    <>
+      <h3>{'Heights'}</h3>
+      <div key='storyCount'>
+        <span>{'Story Count'}</span>
+        <SliderWrapper
+          value={heights.storyCount}
+          onChange={setStoryCount}
+          min={defaultstoryCount.min}
+          max={defaultstoryCount.max}
+          step={defaultstoryCount.step}
+        />
+      </div>
+      <div key='baseHeight'>
+        <span>{'Base Height'}</span>
+        <SliderWrapper
+          value={heights.baseHeight}
+          onChange={setBaseHeight}
+          min={defaultbaseHeight.min}
+          max={defaultbaseHeight.max}
+          step={defaultbaseHeight.step}
+        />
+      </div>
+      <div key='method'>
+        <span>{'Method'}</span>
+        <ProcessingMethodRenderer method={heights.method} updateMethod={setMethod} />
+      </div>
+    </>
+  );
+};
+
+const PostProcessingRenderer: React.FC<{
+  postProcessing: { twist: ProcessingMethods; skew: ProcessingMethods };
+  setPostProcessing: (postProcessing: { twist: ProcessingMethods; skew: ProcessingMethods }) => void;
+}> = ({ postProcessing, setPostProcessing }) => {
+  const setTwist = (method: ProcessingMethods) => setPostProcessing({ ...postProcessing, twist: { ...postProcessing.twist, ...method } as ProcessingMethods });
+  const setSkew = (method: ProcessingMethods) => setPostProcessing({ ...postProcessing, skew: { ...postProcessing.skew, ...method } as ProcessingMethods });
+
+  return (
+    <>
+      <h3>{'Post Processing'}</h3>
+      <div key='twist'>
+        <span>{'Twist'}</span>
+        <ProcessingMethodRenderer method={postProcessing.twist} updateMethod={setTwist} />
+      </div>
+      <div key='skew'>
+        <span>{'Skew'}</span>
+        <ProcessingMethodRenderer method={postProcessing.skew} updateMethod={setSkew} />
+      </div>
+    </>
+  );
+};
+
 const SliderWrapper: React.FC<{ value: number; onChange: (value: number) => void; min: number; max: number; step: number }> = ({
   value,
   onChange,
@@ -257,6 +402,10 @@ const GeometryRenderer: React.FC<IGeometryInputProps> = ({ malcolmiusGeometry, s
 
   const updateType = (type: MalculmiusGeometryType) =>
     setMalcolmiusGeometry({ ...DEFAULT_GEOMETRY_TYPES[type], ...malcolmiusGeometry, type } as MalculmiusGeometry);
+
+  const updateHeights = (heights: HeightGenerator) => setMalcolmiusGeometry({ ...malcolmiusGeometry, heights });
+  const updatePostProcessing = (postProcessing: { twist: ProcessingMethods; skew: ProcessingMethods }) =>
+    setMalcolmiusGeometry({ ...malcolmiusGeometry, postProcessing });
 
   switch (malcolmiusGeometry.type) {
     case Malculmiuses.One:
@@ -323,6 +472,8 @@ const GeometryRenderer: React.FC<IGeometryInputProps> = ({ malcolmiusGeometry, s
               step={defaultInnerRadius.step}
             />
           </div>
+          <HeightsRenderer heights={malcolmiusGeometry.heights} setHeights={updateHeights} />
+          <PostProcessingRenderer postProcessing={malcolmiusGeometry.postProcessing} setPostProcessing={updatePostProcessing} />
         </Form>
       );
   }

@@ -99,7 +99,7 @@ const getSineMethod =
 const getIncrementalMethod =
   (incrementalSettings: IncrementalMethod, total?: number) =>
   (angle: number): number => {
-    return incrementalSettings.total && total ? 1 + angle * total : 1 + angle * incrementalSettings.angle;
+    return incrementalSettings.total && total ? 1 + angle * incrementalSettings.angle * total : 1 + angle * incrementalSettings.angle;
   };
 
 const getBaseMethod = (method: ProcessingMethods, total?: number): ((angle: number) => number) => {
@@ -235,8 +235,8 @@ const createVoxelComplex = (polygons: Vector3[][], heightMap: number[], extrusio
 };
 
 export const twistAndSkewVertex = (v: Vector3, twistMethod: (angle: number) => number, skewMethod: (angle: number) => number, angle: number): Vector3 => {
-  const twistAngle = twistMethod(v.z);
-  const skew = 0.5 + skewMethod(v.z) * 0.5;
+  const twistAngle = twistMethod(v.z * 0.001);
+  const skew = 0.5 + skewMethod(v.z * 0.001) * 0.5;
 
   const cos = Math.cos(twistAngle) * skew;
   const sin = Math.sin(twistAngle) * skew;

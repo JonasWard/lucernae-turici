@@ -46,7 +46,9 @@ export type EllipseExtrusionProfile = {
 
 export type ExtrusionProfile = ArcExtrusionProfile | SquareExtrusionProfile | EllipseExtrusionProfile;
 
-const ARC_DIVSION_COUNT = 12;
+const ARC_DIVSION_COUNT = 8;
+export const MALCULMIUS_MESH_NAME = 'malculmius';
+const UNIT_SCALING = 0.001;
 
 const getArc = (frame: Frame): Vector3[] => {
   let index = 0;
@@ -89,7 +91,7 @@ const basePolygonToMesh = (polygon: Vector3[]): Mesh => {
   }
   return {
     vertices: polygon,
-    faces: polygon.length === 3 ? [[1, 2, 0]] : [[0, 2, 3, 1]],
+    faces: polygon.length === 3 ? [[0, 1, 2]] : [[0, 1, 2, 3]],
   };
 };
 
@@ -270,10 +272,14 @@ export const voxelToMesh = (voxel: Voxel, extrusionProfile: ExtrusionProfile): M
   return joinMeshes(meshes);
 };
 
-export const meshToBabylonMesh = (mesh: Mesh, scene: Scene): BabylonMesh => {
-  const babylonMesh = new BabylonMesh('custom', scene);
+export const meshToBabylonMesh = (mesh: Mesh, scene: Scene, centerPoint: Vector3): BabylonMesh => {
+  const babylonMesh = new BabylonMesh(MALCULMIUS_MESH_NAME, scene);
   const vertexData = new VertexData();
-  vertexData.positions = mesh.vertices.flatMap((v) => [v.x, v.z, -v.y]);
+  vertexData.positions = mesh.vertices.flatMap((v) => [
+    (v.x - centerPoint.x) * UNIT_SCALING + centerPoint.x,
+    (v.z - centerPoint.y) * UNIT_SCALING + centerPoint.y,
+    (-v.y - centerPoint.z) * UNIT_SCALING + centerPoint.z,
+  ]);
   vertexData.indices = mesh.faces.flatMap((f) => (f.length === 4 ? [f[0], f[1], f[2], f[0], f[2], f[3]] : f));
 
   const normals: number[] = [];

@@ -15,9 +15,11 @@ export type MalculmiusOneGeometry = {
   innerRadius: number;
 };
 
+export type MalculmiusGeometryType = Malculmiuses.One;
+
 export type MalculmiusGeometry = MalculmiusOneGeometry;
 
-const MALCULMIUS_TOLERANCE = 0.001;
+const MALCULMIUS_TOLERANCE = 1;
 
 const copyAndRotate = (vss: Vector3[][], origin: Vector3, angle: number): Vector3[][] => {
   const cos = Math.cos(angle);
@@ -39,7 +41,7 @@ const createShardOfMalculmiusOne = (geometry: MalculmiusOneGeometry, origin: Vec
     if (Math.abs(o0) < MALCULMIUS_TOLERANCE) {
       topVs.push(t0, t1);
     } else {
-      const d = v1.add(v0).scale(0.5);
+      const d = t0.add(t1).scale(0.5);
       topVs.push(t0, o.add(d.scale(1 + o0 / d.length())), t1);
     }
 
@@ -83,8 +85,6 @@ const createShardOfMalculmiusOne = (geometry: MalculmiusOneGeometry, origin: Vec
 
   const shards = [...singleShard(origin, v0, v1, innerRadius, circleRadius, offsetA), ...singleShard(origin, v1, v2, innerRadius, circleRadius, offsetB)];
 
-  console.log(shards);
-
   for (let i = 0; i < circleDivisions; i++) {
     vertexSets.push(...copyAndRotate(shards, origin, i * angleDelta));
   }
@@ -104,8 +104,6 @@ const createVoxelComplex = (polygons: Vector3[][], heightMap: number[], extrusio
       meshes.push(voxelToMesh({ baseProfile: polygon.map((v) => v.add(vZ)), height: hDelta }, extrusionProfile));
     }
   });
-
-  console.log(meshes);
 
   return joinMeshes(meshes);
 };

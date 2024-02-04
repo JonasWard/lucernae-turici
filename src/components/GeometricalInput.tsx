@@ -93,7 +93,7 @@ const defaultOffsetA = { min: -100, max: 100, int: false, step: 1 };
 const defaultOffsetB = { min: -100, max: 100, int: false, step: 1 };
 const defaultInnerRadius = { min: 0, max: 100, int: false, step: 1 };
 
-const inputButtonStyle: React.CSSProperties = { position: 'fixed', left: '47vh', right: '45vh', top: '5vh' };
+const inputButtonStyle: React.CSSProperties = { position: 'fixed', left: 80, top: 6 };
 
 const UpdateExtrusionTypeComponent: React.FC<{ type: ExtrusionProfileType; updateType: (type: ExtrusionProfileType) => void }> = ({ type, updateType }) => (
   <Select onChange={updateType} style={{ width: '100%' }} value={type}>

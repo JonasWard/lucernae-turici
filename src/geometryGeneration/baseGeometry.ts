@@ -1,4 +1,4 @@
-import { Vector3, Mesh as BabylonMesh, VertexData, Scene } from '@babylonjs/core';
+import { Vector3, Mesh as BabylonMesh, VertexData, Scene, StandardMaterial } from '@babylonjs/core';
 
 // this mesh assumes a positive oriented coordinate system, which means we will have to transform the mesh when importing them into a babylon scene
 
@@ -272,8 +272,9 @@ export const voxelToMesh = (voxel: Voxel, extrusionProfile: ExtrusionProfile): M
   return joinMeshes(meshes);
 };
 
-export const meshToBabylonMesh = (mesh: Mesh, scene: Scene, centerPoint: Vector3): BabylonMesh => {
+export const meshToBabylonMesh = (mesh: Mesh, scene: Scene, centerPoint: Vector3, material?: StandardMaterial): BabylonMesh => {
   const babylonMesh = new BabylonMesh(MALCULMIUS_MESH_NAME, scene);
+  if (material) babylonMesh.material = material;
   const vertexData = new VertexData();
   vertexData.positions = mesh.vertices.flatMap((v) => [
     (v.x - centerPoint.x) * UNIT_SCALING + centerPoint.x,

@@ -22,14 +22,12 @@ const App: React.FC = () => {
   console.log({ geometry, profile });
 
   const updateGeometry = (geometry: MalculmiusOneGeometry) => {
-    console.log('updateGeometry');
     if (!scene?.isReady()) return;
     setGeometry(geometry);
     rebuildModels(geometry, profile, scene);
   };
 
   const updateProfile = (profile: ExtrusionProfile) => {
-    console.log('updateProfile');
     if (!scene?.isReady()) return;
     setProfile(profile);
     rebuildModels(geometry, profile, scene);
@@ -53,17 +51,9 @@ const App: React.FC = () => {
 
     scene.clearColor = Color3.Black();
 
-    // MeshBuilder.CreateCylinder('box', { diameter: 0.2, height: 1 }, scene);
-
     setScene(scene);
 
-    // const voxel: Voxel = {
-    //   baseProfile: [new Vector3(0, 0, 0), new Vector3(100, 0, 0), new Vector3(100, 100, 0), new Vector3(0, 100, 0)],
-    //   height: 100,
-    // };
     const mesh = createMalculmiusGeometry(geometry, new Vector3(0, 0, 0), profile);
-    // const mesh
-    // const mesh = voxelToMesh(voxel, profile);
 
     meshToBabylonMesh(mesh, scene, new Vector3(0, 0, 0));
 
@@ -72,12 +62,10 @@ const App: React.FC = () => {
 
   const onRender = (scene: any) => {
     if (model !== undefined) {
-      // console.log("hhh")
     }
   };
 
   const rebuildModels = (geometry: MalculmiusOneGeometry, profile: ExtrusionProfile, scene: Scene) => {
-    // remove the old mesh
     scene.meshes.forEach((m) => m.name === MALCULMIUS_MESH_NAME && m.dispose());
 
     const mesh = createMalculmiusGeometry(geometry, new Vector3(0, 0, 0), profile);

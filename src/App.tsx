@@ -35,8 +35,8 @@ const App: React.FC = () => {
   };
 
   const onSceneReady = (scene: any) => {
-    const camera = new ArcRotateCamera('camera1', 0.2, 1.2, 5, new Vector3(0, 1.0, 0), scene);
-    camera.lowerRadiusLimit = 2;
+    const camera = new ArcRotateCamera('camera1', 0.3, 1.5, 2.5, new Vector3(0, 1.0, 0), scene);
+    camera.lowerRadiusLimit = 1.6;
     camera.upperRadiusLimit = 8.0;
     camera.panningSensibility = 0;
 
@@ -67,6 +67,8 @@ const App: React.FC = () => {
     const mesh = createMalculmiusGeometry(geometry, new Vector3(0, 0, 0), profile);
 
     meshToBabylonMesh(mesh, scene, new Vector3(0, 0.5, 0), material);
+
+    SceneLoader.ShowLoadingScreen = false;
 
     model = SceneLoader.Append('./assets/', 'parisThermes.glb', scene, function (scene) {});
   };

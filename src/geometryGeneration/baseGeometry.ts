@@ -51,7 +51,6 @@ export const MALCULMIUS_MESH_NAME = 'malculmius';
 const UNIT_SCALING = 0.001;
 
 const getArc = (frame: Frame): Vector3[] => {
-  let index = 0;
   const angleDelta = (Math.PI * 0.5) / ARC_DIVSION_COUNT;
 
   const vertices = [];
@@ -62,7 +61,6 @@ const getArc = (frame: Frame): Vector3[] => {
     const y = Math.sin(angle);
     const point = frame.origin.add(frame.xAxis.scale(x)).add(frame.yAxis.scale(y));
     vertices.push(point);
-    index++;
   }
 
   return vertices;

@@ -189,28 +189,26 @@ export const loft = (a: Vector3[], b: Vector3[], closed: boolean = false): Mesh 
   faces: a.map((_, i) => [i, (i + 1) % a.length, ((i + 1) % a.length) + a.length, i + a.length]).slice(0, closed ? -0 : -1) as Face[],
 });
 
+const vertexHash = (v: Vector3): string => `${v.x.toFixed(3)}_${v.y.toFixed(3)}_${v.z.toFixed(3)}`;
+
 export const joinMeshes = (meshes: Mesh[]): Mesh => {
   const vertices: Vector3[] = [];
+  const vertexMap: Map<string, number> = new Map();
 
-  const faceIndexMap: Map<number, number> = new Map();
   const faces: Face[] = [];
 
-  let vertexIndexCount = 0;
-  let meshStartIndex = 0;
   meshes.forEach((mesh) => {
-    meshStartIndex = vertexIndexCount;
+    const localHashes: string[] = [];
     mesh.vertices.forEach((v) => {
-      const closestIndex = vertices.findIndex((v2) => v2.subtract(v).lengthSquared() < 0.0001);
-      if (closestIndex === -1) {
+      const hash = vertexHash(v);
+      if (!vertexMap.has(hash)) {
         vertices.push(v);
-        faceIndexMap.set(vertexIndexCount, vertices.length - 1);
-      } else {
-        faceIndexMap.set(vertexIndexCount, closestIndex);
+        vertexMap.set(hash, vertices.length - 1);
       }
-      vertexIndexCount++;
+      localHashes.push(hash);
     });
 
-    mesh.faces.forEach((face) => faces.push(face.map((i) => faceIndexMap.get(i + meshStartIndex) as number) as Face));
+    mesh.faces.forEach((face) => faces.push(face.map((i) => vertexMap.get(localHashes[i]) as number) as Face));
   });
 
   return { vertices, faces };

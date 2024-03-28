@@ -5,9 +5,16 @@ import './App.css';
 import { ArcRotateCamera, Vector3, HemisphericLight, SceneLoader, StandardMaterial, Color3, MeshBuilder, PointLight } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
 import SceneComponent from './components/SceneComponent';
-import { ExtrusionProfile, ExtrusionProfileType, MALCULMIUS_MESH_NAME, meshToBabylonMesh } from './geometryGeneration/baseGeometry';
+import {
+  ExtrusionProfile,
+  ExtrusionProfileType,
+  HalfEdgeRenderMethod,
+  MALCULMIUS_MESH_NAME,
+  MALCULMIUS_SHADE_NAME,
+  renderHalfEdgeMesh,
+} from './geometryGeneration/baseGeometry';
 import { MalculmiusOneGeometry, Malculmiuses, createMalculmiusGeometry } from './geometryGeneration/voxelComplex';
-import { DEFAULT_GEOMETRY_TYPES, DEFAULT_PROFILE_TYPES, InputRenderer } from './components/GeometricalInput';
+import { DEFAULT_GEOMETRY_TYPES, DEFAULT_PROFILE_TYPES, InputRenderer } from './components/geometry/GeometryParentComponent';
 /* eslint-disable */
 
 // import model from "./assets/model2/scene.gltf";
@@ -19,8 +26,6 @@ const App: React.FC = () => {
 
   const [geometry, setGeometry] = useState<MalculmiusOneGeometry>(DEFAULT_GEOMETRY_TYPES[Malculmiuses.One]);
   const [profile, setProfile] = useState<ExtrusionProfile>(DEFAULT_PROFILE_TYPES[ExtrusionProfileType.Arc]);
-
-  console.log({ geometry, profile });
 
   const updateGeometry = (geometry: MalculmiusOneGeometry) => {
     if (!scene?.isReady()) return;
@@ -36,7 +41,7 @@ const App: React.FC = () => {
 
   const onSceneReady = (scene: any) => {
     const camera = new ArcRotateCamera('camera1', 0.3, 1.5, 2.5, new Vector3(0, 1.0, 0), scene);
-    camera.lowerRadiusLimit = 1.6;
+    camera.lowerRadiusLimit = 0.6;
     camera.upperRadiusLimit = 8.0;
     camera.panningSensibility = 0;
 
@@ -62,11 +67,12 @@ const App: React.FC = () => {
     material.emissiveColor = new Color3(0.67, 0.64, 0.49);
     setMaterial(material);
 
-    MeshBuilder.CreateCylinder('pedistel', { diameterTop: 0.25, diameterBottom: 0.5, height: 1 }, scene);
+    // MeshBuilder.CreateCylinder('pedistel', { diameterTop: 0.25, diameterBottom: 0.5, height: 1 }, scene);
 
-    const mesh = createMalculmiusGeometry(geometry, new Vector3(0, 0, 0), profile);
+    const { building, shade } = createMalculmiusGeometry(geometry, new Vector3(0, 0, 0), profile);
 
-    meshToBabylonMesh(mesh, scene, new Vector3(0, 0.5, 0), material);
+    // meshToBabylonMesh(building, scene, new Vector3(0, 0.5, 0), MALCULMIUS_MESH_NAME, material ?? undefined);
+    renderHalfEdgeMesh(shade, scene, MALCULMIUS_SHADE_NAME, HalfEdgeRenderMethod.Coloured);
 
     SceneLoader.ShowLoadingScreen = false;
 
@@ -81,8 +87,9 @@ const App: React.FC = () => {
   const rebuildModels = (geometry: MalculmiusOneGeometry, profile: ExtrusionProfile, scene: Scene) => {
     scene.meshes.forEach((m) => m.name === MALCULMIUS_MESH_NAME && m.dispose());
 
-    const mesh = createMalculmiusGeometry(geometry, new Vector3(0, 0, 0), profile);
-    meshToBabylonMesh(mesh, scene, new Vector3(0, 0.5, 0), material ?? undefined);
+    const { building, shade } = createMalculmiusGeometry(geometry, new Vector3(0, 0, 0), profile);
+    // meshToBabylonMesh(building, scene, new Vector3(0, 0.5, 0), MALCULMIUS_MESH_NAME, material ?? undefined);
+    renderHalfEdgeMesh(shade, scene, MALCULMIUS_SHADE_NAME, HalfEdgeRenderMethod.Coloured);
   };
 
   return (

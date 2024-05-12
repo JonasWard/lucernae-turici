@@ -1,5 +1,5 @@
 import { Form, Select, Switch } from 'antd';
-import { ProcessingMethods, ProcessingMethodType, DEFAULT_PROCESSING_METHODS } from '../../geometryGeneration/voxelComplex';
+import { ProcessingMethods, ProcessingMethodType, DEFAULT_PROCESSING_METHODS } from '../../geometryGeneration/geometry';
 import { SliderWrapper } from '../helpers/SliderWrapperComponent';
 
 const defaulttotal = { min: 0, max: 20, step: 0.1, int: false };

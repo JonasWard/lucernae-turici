@@ -1,4 +1,4 @@
-import { ProcessingMethods } from '../../geometryGeneration/voxelComplex';
+import { ProcessingMethods } from '../../geometryGeneration/geometry';
 import { ProcessingMethodRenderer } from './GeometryProcessingMethodInput';
 
 export const PostProcessingRenderer: React.FC<{

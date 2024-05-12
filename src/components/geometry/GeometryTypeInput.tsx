@@ -1,5 +1,5 @@
 import { Select } from 'antd';
-import { MalculmiusGeometryType, Malculmiuses } from '../../geometryGeneration/voxelComplex';
+import { MalculmiusGeometryType, Malculmiuses } from '../../geometryGeneration/geometry';
 
 export const UpdateGeometryTypeComponent: React.FC<{ type: MalculmiusGeometryType; updateType: (type: MalculmiusGeometryType) => void }> = ({
   type,

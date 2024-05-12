@@ -1,5 +1,5 @@
 import { Form } from 'antd';
-import { MalculmiusGeometryType, MalculmiusGeometry, HeightGenerator, ProcessingMethods, Malculmiuses } from '../../geometryGeneration/voxelComplex';
+import { MalculmiusGeometryType, MalculmiusGeometry, HeightGenerator, ProcessingMethods, Malculmiuses } from '../../geometryGeneration/geometry';
 import { DEFAULT_GEOMETRY_TYPES } from './GeometryParentComponent';
 import { SliderWrapper } from '../helpers/SliderWrapperComponent';
 import { UpdateGeometryTypeComponent } from './GeometryTypeInput';

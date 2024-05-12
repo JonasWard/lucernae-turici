@@ -1,7 +1,8 @@
-import { Vector3, Mesh as BabylonMesh, VertexData, Scene, StandardMaterial } from '@babylonjs/core';
-import { getCenterOfV3s, getFaceVertices } from './halfedge';
-import { HalfEdgeFace, HalfEdgeMesh, V2, V3 } from './geometrytypes';
-import { getV3, getVector3 } from './helpermethods';
+import { Vector3, Mesh as BabylonMesh, VertexData, Scene, StandardMaterial, Color3 } from '@babylonjs/core';
+import { getCenterOfHalfEdge, getEndVertexOfHalfEdge, getFaceVertices, getStartVertexOfHalfEdge } from './halfedge';
+import { BaseFrame, HalfEdge, HalfEdgeFace, HalfEdgeMesh, TransformationMatrix, V2 } from './geometrytypes';
+import { getColorFromUUID, getV3, getVector3, getVertexHash } from './helpermethods';
+import { V3 } from './v3';
 
 // this mesh assumes a positive oriented coordinate system, which means we will have to transform the mesh when importing them into a babylon scene
 
@@ -52,7 +53,7 @@ export type ExtrusionProfile = ArcExtrusionProfile | SquareExtrusionProfile | El
 const ARC_DIVSION_COUNT = 8;
 export const MALCULMIUS_MESH_NAME = 'malculmius';
 export const MALCULMIUS_SHADE_NAME = 'shade';
-const UNIT_SCALING = 0.001;
+const UNIT_SCALING = 1;
 
 const getArc = (frame: Frame): Vector3[] => {
   const angleDelta = (Math.PI * 0.5) / ARC_DIVSION_COUNT;
@@ -193,8 +194,6 @@ export const loft = (a: Vector3[], b: Vector3[], closed: boolean = false): Mesh 
   faces: a.map((_, i) => [i, (i + 1) % a.length, ((i + 1) % a.length) + a.length, i + a.length]).slice(0, closed ? -0 : -1) as Face[],
 });
 
-export const vertexHash = (v: Vector3 | V3): string => `${v.x.toFixed(3)}_${v.y.toFixed(3)}_${v.z.toFixed(3)}`;
-
 export const joinMeshes = (meshes: Mesh[]): Mesh => {
   const vertices: Vector3[] = [];
   const vertexMap: Map<string, number> = new Map();
@@ -204,7 +203,7 @@ export const joinMeshes = (meshes: Mesh[]): Mesh => {
   meshes.forEach((mesh) => {
     const localHashes: string[] = [];
     mesh.vertices.forEach((v) => {
-      const hash = vertexHash(v);
+      const hash = getVertexHash(v);
       if (!vertexMap.has(hash)) {
         vertices.push(v);
         vertexMap.set(hash, vertices.length - 1);
@@ -352,7 +351,7 @@ const getSimpleTriangularMeshForHalfEdgeFace = (face: HalfEdgeFace, m: HalfEdgeM
   if (fB.length === 4) return [makeFaceData([fB[0], fB[1], fB[2]]), makeFaceData([fB[0], fB[2], fB[3]])];
 
   const faces: FaceWithData[] = [];
-  const centerPoint = getCenterOfV3s(fB);
+  const centerPoint = V3.getCenter(fB);
   fB.forEach((v, i) => {
     faces.push(makeFaceData([v, fB[(i + 1) % fB.length], centerPoint]));
   });
@@ -366,7 +365,7 @@ const getSetBackTriangularMeshForHalfEdgeFace = (face: HalfEdgeFace, m: HalfEdge
   if (fB.length < 3) return [];
 
   const faces: FaceWithData[] = [];
-  const centerPoint = getCenterOfV3s(fB);
+  const centerPoint = V3.getCenter(fB);
 
   const halfFBSet = fB.map((v) => ({
     x: v.x + (centerPoint.x - v.x) * 0.2,
@@ -408,7 +407,7 @@ const getFacesWithDataForHalfEdgeMesh = (m: HalfEdgeMesh, method: HalfEdgeRender
     .flat();
 };
 
-const getVertexDataForFaceWithData = (fs: FaceWithData[]): VertexData => {
+export const getVertexDataForFaceWithData = (fs: FaceWithData[]): VertexData => {
   const vertexData = new VertexData();
   const positions: number[] = [];
   const indices: number[] = [];
@@ -430,16 +429,339 @@ const getVertexDataForFaceWithData = (fs: FaceWithData[]): VertexData => {
   return vertexData;
 };
 
-export const renderHalfEdgeMesh = (m: HalfEdgeMesh, scene: Scene, name: string, renderMethod?: HalfEdgeRenderMethod) => {
+// method for rendering an entire half edge mesh
+export const renderHalfEdgeMesh = (m: HalfEdgeMesh, scene: Scene, name: string, renderMethod?: HalfEdgeRenderMethod, material?: StandardMaterial) => {
   const facedata = getFacesWithDataForHalfEdgeMesh(m, renderMethod);
 
   const vertexData = getVertexDataForFaceWithData(facedata);
 
-  // const material = new StandardMaterial('normal', scene);
-  // material.wireframe = true;
-
   // toda add material
   const babylonMesh = new BabylonMesh(name, scene);
-  // babylonMesh.material = material;
+  if (material) babylonMesh.material = material;
   vertexData.applyToMesh(babylonMesh);
 };
+
+// method for rendering / 'visualizing' a singel half edge
+export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, material?: StandardMaterial) => {
+  const halfEdgeScale = 0.7;
+  if (!he.face) return;
+  // getting the face that belong to the half edge
+  const face = m.faces[he.face];
+
+  const faceCenter = V3.getCenter(getFaceVertices(face, m));
+  const edgeCenter = getCenterOfHalfEdge(he, m, 0.5);
+  const edgeStart = getStartVertexOfHalfEdge(he, m);
+  const edgeEnd = getEndVertexOfHalfEdge(he, m);
+
+  const topVertex: V3 = V3.add(edgeCenter, V3.mul(V3.sub(faceCenter, edgeCenter), halfEdgeScale));
+  const halfTopVertex: V3 = V3.add(edgeCenter, V3.mul(V3.sub(faceCenter, edgeCenter), halfEdgeScale * 0.5));
+
+  const sideEdgeStart: V3 = V3.add(edgeStart, V3.mul(V3.sub(faceCenter, edgeStart), halfEdgeScale));
+  const sideEdgeEnd: V3 = V3.add(edgeEnd, V3.mul(V3.sub(faceCenter, edgeEnd), halfEdgeScale));
+
+  const facedataMain = [makeFaceData([edgeStart, halfTopVertex, topVertex]), makeFaceData([halfTopVertex, edgeEnd, topVertex])];
+
+  const faceDataStart = [makeFaceData([sideEdgeStart, edgeStart, topVertex])];
+
+  const faceDataEnd = [makeFaceData([edgeEnd, sideEdgeEnd, topVertex])];
+
+  const backFaceCulling: boolean = false;
+
+  const vertexData = getVertexDataForFaceWithData(facedataMain);
+  const babylonMesh = new BabylonMesh(he.id, scene);
+  if (!material) {
+    const material = new StandardMaterial(`${he.id.slice(0, 2)}-material`, scene);
+    const color = getColorFromUUID(he.id);
+    material.diffuseColor = color;
+    material.backFaceCulling = backFaceCulling;
+    babylonMesh.material = material;
+  } else babylonMesh.material = material;
+  vertexData.applyToMesh(babylonMesh);
+
+  const vertexDataStart = getVertexDataForFaceWithData(faceDataStart);
+  const babylonMeshStart = new BabylonMesh(`${he.id}-start`, scene);
+
+  const previousMaterialName = `${he.previous.slice(0, 2)}-material`;
+  const startMaterial = scene.materials.find((m) => m.name === previousMaterialName) as undefined | StandardMaterial;
+
+  if (!startMaterial) {
+    const materialStart = new StandardMaterial(previousMaterialName, scene);
+    const color = getColorFromUUID(he.previous);
+    materialStart.diffuseColor = color;
+    materialStart.backFaceCulling = backFaceCulling;
+    babylonMeshStart.material = materialStart;
+  } else babylonMeshStart.material = startMaterial;
+  vertexDataStart.applyToMesh(babylonMeshStart);
+
+  const vertexDataEnd = getVertexDataForFaceWithData(faceDataEnd);
+  const babylonMeshEnd = new BabylonMesh(`${he.id}-end`, scene);
+
+  const nextMaterialName = `${he.next.slice(0, 2)}-material`;
+  const endMaterial = scene.materials.find((m) => m.name === nextMaterialName) as undefined | StandardMaterial;
+
+  if (!endMaterial) {
+    const materialEnd = new StandardMaterial(previousMaterialName, scene);
+    const color = getColorFromUUID(he.next);
+    materialEnd.diffuseColor = color;
+    materialEnd.backFaceCulling = backFaceCulling;
+    babylonMeshEnd.material = materialEnd;
+  } else babylonMeshEnd.material = endMaterial;
+  vertexDataEnd.applyToMesh(babylonMeshEnd);
+
+  if (he.neighbour) {
+    const faceDataNeighbour = [makeFaceData([edgeStart, edgeEnd, halfTopVertex])];
+    const vertexDataNeighbour = getVertexDataForFaceWithData(faceDataNeighbour);
+
+    const babylonMeshNeighbour = new BabylonMesh(`${he.id}-neighbour`, scene);
+
+    const neighbourMaterialName = `${he.neighbour.slice(0, 2)}-material`;
+    const neighbourMaterial = scene.materials.find((m) => m.name === neighbourMaterialName) as undefined | StandardMaterial;
+
+    if (!neighbourMaterial) {
+      const neighbourMaterial = new StandardMaterial(neighbourMaterialName, scene);
+      const color = getColorFromUUID(he.neighbour);
+      neighbourMaterial.diffuseColor = color;
+      neighbourMaterial.backFaceCulling = backFaceCulling;
+      babylonMeshNeighbour.material = neighbourMaterial;
+    } else babylonMeshNeighbour.material = neighbourMaterial;
+    vertexDataNeighbour.applyToMesh(babylonMeshNeighbour);
+  }
+};
+
+export abstract class MeshFactory {
+  public static createPolygon = (
+    vertexCount = 4,
+    outerRadius = 1,
+    origin = new Vector3(0, 0, 0),
+    xAxis = new Vector3(1, 0, 0),
+    yAxis = new Vector3(0, 1, 0)
+  ): Mesh => {
+    if (vertexCount < 3) throw new Error('you need at least 3 vertices for a given polygon mesh');
+    const alphaDelta = (Math.PI * 2.0) / vertexCount;
+    const vertices: Vector3[] = [];
+
+    for (let i = 0; i < vertexCount; i++)
+      vertices.push(origin.add(xAxis.scale(outerRadius * Math.cos(alphaDelta * i)).add(yAxis.scale(outerRadius * Math.sin(alphaDelta * i)))));
+
+    return {
+      vertices,
+      faces: [[...Array(vertexCount).keys()]],
+    };
+  };
+
+  // triangular grid actually considers pairs of triangles as one
+  public static createGrid = (
+    gridType: 3 | 4 | 6 = 4,
+    sideSpacing = 1,
+    xCount: number,
+    yCount: number,
+    origin = new Vector3(0, 0, 0),
+    xAxis = new Vector3(1, 0, 0),
+    yAxis = new Vector3(0, 1, 0)
+  ): Mesh => {
+    if (xCount < 1 || yCount < 1) throw new Error('need at least 1 cell in each direction');
+
+    // creating the base mesh
+    let baseMesh: [Mesh] | [Mesh, Mesh];
+
+    let vectorSpacingX: Vector3;
+    let vectorSpacingY: Vector3;
+
+    const scaledX = xAxis.scale(sideSpacing);
+
+    // defining the base shapes
+    switch (gridType) {
+      case 3:
+        const halfX = xAxis.scale(sideSpacing * 0.5);
+        const oneAndAHalfX = xAxis.scale(sideSpacing * 1.5);
+        const triScaledY = yAxis.scale(sideSpacing * 3 ** 0.5 * 0.5);
+
+        baseMesh = [
+          {
+            vertices: [origin, origin.add(scaledX), origin.add(halfX.add(triScaledY)), origin.add(oneAndAHalfX.add(triScaledY))],
+            faces: [
+              [1, 2, 0],
+              [3, 2, 1],
+            ],
+          },
+          {
+            vertices: [origin.add(halfX), origin.add(oneAndAHalfX), origin.add(triScaledY), origin.add(scaledX.add(triScaledY))],
+            faces: [
+              [3, 2, 0],
+              [1, 3, 0],
+            ],
+          },
+        ];
+
+        vectorSpacingX = scaledX;
+        vectorSpacingY = triScaledY;
+
+        break;
+
+      case 4:
+        const quadScaledY = yAxis.scale(sideSpacing);
+
+        baseMesh = [
+          {
+            vertices: [origin, origin.add(scaledX), origin.add(quadScaledY), origin.add(scaledX.add(quadScaledY))],
+            faces: [[1, 3, 2, 0]],
+          },
+        ];
+
+        vectorSpacingX = scaledX;
+        vectorSpacingY = quadScaledY;
+
+        break;
+
+      case 6:
+        const yScaleHalf = yAxis.scale(sideSpacing * 0.5);
+        const yScaleOneAndAHalf = yAxis.scale(sideSpacing * 1.5);
+        const yScaleDouble = yAxis.scale(sideSpacing * 2.0);
+        const xScaleOne = xAxis.scale(sideSpacing * 3 ** 0.5 * 0.5);
+        const xScaleTwo = xAxis.scale(sideSpacing * 3 ** 0.5);
+
+        const verticesHex = [
+          origin.add(yScaleHalf),
+          origin.add(yScaleOneAndAHalf),
+          origin.add(xScaleOne.add(yScaleDouble)),
+          origin.add(xScaleTwo.add(yScaleOneAndAHalf)),
+          origin.add(xScaleTwo.add(yScaleHalf)),
+          origin.add(xScaleOne),
+        ];
+
+        baseMesh = [
+          {
+            vertices: verticesHex,
+            faces: [[5, 4, 3, 2, 1, 0]],
+          },
+          {
+            vertices: verticesHex.map((v) => v.add(xScaleOne)),
+            faces: [[5, 4, 3, 2, 1, 0]],
+          },
+        ];
+
+        vectorSpacingX = xScaleTwo;
+        vectorSpacingY = yScaleOneAndAHalf;
+
+        break;
+    }
+
+    // populating the meshes
+
+    const meshes: Mesh[] = [];
+
+    const xVectors = [...Array(xCount).keys()].map((i) => vectorSpacingX.scale(i));
+    const yVectors = [...Array(yCount).keys()].map((j) => vectorSpacingY.scale(j));
+
+    yVectors.forEach((y, i) => {
+      const localMesh = baseMesh[i % baseMesh.length];
+      xVectors.forEach((x) => {
+        const xy = x.add(y);
+
+        meshes.push({
+          vertices: localMesh.vertices.map((v) => v.add(xy)),
+          faces: localMesh.faces.map((l) => l.map((i) => i)),
+        });
+      });
+    });
+
+    return joinMeshes(meshes);
+  };
+}
+
+export const getWorldXYToFrameTransformation = (f: BaseFrame): TransformationMatrix => [
+  f.x.x,
+  f.y.x,
+  f.z.x,
+  f.o.x,
+  f.x.y,
+  f.y.y,
+  f.z.y,
+  f.o.y,
+  f.x.z,
+  f.y.z,
+  f.z.z,
+  f.o.z,
+  0,
+  0,
+  0,
+  1,
+];
+
+const getFrameToFrameForV3Transformation = (p: V3, fA: BaseFrame, fB: BaseFrame): V3 => {
+  const v = new Vector3(p.x, p.y, p.z);
+  const oA = new Vector3(fA.o.x, fA.o.y, fA.o.z);
+  const xA = new Vector3(fA.x.x, fA.x.y, fA.x.z);
+  const yA = new Vector3(fA.y.x, fA.y.y, fA.y.z);
+  const zA = new Vector3(fA.z.x, fA.z.y, fA.z.z);
+  const oB = new Vector3(fB.o.x, fB.o.y, fB.o.z);
+  const xB = new Vector3(fB.x.x, fB.x.y, fB.x.z);
+  const yB = new Vector3(fB.y.x, fB.y.y, fB.y.z);
+  const zB = new Vector3(fB.z.x, fB.z.y, fB.z.z);
+
+  const locP = v.subtract(oA);
+  const xT = locP.dot(xA);
+  const yT = locP.dot(yA);
+  const zT = locP.dot(zA);
+
+  const vProjected = oB.add(xB.scale(xT)).add(yB.scale(yT)).add(zB.scale(zT));
+  return { x: vProjected.x, y: vProjected.y, z: vProjected.z };
+};
+
+export const getFrameToFrameTransformation = (a: BaseFrame, b: BaseFrame): TransformationMatrix => {
+  const o = getFrameToFrameForV3Transformation({ x: 0, y: 0, z: 0 }, a, b);
+  const x = getFrameToFrameForV3Transformation({ x: 1, y: 0, z: 0 }, a, b);
+  const y = getFrameToFrameForV3Transformation({ x: 0, y: 1, z: 0 }, a, b);
+  const z = getFrameToFrameForV3Transformation({ x: 0, y: 0, z: 1 }, a, b);
+  const frame: BaseFrame = {
+    o,
+    x: { x: x.x - o.x, y: x.y - o.y, z: x.z - o.z },
+    y: { x: y.x - o.x, y: y.y - o.y, z: y.z - o.z },
+    z: { x: z.x - o.x, y: z.y - o.y, z: z.z - o.z },
+  };
+  return getWorldXYToFrameTransformation(frame);
+};
+
+export const getTransformedV3 = (v: V3, m: TransformationMatrix): V3 => {
+  const x = m[0] * v.x + m[1] * v.y + m[2] * v.z + m[3];
+  const y = m[4] * v.x + m[5] * v.y + m[6] * v.z + m[7];
+  const z = m[8] * v.x + m[9] * v.y + m[10] * v.z + m[11];
+  return { x, y, z };
+};
+
+export const WorldXY: BaseFrame = {
+  o: V3.Origin,
+  x: V3.XAxis,
+  y: V3.YAxis,
+  z: V3.ZAxis,
+};
+
+export class BaseFrameFactory {
+  public static getBaseFramArrayAlongDirection = (d: V3, count = 3, spacing = 0.1, o = WorldXY.o, x = WorldXY.x, y = WorldXY.y, z = WorldXY.z): BaseFrame[] => {
+    const frames: BaseFrame[] = [];
+    for (let i = 0; i < count; i++) {
+      frames.push({
+        o: V3.add(o, V3.mul(d, i * spacing)),
+        x,
+        y,
+        z,
+      });
+    }
+    return frames;
+  };
+
+  public static getBaseFramArrayAlongDirectionForSpacings = (
+    d: V3,
+    spacings: number[] = [0, 0.1],
+    o = WorldXY.o,
+    x = WorldXY.x,
+    y = WorldXY.y,
+    z = WorldXY.z
+  ): BaseFrame[] =>
+    spacings.map((spacing) => ({
+      o: V3.add(o, V3.mul(d, spacing)),
+      x,
+      y,
+      z,
+    }));
+}

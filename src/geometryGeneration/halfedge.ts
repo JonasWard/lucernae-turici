@@ -1,21 +1,14 @@
-import { Mesh, vertexHash } from './baseGeometry';
-import { HalfEdge, HalfEdgeFace, HalfEdgeMesh, V3 } from './geometrytypes';
+import { Mesh } from './baseGeometry';
+import { HalfEdge, HalfEdgeFace, HalfEdgeMesh } from './geometrytypes';
 import { getRandomUUID } from './helpermethods';
-
-const getNextEdge = (edge: HalfEdge, mesh: HalfEdgeMesh): HalfEdge => {
-  return mesh.halfEdges[edge.next];
-};
-
-const getNeighbourEdge = (edge: HalfEdge, halfEdges: Record<string, HalfEdge>): HalfEdge | undefined => {
-  return edge.neighbour ? halfEdges[edge.neighbour] : undefined;
-};
+import { V3 } from './v3';
 
 export const getFaceEdges = (face: HalfEdgeFace, mesh: HalfEdgeMesh): HalfEdge[] => {
   const edges: HalfEdge[] = [];
   let edge = mesh.halfEdges[face.edge];
   do {
     edges.push(edge);
-    edge = getNextEdge(edge, mesh);
+    edge = mesh.halfEdges[edge.next];
   } while (edge.id !== face.edge);
   return edges;
 };
@@ -24,34 +17,46 @@ export const getFaceVertices = (face: HalfEdgeFace, mesh: HalfEdgeMesh): V3[] =>
   return getFaceEdges(face, mesh).map((edge) => mesh.vertices[edge.vertex]);
 };
 
-export const getCenterOfV3s = (vertices: V3[]): V3 => {
-  let count = 0;
-  const rawV = vertices.reduce(
-    (a, b) => {
-      a.x += b.x;
-      a.y += b.y;
-      a.z += b.z;
-      count++;
-      return a;
-    },
-    { x: 0, y: 0, z: 0 }
-  );
+export const getStartVertexOfHalfEdge = (edge: HalfEdge, mesh: HalfEdgeMesh) => mesh.vertices[mesh.halfEdges[edge.previous].vertex];
+export const getEndVertexOfHalfEdge = (edge: HalfEdge, mesh: HalfEdgeMesh) => mesh.vertices[edge.vertex];
 
-  const scale = 1 / count;
-  return { x: rawV.x * scale, y: rawV.y * scale, z: rawV.z * scale };
+export const getCenterOfHalfEdge = (edge: HalfEdge, mesh: HalfEdgeMesh, offset: number = 0.5): V3 => {
+  const previousVertex = getStartVertexOfHalfEdge(edge, mesh);
+  const edgeVertex = getEndVertexOfHalfEdge(edge, mesh);
+
+  return V3.add(previousVertex, V3.mul(V3.sub(edgeVertex, previousVertex), offset));
+};
+
+export const linkingHalfEdges = (halfEdgeMap: { [k: string]: HalfEdge }): void => {
+  const groupedEdgesMap: { [k: string]: HalfEdge[] } = {};
+  Object.values(halfEdgeMap).forEach((edge) => {
+    const sortedEdgeName =
+      edge.vertex.localeCompare(halfEdgeMap[edge.previous].vertex) < 0
+        ? `${edge.vertex}.${halfEdgeMap[edge.previous].vertex}`
+        : `${halfEdgeMap[edge.previous].vertex}.${edge.vertex}`;
+    if (groupedEdgesMap[sortedEdgeName]) groupedEdgesMap[sortedEdgeName].push(edge);
+    else groupedEdgesMap[sortedEdgeName] = [edge];
+  });
+
+  Object.values(groupedEdgesMap).forEach((edges) => {
+    if (edges.length === 2) {
+      edges[0].neighbour = edges[1].id;
+      edges[1].neighbour = edges[0].id;
+    }
+  });
 };
 
 export const getHalfEdgeMeshFromMesh = (mesh: Mesh): HalfEdgeMesh => {
   // mapping all vertices to a record
   const vertices: { [k: string]: V3 } = Object.fromEntries(
-    mesh.vertices.map((vertex) => [vertexHash(vertex), { x: vertex.x, y: vertex.y, z: vertex.z }] as [string, V3])
+    mesh.vertices.map((vertex) => [V3.getHash(vertex), { x: vertex.x, y: vertex.y, z: vertex.z }] as [string, V3])
   );
 
   interface rawHalfEdge {
     id: string;
     faceId: string;
     vId: string;
-    vIdEnd: string;
+    vIdStart: string;
   }
 
   const vertexEdgesMap: { [k: string]: HalfEdge[] } = {};
@@ -65,8 +70,8 @@ export const getHalfEdgeMeshFromMesh = (mesh: Mesh): HalfEdgeMesh => {
       const rawEdges: rawHalfEdge[] = f.map((vIdx, i) => ({
         id: getRandomUUID(),
         faceId,
-        vId: vertexHash(mesh.vertices[vIdx]),
-        vIdEnd: vertexHash(mesh.vertices[f[(i + 1) % f.length]]),
+        vId: V3.getHash(mesh.vertices[vIdx]),
+        vIdStart: V3.getHash(mesh.vertices[f[(i + f.length - 1) % f.length]]),
       }));
 
       // linking the half edges within a face
@@ -76,21 +81,19 @@ export const getHalfEdgeMeshFromMesh = (mesh: Mesh): HalfEdgeMesh => {
           face: rawEdge.faceId,
           vertex: rawEdge.vId,
           next: arr[(i + 1) % arr.length].id,
-          previous: arr[(arr.length + i - 1) % arr.length].id,
+          previous: arr[(i + arr.length - 1) % arr.length].id,
         } as HalfEdge;
 
         allHalfEdges.push(halfEdge);
 
         // figuring out neighbour situations for the half edge
-        const rawId = rawEdge.vId.localeCompare(rawEdge.vIdEnd) < 0 ? `${rawEdge.vId}.${rawEdge.vIdEnd}` : `${rawEdge.vIdEnd}.${rawEdge.vId}`;
+        const rawId = rawEdge.vId.localeCompare(rawEdge.vIdStart) < 0 ? `${rawEdge.vId}.${rawEdge.vIdStart}` : `${rawEdge.vIdStart}.${rawEdge.vId}`;
 
         if (vertexEdgesMap[rawId]) vertexEdgesMap[rawId].push(halfEdge);
         else vertexEdgesMap[rawId] = [halfEdge];
 
         return halfEdge;
       });
-
-      console.log(vertexEdgesMap);
 
       Object.values(vertexEdgesMap).forEach((edges) => {
         if (edges.length === 2) {
@@ -119,26 +122,28 @@ export const getHalfEdgeMeshFromMesh = (mesh: Mesh): HalfEdgeMesh => {
 // iterates recursively at a node to find the first other naked halfedge, the assumption is that the currentEdge hasn't been added yet
 // assumption is that there are not more that 10 edges at the same node ever
 const getConsecutiveNakedEdge = (currentEdge: HalfEdge, heMesh: HalfEdgeMesh, iterationLevel = 0): undefined | HalfEdge => {
-  if (iterationLevel > 10) return undefined;
-  const previousEdge = heMesh.halfEdges[currentEdge.previous];
-  if (!previousEdge.neighbour) return previousEdge;
-  const previousEdgeForPrevious = heMesh.halfEdges[heMesh.halfEdges[previousEdge.neighbour].previous];
-  if (!previousEdgeForPrevious.neighbour) return previousEdgeForPrevious;
-  return getConsecutiveNakedEdge(previousEdgeForPrevious, heMesh, iterationLevel + 1);
+  if (iterationLevel > 40) return undefined;
+  if (!currentEdge.neighbour) return currentEdge;
+  const previousEdgeForNeighbour = heMesh.halfEdges[heMesh.halfEdges[currentEdge.neighbour].previous];
+  if (!previousEdgeForNeighbour.neighbour) return previousEdgeForNeighbour;
+  return getConsecutiveNakedEdge(previousEdgeForNeighbour, heMesh, iterationLevel + 1);
 };
 
-export const getBoundariesForHalfEdgeMesh = (heMesh: HalfEdgeMesh) => {
+export const getBoundariesForHalfEdgeMesh = (heMesh: HalfEdgeMesh, searchOrder?: [HalfEdge, boolean][][]) => {
   // find all the naked edges
   const nakedEdges = Object.values(heMesh.halfEdges).filter((he) => !he.neighbour);
   const nakedEdgesNotAddedMap = Object.fromEntries(nakedEdges.map((he) => [he.id, true]));
 
   const invertedLoops: HalfEdge[][] = [];
+  const localSearchOrderList: [HalfEdge, boolean][][] = searchOrder ?? [];
 
   let iterations = 0;
   while (true) {
     // take the first nakedEdge that hasn't been added yet
     const firstEdge = nakedEdges.find((he) => nakedEdgesNotAddedMap[he.id]);
     if (!firstEdge) break;
+
+    const localSearchList: [HalfEdge, boolean][] = [[firstEdge, true]];
 
     const localInvertedLoop: HalfEdge[] = [firstEdge];
     nakedEdgesNotAddedMap[firstEdge.id] = false;
@@ -149,12 +154,14 @@ export const getBoundariesForHalfEdgeMesh = (heMesh: HalfEdgeMesh) => {
     // initialise the second while loop
     while (true) {
       // find the previous edge of the edge
-      const previousEdge = getConsecutiveNakedEdge(activeEdge, heMesh);
+      const previousEdge = getConsecutiveNakedEdge(heMesh.halfEdges[activeEdge.previous], heMesh);
       if (!previousEdge) {
         console.log('could not find consecutive edge, escaping while loop');
         iterations = 101;
         break;
       }
+
+      localSearchList.push([previousEdge, true]);
 
       nakedEdgesNotAddedMap[previousEdge.id] = false;
       if (previousEdge.id === firstEdge.id) break;
@@ -166,6 +173,8 @@ export const getBoundariesForHalfEdgeMesh = (heMesh: HalfEdgeMesh) => {
         console.log('stuck in loop ...');
         break;
       }
+
+      localSearchOrderList.push(localSearchList);
     }
 
     invertedLoops.push(localInvertedLoop);
@@ -174,5 +183,5 @@ export const getBoundariesForHalfEdgeMesh = (heMesh: HalfEdgeMesh) => {
     if (iterations > 100) break;
   }
 
-  console.log(invertedLoops);
+  return invertedLoops;
 };

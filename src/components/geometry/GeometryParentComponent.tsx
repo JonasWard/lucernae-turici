@@ -5,7 +5,7 @@ import {
   ExtrusionProfileType,
   SquareExtrusionProfile,
 } from '../../geometryGeneration/baseGeometry';
-import { DEFAULT_PROCESSING_METHODS, HeightGenerator, MalculmiusGeometry, Malculmiuses, ProcessingMethodType } from '../../geometryGeneration/voxelComplex';
+import { DEFAULT_PROCESSING_METHODS, HeightGenerator, MalculmiusGeometry, Malculmiuses, ProcessingMethodType } from '../../geometryGeneration/geometry';
 import { useState } from 'react';
 import { Button, Switch } from 'antd';
 import { defaultInsetBottom, defaultInsetTop, defaultInsetSides, defaultRadiusTop, defaultRadius } from './GeometryExtrusionSettings';
@@ -37,7 +37,7 @@ export const DEFAULT_PROFILE_TYPES = {
 export const DEFAULT_GEOMETRY_TYPES = {
   [Malculmiuses.One]: {
     type: Malculmiuses.One,
-    circleRadius: 100,
+    circleRadius: 250,
     circleDivisions: 5,
     angleSplit: 0.5,
     offsetA: 10,

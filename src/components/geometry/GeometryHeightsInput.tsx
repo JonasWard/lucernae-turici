@@ -1,4 +1,4 @@
-import { HeightGenerator, ProcessingMethods } from '../../geometryGeneration/voxelComplex';
+import { HeightGenerator, ProcessingMethods } from '../../geometryGeneration/geometry';
 import { SliderWrapper } from '../helpers/SliderWrapperComponent';
 import { ProcessingMethodRenderer } from './GeometryProcessingMethodInput';
 

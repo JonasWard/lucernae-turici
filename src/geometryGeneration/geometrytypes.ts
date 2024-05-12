@@ -1,13 +1,35 @@
+import { V3 } from './v3';
+
 export interface V2 {
   u: number;
   v: number;
 }
 
-export interface V3 {
-  x: number;
-  y: number;
-  z: number;
+export interface BaseFrame {
+  o: V3;
+  x: V3;
+  y: V3;
+  z: V3;
 }
+
+export type TransformationMatrix = [
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number
+];
 
 export interface HalfEdgeMesh {
   faces: { [k: string]: HalfEdgeFace };
@@ -24,7 +46,12 @@ export interface HalfEdge {
   face?: string; // face id
 }
 
+export interface VCFaceMetaData {
+  originVoxelId: string;
+}
+
 export interface HalfEdgeFace {
   id: string; // unique id
   edge: string; // the id of one of the edges that is part of this face
+  metaData?: VCFaceMetaData;
 }

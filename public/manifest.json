@@ -8,14 +8,14 @@
       "type": "image/x-icon"
     },
     {
-      "src": "chocolatechaud192.png",
+      "src": "para-slim-shady_192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "chocolatechaud.png",
+      "src": "para-slim-shady_512.png",
       "type": "image/png",
-      "sizes": "1024x1024"
+      "sizes": "512x512"
     }
   ],
   "start_url": ".",

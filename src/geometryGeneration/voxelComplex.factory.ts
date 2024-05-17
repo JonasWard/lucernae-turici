@@ -1,6 +1,7 @@
-import { WorldXY, getFrameToFrameTransformation } from './baseGeometry';
+import { BaseFrameFactory, WorldXY, getFrameToFrameTransformation } from './baseGeometry';
 import { BaseFrame, HalfEdge, HalfEdgeMesh } from './geometrytypes';
-import { getFaceEdges } from './halfedge';
+import { getFaceEdges, markFacesWithOneNakedEdge } from './halfedge';
+import { HalfEdgeMeshFactory } from './halfedge.factory';
 import { getRandomUUID } from './helpermethods';
 import { V3 } from './v3';
 import { VoxelComplex, Voxel, VoxelState } from './voxelComplex.type';
@@ -33,8 +34,6 @@ export class VoxelFactory {
     // constructing of the voxels
     const voxels: { [k: string]: Voxel } = {};
 
-    const state = VoxelState.MASSIVE;
-
     Object.values(heMesh.faces).forEach((face) => {
       // storing all the data to correctly map the neighbour map
       const halfEdges = getFaceEdges(face, heMesh);
@@ -46,7 +45,7 @@ export class VoxelFactory {
 
       const vertexIndexes = [...halfEdges.map((he) => bottomVertexMap[he.vertex]), ...halfEdges.map((he) => topVertexMap[he.vertex])];
       voxels[faceVoxelIdMap[face.id]] = {
-        state,
+        state: face?.metaData?.voxelState ?? VoxelState.MASSIVE,
         id: faceVoxelIdMap[face.id],
         n: halfEdges.length,
         vertices: vertexIndexes,
@@ -122,4 +121,16 @@ export class VoxelFactory {
 
     return { voxels, vertices };
   };
+
+  public static getCylinder = (radiusses: number[], heights: number[], divisions: number): VoxelComplex => {
+    const baseSpiral = HalfEdgeMeshFactory.createCylinder(radiusses, divisions);
+    markFacesWithOneNakedEdge(baseSpiral);
+    const baseFrames = BaseFrameFactory.getBaseFramArrayAlongDirectionForSpacings(V3.ZAxis, heights);
+
+    return VoxelFactory.sweepHalfEdgeMesh(baseSpiral, baseFrames);
+  };
+
+  // public static getTowerOfBable = (radius: number, floorDelta: number, divisions: number, totalTurningRadius: number): VoxelComplex => {
+
+  // }
 }

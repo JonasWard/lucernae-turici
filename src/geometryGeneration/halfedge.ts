@@ -1,7 +1,7 @@
-import { Mesh } from './baseGeometry';
 import { HalfEdge, HalfEdgeFace, HalfEdgeMesh } from './geometrytypes';
 import { getRandomUUID } from './helpermethods';
-import { V3 } from './v3';
+import { V3, Mesh } from './v3';
+import { VoxelState } from './voxelComplex.type';
 
 export const getFaceEdges = (face: HalfEdgeFace, mesh: HalfEdgeMesh): HalfEdge[] => {
   const edges: HalfEdge[] = [];
@@ -13,12 +13,20 @@ export const getFaceEdges = (face: HalfEdgeFace, mesh: HalfEdgeMesh): HalfEdge[]
   return edges;
 };
 
-export const getFaceVertices = (face: HalfEdgeFace, mesh: HalfEdgeMesh): V3[] => {
-  return getFaceEdges(face, mesh).map((edge) => mesh.vertices[edge.vertex]);
-};
-
+export const getFaceVertices = (face: HalfEdgeFace, mesh: HalfEdgeMesh): V3[] => getFaceEdges(face, mesh).map((edge) => mesh.vertices[edge.vertex]);
+export const getFaceNormal = (face: HalfEdgeFace, mesh: HalfEdgeMesh): V3 => V3.getNormalForVertices(getFaceVertices(face, mesh));
 export const getStartVertexOfHalfEdge = (edge: HalfEdge, mesh: HalfEdgeMesh) => mesh.vertices[mesh.halfEdges[edge.previous].vertex];
 export const getEndVertexOfHalfEdge = (edge: HalfEdge, mesh: HalfEdgeMesh) => mesh.vertices[edge.vertex];
+export const getVerticesFacesMap = (mesh: HalfEdgeMesh): { [k: string]: string[] } => {
+  const verticesFacesMap: { [k: string]: string[] } = {};
+  Object.values(mesh.faces).forEach((face) => {
+    getFaceEdges(face, mesh).forEach((edge) => {
+      if (verticesFacesMap[edge.vertex]) verticesFacesMap[edge.vertex].push(face.id);
+      else verticesFacesMap[edge.vertex] = [face.id];
+    });
+  });
+  return verticesFacesMap;
+};
 
 export const getCenterOfHalfEdge = (edge: HalfEdge, mesh: HalfEdgeMesh, offset: number = 0.5): V3 => {
   const previousVertex = getStartVertexOfHalfEdge(edge, mesh);
@@ -46,7 +54,7 @@ export const linkingHalfEdges = (halfEdgeMap: { [k: string]: HalfEdge }): void =
   });
 };
 
-export const getHalfEdgeMeshFromMesh = (mesh: Mesh): HalfEdgeMesh => {
+export const getHalfEdgeMeshFromMesh = (mesh: Mesh, withNeighbours: boolean = false): HalfEdgeMesh => {
   // mapping all vertices to a record
   const vertices: { [k: string]: V3 } = Object.fromEntries(
     mesh.vertices.map((vertex) => [V3.getHash(vertex), { x: vertex.x, y: vertex.y, z: vertex.z }] as [string, V3])
@@ -59,8 +67,14 @@ export const getHalfEdgeMeshFromMesh = (mesh: Mesh): HalfEdgeMesh => {
     vIdStart: string;
   }
 
-  const vertexEdgesMap: { [k: string]: HalfEdge[] } = {};
   const allHalfEdges: HalfEdge[] = [];
+
+  const vertexIndexMap = Object.fromEntries(mesh.vertices.map((v, i) => [V3.getHash(v), i]));
+  const nestedEdgesMap: {
+    [k: string]: {
+      [k: string]: HalfEdge[];
+    };
+  } = {};
 
   // face wise construction of half edges
   const faces = Object.fromEntries(
@@ -86,21 +100,32 @@ export const getHalfEdgeMeshFromMesh = (mesh: Mesh): HalfEdgeMesh => {
 
         allHalfEdges.push(halfEdge);
 
-        // figuring out neighbour situations for the half edge
-        const rawId = rawEdge.vId.localeCompare(rawEdge.vIdStart) < 0 ? `${rawEdge.vId}.${rawEdge.vIdStart}` : `${rawEdge.vIdStart}.${rawEdge.vId}`;
-
-        if (vertexEdgesMap[rawId]) vertexEdgesMap[rawId].push(halfEdge);
-        else vertexEdgesMap[rawId] = [halfEdge];
+        if (withNeighbours) {
+          // figuring out neighbour situations for the half edge - causes a huge performance hit, needs to be tweaked!
+          if (vertexIndexMap[rawEdge.vId] < vertexIndexMap[rawEdge.vIdStart]) {
+            if (nestedEdgesMap[rawEdge.vId]) {
+              if (nestedEdgesMap[rawEdge.vId][rawEdge.vIdStart]) nestedEdgesMap[rawEdge.vId][rawEdge.vIdStart].push(halfEdge);
+              else nestedEdgesMap[rawEdge.vId][rawEdge.vIdStart] = [halfEdge];
+            } else nestedEdgesMap[rawEdge.vId] = { [rawEdge.vIdStart]: [halfEdge] };
+          } else {
+            if (nestedEdgesMap[rawEdge.vIdStart]) {
+              if (nestedEdgesMap[rawEdge.vIdStart][rawEdge.vId]) nestedEdgesMap[rawEdge.vIdStart][rawEdge.vId].push(halfEdge);
+              else nestedEdgesMap[rawEdge.vIdStart][rawEdge.vId] = [halfEdge];
+            } else nestedEdgesMap[rawEdge.vIdStart] = { [rawEdge.vId]: [halfEdge] };
+          }
+        }
 
         return halfEdge;
       });
 
-      Object.values(vertexEdgesMap).forEach((edges) => {
-        if (edges.length === 2) {
-          edges[0].neighbour = edges[1].id;
-          edges[1].neighbour = edges[0].id;
-        }
-      });
+      Object.values(nestedEdgesMap).forEach((edgesMap) =>
+        Object.values(edgesMap).forEach((edges) => {
+          if (edges.length === 2) {
+            edges[0].neighbour = edges[1].id;
+            edges[1].neighbour = edges[0].id;
+          }
+        })
+      );
 
       return [
         faceId,
@@ -112,11 +137,19 @@ export const getHalfEdgeMeshFromMesh = (mesh: Mesh): HalfEdgeMesh => {
     })
   );
 
+  const halfEdges = Object.fromEntries(allHalfEdges.map((e) => [e.id, e]));
+
   return {
     faces,
     vertices,
-    halfEdges: Object.fromEntries(allHalfEdges.map((e) => [e.id, e])),
+    halfEdges,
   };
+};
+
+export const markFacesWithOneNakedEdge = (heMesh: HalfEdgeMesh): void => {
+  Object.values(heMesh.faces).forEach((face) => {
+    if (getFaceEdges(face, heMesh).filter((he) => !he.neighbour).length === 1) face.metaData = { voxelState: VoxelState.ONEDIRECTION };
+  });
 };
 
 // iterates recursively at a node to find the first other naked halfedge, the assumption is that the currentEdge hasn't been added yet

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Scene } from '@babylonjs/core';
 import './App.css';
-import { ArcRotateCamera, Vector3, HemisphericLight, SceneLoader, StandardMaterial, Color3, MeshBuilder, PointLight } from '@babylonjs/core';
+import { ArcRotateCamera, Vector3, HemisphericLight, SceneLoader, StandardMaterial, Color3 } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
 import SceneComponent from './components/SceneComponent';
 import {
@@ -11,19 +11,20 @@ import {
   HalfEdgeRenderMethod,
   MALCULMIUS_MESH_NAME,
   MALCULMIUS_SHADE_NAME,
-  MeshFactory,
-  renderHalfEdge,
   renderHalfEdgeMesh,
   BaseFrameFactory,
 } from './geometryGeneration/baseGeometry';
 import { MalculmiusOneGeometry, Malculmiuses, createCellComplexFromMalculmiusGeometry, createMalculmiusGeometry } from './geometryGeneration/geometry';
 import { DEFAULT_GEOMETRY_TYPES, DEFAULT_PROFILE_TYPES, InputRenderer } from './components/geometry/GeometryParentComponent';
-import { getHalfEdgeMeshFromMesh } from './geometryGeneration/halfedge';
 import { VoxelFactory } from './geometryGeneration/voxelComplex.factory';
-import { getMeshRepresentationOfVoxelComplexGraph } from './geometryGeneration/voxelComplex.artists';
 import { getHalfEdgeMeshForVoxelEnclosure } from './geometryGeneration/voxelComplex';
 import { setVoxelComplexState } from './geometryGeneration/voxelComplex.states';
 import { V3 } from './geometryGeneration/v3';
+import { VoxelMesh } from './geometryGeneration/voxelComplex.mesh';
+import { GeometryStateMap } from './geometryGeneration/voxelComplex.type';
+import { HalfEdgeMeshRenderer } from './geometryGeneration/halfedge.artists';
+import { HalfEdgeMeshFactory } from './geometryGeneration/halfedge.factory';
+import { VoxelComplexMeshArtist } from './geometryGeneration/voxelComplex.artists';
 /* eslint-disable */
 
 // import model from "./assets/model2/scene.gltf";
@@ -71,19 +72,16 @@ const App: React.FC = () => {
     material.ambientColor = new Color3(0.23, 0.23, 0.23);
     material.indexOfRefraction = 0.52;
     material.alpha = 1;
-    material.cameraExposure = 0.66;
-    material.cameraContrast = 1.66;
+    material.cameraExposure = 0.3;
+    material.cameraContrast = 1.2;
     material.emissiveColor = new Color3(0.67, 0.64, 0.49);
-    material.wireframe = true;
+    // material.wireframe = true;
     // material.backFaceCulling = false;
     setMaterial(material);
 
-    const cellBase = MeshFactory.createPolygon(20, 0.2, new Vector3(0, 0, 0.3));
+    const cellBase = HalfEdgeMeshFactory.createPolygon(20, 0.2, new Vector3(0, 0, 0.3));
     const cellDir = { x: 0, y: 0, z: 0.2 };
-    const cellComplex = VoxelFactory.simpleExtrusion(
-      cellBase.vertices.map((v) => ({ x: v.x, y: v.y, z: v.z })),
-      cellDir
-    );
+    const cellComplex = VoxelFactory.extrudeHalfEdgeMesh(cellBase, cellDir);
 
     // console.log(cellComplex.vertices);
     // cellComplex.vertices = Object.fromEntries(
@@ -99,12 +97,18 @@ const App: React.FC = () => {
     const buildingCellComplex = createCellComplexFromMalculmiusGeometry(geometry);
 
     const sdfMethod = (v: V3) => Math.cos(v.x * 4) * Math.sin(v.y * 4) - v.z + 2;
-    const baseFrames = BaseFrameFactory.getBaseFramArrayAlongDirection({ x: 0, y: 0, z: 1 }, 10, 0.25);
+    const baseFrames = BaseFrameFactory.getBaseFramArrayAlongDirection({ x: 0, y: 0, z: 1 }, 5, 0.25);
 
-    const simpleGrid = MeshFactory.createGrid(4, 0.25, 10, 10);
-    const halfEdgeMeshFromGrid = getHalfEdgeMeshFromMesh(simpleGrid);
-    const voxelComplex = VoxelFactory.sweepHalfEdgeMesh(halfEdgeMeshFromGrid, baseFrames);
-    setVoxelComplexState(voxelComplex, sdfMethod);
+    const simpleGrid = HalfEdgeMeshFactory.createGrid(4, 0.25, 10, 10);
+    // const voxelComplex = VoxelFactory.getCylinder([0.8, 0.7, 0.2, 0.1], [0.5, 2], 3);
+
+    const voxelComplex = VoxelFactory.getCylinder(
+      [1.0, 0.9, 0.7, 0.65, 0.45, 0.25],
+      [0.5, 0.65, 0.9, 1.05, 1.4, 1.8, 2, 2.5, 2.75, 3.1, 3.25, 4.2, 4.45, 4.7],
+      25
+    );
+    // const voxelComplex = VoxelFactory.sweepHalfEdgeMesh(simpleGrid, baseFrames);
+    // setVoxelComplexState(voxelComplex, sdfMethod);
 
     Object.entries(buildingCellComplex.vertices).forEach(([k, v]) => {
       buildingCellComplex.vertices[k] = { x: v.x * 0.001, y: -v.y * 0.001, z: v.z * 0.001 };
@@ -113,7 +117,35 @@ const App: React.FC = () => {
     // const bottomCellComplex = CellFactory.sweepHalfEdgeMesh(shade, baseFrames);
     const shellHEMesh = getHalfEdgeMeshForVoxelEnclosure(voxelComplex);
 
-    Object.values(shellHEMesh.halfEdges).forEach((he) => renderHalfEdge(he, shellHEMesh, scene));
+    const gSM: GeometryStateMap = {
+      extrusionProfile: {
+        type: ExtrusionProfileType.Ellipse,
+        insetTop: 0.15,
+        insetBottom: 0.15,
+        insetSides: 0.25,
+        radius: 0.3,
+      },
+      // extrusionProfile: profile,
+    };
+
+    const defaultMaterial = new StandardMaterial('normalMaterial', scene);
+    VoxelComplexMeshArtist.render(voxelComplex, scene, gSM, defaultMaterial);
+
+    // console.log(voxelComplex.voxels);
+
+    // const closed = VoxelMesh.getHalfEdgeMeshForVoxelComplex(voxelComplex, gSM);
+
+    // HalfEdgeMeshRenderer.render(VoxelMesh.getClosingTestMeshes(), scene);
+
+    // const uvs = VoxelMesh.getUVsForGeometryState(gSM);
+
+    // defaultMaterial.wireframe = true;
+
+    // HalfEdgeMeshRenderer.render(closed, scene, defaultMaterial);
+
+    // Object.values(closed.halfEdges).forEach((he) => renderHalfEdge(he, closed, scene));
+
+    // Object.values(shellHEMesh.halfEdges).forEach((he) => renderHalfEdge(he, shellHEMesh, scene));
 
     // getMeshRepresentationOfVoxelComplexGraph(voxelComplex, scene);
 
@@ -121,7 +153,7 @@ const App: React.FC = () => {
     // renderHalfEdgeMesh(shade, scene, MALCULMIUS_SHADE_NAME, HalfEdgeRenderMethod.Coloured, material);
     // const localHeMesh = getHalfEdgeMeshFromMesh(building);
 
-    const testMesh = MeshFactory.createGrid(4, 240, 1, 2);
+    const testMesh = HalfEdgeMeshFactory.createGrid(4, 240, 1, 2);
     // const localHeMesh = getHalfEdgeMeshFromMesh(testMesh);
     const localHeMesh = shade;
     // renderHalfEdgeMesh(localHeMesh, scene, MALCULMIUS_SHADE_NAME, HalfEdgeRenderMethod.Coloured, material);
@@ -131,7 +163,7 @@ const App: React.FC = () => {
 
     SceneLoader.ShowLoadingScreen = false;
 
-    model = SceneLoader.Append('./assets/', 'parisThermes.glb', scene, function (scene) {});
+    // model = SceneLoader.Append('./assets/', 'parisThermes.glb', scene, function (scene) {});
   };
 
   const onRender = (scene: any) => {

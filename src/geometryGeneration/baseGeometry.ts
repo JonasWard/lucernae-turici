@@ -1,4 +1,4 @@
-import { Vector3, Mesh as BabylonMesh, VertexData, Scene, StandardMaterial, Color3 } from '@babylonjs/core';
+import { Vector3, Mesh as BabylonMesh, VertexData, Scene, StandardMaterial } from '@babylonjs/core';
 import { getCenterOfHalfEdge, getEndVertexOfHalfEdge, getFaceVertices, getStartVertexOfHalfEdge } from './halfedge';
 import { BaseFrame, HalfEdge, HalfEdgeFace, HalfEdgeMesh, TransformationMatrix, V2 } from './geometrytypes';
 import { getColorFromUUID, getV3, getVector3, getVertexHash } from './helpermethods';
@@ -27,25 +27,25 @@ export enum ExtrusionProfileType {
 
 export type ArcExtrusionProfile = {
   type: ExtrusionProfileType.Arc;
-  radiusTop: number; // absolute value
-  insetTop: number; // absolute value
-  insetBottom: number; // absolute value
-  insetSides: number; // absolute value
+  radiusTop: number; // relative value
+  insetTop: number; // relative value
+  insetBottom: number; // relative value
+  insetSides: number; // relative value
 };
 
 export type SquareExtrusionProfile = {
   type: ExtrusionProfileType.Square;
-  insetTop: number; // absolute value
-  insetBottom: number; // absolute value
-  insetSides: number; // absolute value
+  insetTop: number; // relative value
+  insetBottom: number; // relative value
+  insetSides: number; // relative value
 };
 
 export type EllipseExtrusionProfile = {
   type: ExtrusionProfileType.Ellipse;
-  radius: number; // absolute value
-  insetTop: number; // absolute value
-  insetBottom: number; // absolute value
-  insetSides: number; // absolute value
+  radius: number; // realtive value
+  insetTop: number; // realtive value
+  insetBottom: number; // realtive value
+  insetSides: number; // realtive value
 };
 
 export type ExtrusionProfile = ArcExtrusionProfile | SquareExtrusionProfile | EllipseExtrusionProfile;
@@ -465,7 +465,7 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
 
   const faceDataEnd = [makeFaceData([edgeEnd, sideEdgeEnd, topVertex])];
 
-  const backFaceCulling: boolean = false;
+  const backFaceCulling: boolean = true;
 
   const vertexData = getVertexDataForFaceWithData(facedataMain);
   const babylonMesh = new BabylonMesh(he.id, scene);
@@ -527,147 +527,6 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
     vertexDataNeighbour.applyToMesh(babylonMeshNeighbour);
   }
 };
-
-export abstract class MeshFactory {
-  public static createPolygon = (
-    vertexCount = 4,
-    outerRadius = 1,
-    origin = new Vector3(0, 0, 0),
-    xAxis = new Vector3(1, 0, 0),
-    yAxis = new Vector3(0, 1, 0)
-  ): Mesh => {
-    if (vertexCount < 3) throw new Error('you need at least 3 vertices for a given polygon mesh');
-    const alphaDelta = (Math.PI * 2.0) / vertexCount;
-    const vertices: Vector3[] = [];
-
-    for (let i = 0; i < vertexCount; i++)
-      vertices.push(origin.add(xAxis.scale(outerRadius * Math.cos(alphaDelta * i)).add(yAxis.scale(outerRadius * Math.sin(alphaDelta * i)))));
-
-    return {
-      vertices,
-      faces: [[...Array(vertexCount).keys()]],
-    };
-  };
-
-  // triangular grid actually considers pairs of triangles as one
-  public static createGrid = (
-    gridType: 3 | 4 | 6 = 4,
-    sideSpacing = 1,
-    xCount: number,
-    yCount: number,
-    origin = new Vector3(0, 0, 0),
-    xAxis = new Vector3(1, 0, 0),
-    yAxis = new Vector3(0, 1, 0)
-  ): Mesh => {
-    if (xCount < 1 || yCount < 1) throw new Error('need at least 1 cell in each direction');
-
-    // creating the base mesh
-    let baseMesh: [Mesh] | [Mesh, Mesh];
-
-    let vectorSpacingX: Vector3;
-    let vectorSpacingY: Vector3;
-
-    const scaledX = xAxis.scale(sideSpacing);
-
-    // defining the base shapes
-    switch (gridType) {
-      case 3:
-        const halfX = xAxis.scale(sideSpacing * 0.5);
-        const oneAndAHalfX = xAxis.scale(sideSpacing * 1.5);
-        const triScaledY = yAxis.scale(sideSpacing * 3 ** 0.5 * 0.5);
-
-        baseMesh = [
-          {
-            vertices: [origin, origin.add(scaledX), origin.add(halfX.add(triScaledY)), origin.add(oneAndAHalfX.add(triScaledY))],
-            faces: [
-              [1, 2, 0],
-              [3, 2, 1],
-            ],
-          },
-          {
-            vertices: [origin.add(halfX), origin.add(oneAndAHalfX), origin.add(triScaledY), origin.add(scaledX.add(triScaledY))],
-            faces: [
-              [3, 2, 0],
-              [1, 3, 0],
-            ],
-          },
-        ];
-
-        vectorSpacingX = scaledX;
-        vectorSpacingY = triScaledY;
-
-        break;
-
-      case 4:
-        const quadScaledY = yAxis.scale(sideSpacing);
-
-        baseMesh = [
-          {
-            vertices: [origin, origin.add(scaledX), origin.add(quadScaledY), origin.add(scaledX.add(quadScaledY))],
-            faces: [[1, 3, 2, 0]],
-          },
-        ];
-
-        vectorSpacingX = scaledX;
-        vectorSpacingY = quadScaledY;
-
-        break;
-
-      case 6:
-        const yScaleHalf = yAxis.scale(sideSpacing * 0.5);
-        const yScaleOneAndAHalf = yAxis.scale(sideSpacing * 1.5);
-        const yScaleDouble = yAxis.scale(sideSpacing * 2.0);
-        const xScaleOne = xAxis.scale(sideSpacing * 3 ** 0.5 * 0.5);
-        const xScaleTwo = xAxis.scale(sideSpacing * 3 ** 0.5);
-
-        const verticesHex = [
-          origin.add(yScaleHalf),
-          origin.add(yScaleOneAndAHalf),
-          origin.add(xScaleOne.add(yScaleDouble)),
-          origin.add(xScaleTwo.add(yScaleOneAndAHalf)),
-          origin.add(xScaleTwo.add(yScaleHalf)),
-          origin.add(xScaleOne),
-        ];
-
-        baseMesh = [
-          {
-            vertices: verticesHex,
-            faces: [[5, 4, 3, 2, 1, 0]],
-          },
-          {
-            vertices: verticesHex.map((v) => v.add(xScaleOne)),
-            faces: [[5, 4, 3, 2, 1, 0]],
-          },
-        ];
-
-        vectorSpacingX = xScaleTwo;
-        vectorSpacingY = yScaleOneAndAHalf;
-
-        break;
-    }
-
-    // populating the meshes
-
-    const meshes: Mesh[] = [];
-
-    const xVectors = [...Array(xCount).keys()].map((i) => vectorSpacingX.scale(i));
-    const yVectors = [...Array(yCount).keys()].map((j) => vectorSpacingY.scale(j));
-
-    yVectors.forEach((y, i) => {
-      const localMesh = baseMesh[i % baseMesh.length];
-      xVectors.forEach((x) => {
-        const xy = x.add(y);
-
-        meshes.push({
-          vertices: localMesh.vertices.map((v) => v.add(xy)),
-          faces: localMesh.faces.map((l) => l.map((i) => i)),
-        });
-      });
-    });
-
-    return joinMeshes(meshes);
-  };
-}
 
 export const getWorldXYToFrameTransformation = (f: BaseFrame): TransformationMatrix => [
   f.x.x,

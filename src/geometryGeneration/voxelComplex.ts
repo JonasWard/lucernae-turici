@@ -11,12 +11,13 @@ const getBottomFaceIndexes = (v: Voxel): number[] => [...Array(v.n).keys()].reve
 const getSideFaceIndexes = (v: Voxel, i: number): [number, number, number, number] => [i, (i + 1) % v.n, v.n + ((i + 1) % v.n), v.n + i];
 const getFaceIndexArraysForVoxel = (v: Voxel, vX: VoxelComplex, includeFacesWithNeighbour?: boolean): number[][] => {
   const faceIndexes: number[][] = [];
-  if (includeFacesWithNeighbour || isFaceClosed(v.state, getNeighbourState(v, vX, 0))) faceIndexes.push(getTopFaceIndexes(v));
-  if (includeFacesWithNeighbour || isFaceClosed(v.state, getNeighbourState(v, vX, 1))) faceIndexes.push(getBottomFaceIndexes(v));
-  for (let i = 0; i < v.n; i++)
-    if (includeFacesWithNeighbour || isFaceClosed(v.state, getNeighbourState(v, vX, i + 2))) faceIndexes.push(getSideFaceIndexes(v, i));
+  if (includeFacesWithNeighbour || isFaceInVoxelClosed(v, vX, 0)) faceIndexes.push(getTopFaceIndexes(v));
+  if (includeFacesWithNeighbour || isFaceInVoxelClosed(v, vX, 1)) faceIndexes.push(getBottomFaceIndexes(v));
+  for (let i = 0; i < v.n; i++) if (includeFacesWithNeighbour || isFaceInVoxelClosed(v, vX, i + 2)) faceIndexes.push(getSideFaceIndexes(v, i));
   return faceIndexes;
 };
+
+export const isFaceInVoxelClosed = (v: Voxel, vX: VoxelComplex, faceIndex: number): boolean => isFaceClosed(v.state, getNeighbourState(v, vX, faceIndex));
 
 const getTopFace = (v: Voxel): string[] => v.vertices.slice(v.n, 2 * v.n);
 const getBottomFace = (v: Voxel): string[] => v.vertices.slice(0, v.n).reverse();
@@ -28,7 +29,7 @@ const getSideFaces = (v: Voxel): [string, string, string, string][] => {
   return faces;
 };
 
-const gefFace = (v: Voxel, i: number) => {
+export const gefFace = (v: Voxel, i: number) => {
   if (i < 0 || i > v.n + 1) throw new Error(`index ${i} is not in the face domain [0, ${i + 1} for voxel ${v.id} with ${v.n + 2} faces`);
   if (i === 0) return getTopFace(v);
   if (i === 1) return getBottomFace(v);

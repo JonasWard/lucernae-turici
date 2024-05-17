@@ -1,9 +1,9 @@
-import { Color3, Scene, StandardMaterial, MeshBuilder, Vector3 } from '@babylonjs/core';
-import { V2 } from './geometrytypes';
+import { Color3, Scene, StandardMaterial, MeshBuilder, Vector3, Material, Mesh as BabylonMesh } from '@babylonjs/core';
 import { ExtrusionProfile } from './baseGeometry';
-import { V3 } from './v3';
-import { VoxelComplex, Voxel } from './voxelComplex.type';
+import { V3, Mesh } from './v3';
+import { VoxelComplex, Voxel, GeometryStateMap } from './voxelComplex.type';
 import { getCenterOfVoxelFace, getCenterOfVoxel } from './voxelComplex';
+import { VoxelMesh } from './voxelComplex.mesh';
 
 const vSize = 0.02;
 const vHSize = vSize * 0.2;
@@ -11,9 +11,9 @@ const edgeResolution = 5;
 const colorScale = 200;
 
 const getColorForVertex = (v: V3): string => {
-  const r = Math.ceil((v.x * colorScale) % 265).toString(16);
-  const g = Math.ceil((v.y * colorScale) % 265).toString(16);
-  const b = Math.ceil((v.z * colorScale) % 265).toString(16);
+  const r = Math.ceil((v.x * colorScale) % 255).toString(16);
+  const g = Math.ceil((v.y * colorScale) % 255).toString(16);
+  const b = Math.ceil((v.z * colorScale) % 255).toString(16);
   return `#${r.length < 2 ? '0' + r : r}${g.length < 2 ? '0' + g : g}${b.length < 2 ? '0' + b : b}`;
 };
 
@@ -93,9 +93,6 @@ const getAllRepresentativeMeshForVoxelFace = (voxel: Voxel, vX: VoxelComplex, sc
 
 export const applyMalcolmiusLogic = (vX: VoxelComplex, extrusionProfile: ExtrusionProfile, scene: Scene) => {};
 
-export const curveForQuad = (v00: V3, v01: V3, v11: V3, v10: V3, uvs: V2[]): V3[] =>
-  uvs.map((uv) => V3.add(V3.mul(v00, (1 - uv.u) * (1 - uv.v)), V3.mul(v01, (1 - uv.u) * uv.v), V3.mul(v10, uv.u * (1 - uv.v)), V3.mul(v11, uv.u * uv.v)));
-
 // to parse a single voxel, go face by face and for every face, come up with the mesh logic that applies based on the neigbouring voxel
 // for now we only consider
 
@@ -109,3 +106,37 @@ export const getMeshRepresentationOfVoxelComplexGraph = (vX: VoxelComplex, scene
   // render the face vertices
   Object.values(vX.voxels).forEach((voxel) => getAllRepresentativeMeshForVoxelFace(voxel, vX, scene));
 };
+
+export const createStandardLampMaterial = (scene: Scene) => {
+  const material = new StandardMaterial('lamp', scene);
+  material.diffuseColor = new Color3(1, 1, 1);
+  material.specularColor = new Color3(1, 1, 1);
+  material.emissiveColor = new Color3(1, 1, 1);
+  return material;
+};
+
+// artist that renderers a voxel complex using a mesh representation
+export class VoxelComplexMeshArtist {
+  public static defaultMaterial = (scene: Scene) => {
+    const material = new StandardMaterial('material', scene);
+    material.ambientColor = new Color3(0.23, 0.23, 0.23);
+    material.indexOfRefraction = 0.52;
+    material.alpha = 1;
+    material.cameraExposure = 0.66;
+    material.cameraContrast = 1.66;
+    material.emissiveColor = new Color3(0.67, 0.64, 0.49);
+    material.wireframe = true;
+
+    return material;
+  };
+
+  public static render = (vX: VoxelComplex, scene: Scene, gSM: GeometryStateMap, material?: Material | StandardMaterial) => {
+    const mesh = VoxelMesh.getMeshForVoxelComplex(vX, gSM);
+
+    const meshMaterial = material ?? VoxelComplexMeshArtist.defaultMaterial(scene);
+    const vertexData = Mesh.getVertexDataForMesh(mesh);
+    const babylonMesh = new BabylonMesh('voxelComplex', scene);
+    vertexData.applyToMesh(babylonMesh);
+    babylonMesh.material = meshMaterial;
+  };
+}

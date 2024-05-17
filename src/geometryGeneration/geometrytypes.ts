@@ -1,4 +1,5 @@
 import { V3 } from './v3';
+import { VoxelState } from './voxelComplex.type';
 
 export interface V2 {
   u: number;
@@ -43,11 +44,12 @@ export interface HalfEdge {
   next: string; // next half edge id
   previous: string; // previoys hald edge id
   neighbour?: string; // neigbour id
-  face?: string; // face id
+  face: string; // face id
 }
 
 export interface VCFaceMetaData {
-  originVoxelId: string;
+  originVoxelId?: string;
+  voxelState?: VoxelState;
 }
 
 export interface HalfEdgeFace {

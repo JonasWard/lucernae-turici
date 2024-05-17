@@ -14,23 +14,23 @@ import { InputDrawer, inputButtonStyle } from './GeometryInputDrawer';
 export const DEFAULT_PROFILE_TYPES = {
   [ExtrusionProfileType.Arc]: {
     type: ExtrusionProfileType.Arc,
-    radiusTop: 10,
-    insetTop: 10,
-    insetBottom: 10,
-    insetSides: 10,
+    radiusTop: 0.35,
+    insetTop: 0.1,
+    insetBottom: 0.1,
+    insetSides: 0.1,
   } as ArcExtrusionProfile,
   [ExtrusionProfileType.Ellipse]: {
     type: ExtrusionProfileType.Ellipse,
-    radius: 20,
-    insetTop: 10,
-    insetBottom: 10,
-    insetSides: 10,
+    radius: 0.35,
+    insetTop: 0.1,
+    insetBottom: 0.1,
+    insetSides: 0.1,
   } as EllipseExtrusionProfile,
   [ExtrusionProfileType.Square]: {
     type: ExtrusionProfileType.Square,
-    insetTop: 10,
-    insetBottom: 10,
-    insetSides: 10,
+    insetTop: 0.1,
+    insetBottom: 0.1,
+    insetSides: 0.1,
   } as SquareExtrusionProfile,
 };
 

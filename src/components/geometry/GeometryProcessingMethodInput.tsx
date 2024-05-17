@@ -1,6 +1,7 @@
 import { Form, Select, Switch } from 'antd';
 import { ProcessingMethods, ProcessingMethodType, DEFAULT_PROCESSING_METHODS } from '../../geometryGeneration/geometry';
 import { SliderWrapper } from '../helpers/SliderWrapperComponent';
+import React from 'react';
 
 const defaulttotal = { min: 0, max: 20, step: 0.1, int: false };
 const defaultmax = { min: 0.1, max: 3, step: 0.01, int: false };

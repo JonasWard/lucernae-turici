@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { Button, Switch } from 'antd';
 import { defaultInsetBottom, defaultInsetTop, defaultInsetSides, defaultRadiusTop, defaultRadius } from './GeometryExtrusionSettings';
 import { InputDrawer, inputButtonStyle } from './GeometryInputDrawer';
+import React from 'react';
 
 export const DEFAULT_PROFILE_TYPES = {
   [ExtrusionProfileType.Arc]: {

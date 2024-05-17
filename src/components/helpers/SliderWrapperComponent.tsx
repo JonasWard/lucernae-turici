@@ -1,4 +1,5 @@
 import { Slider } from 'antd';
+import React from 'react';
 
 export const SliderWrapper: React.FC<{ value: number; onChange: (value: number) => void; min: number; max: number; step: number }> = ({
   value,

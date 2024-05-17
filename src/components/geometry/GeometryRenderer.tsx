@@ -5,6 +5,7 @@ import { SliderWrapper } from '../helpers/SliderWrapperComponent';
 import { UpdateGeometryTypeComponent } from './GeometryTypeInput';
 import { HeightsRenderer } from './GeometryHeightsInput';
 import { PostProcessingRenderer } from './GeometryPostProcessing';
+import React from 'react';
 
 const defaultCircleRadius = { min: 50, max: 250, int: false, step: 1 };
 const defaultCircleDivisions = { min: 3, max: 10, int: true, step: 1 };

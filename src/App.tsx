@@ -25,6 +25,7 @@ import { GeometryStateMap } from './geometryGeneration/voxelComplex.type';
 import { HalfEdgeMeshRenderer } from './geometryGeneration/halfedge.artists';
 import { HalfEdgeMeshFactory } from './geometryGeneration/halfedge.factory';
 import { VoxelComplexMeshArtist } from './geometryGeneration/voxelComplex.artists';
+import { DataToURLFactory } from './geometryGeneration/dataStringParsing';
 /* eslint-disable */
 
 // import model from "./assets/model2/scene.gltf";
@@ -152,6 +153,8 @@ const App: React.FC = () => {
     // meshToBabylonMesh(building, scene, new Vector3(0, 0.5, 0), MALCULMIUS_MESH_NAME, material ?? undefined);
     // renderHalfEdgeMesh(shade, scene, MALCULMIUS_SHADE_NAME, HalfEdgeRenderMethod.Coloured, material);
     // const localHeMesh = getHalfEdgeMeshFromMesh(building);
+
+    DataToURLFactory.test();
 
     const testMesh = HalfEdgeMeshFactory.createGrid(4, 240, 1, 2);
     // const localHeMesh = getHalfEdgeMeshFromMesh(testMesh);

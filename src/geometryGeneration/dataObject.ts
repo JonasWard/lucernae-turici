@@ -1,31 +1,45 @@
 // version 0.1
 
-import { DataToURLFactory, DataValues, VersionMapGenerator, VersionObject } from './dataStringParsing';
-import { getVersion0_1DataMap, version0_1BaseData, version0_1DeconstructObject, version0_1ConstructObject } from './versions/version0.1';
+import { DataToURLFactory, DataValues, SemanticValues, VersionMapGenerator, VersionObject } from './dataStringParsing';
+import {
+  getVersion0_1VersionObject,
+  version0_1BaseData,
+  version0_1DeconstructObject,
+  version0_1ConstructObject,
+  version0_1Update,
+} from './versions/version0.1';
 
-const dataDefinition: VersionMapGenerator = {
+export const DataDefinition: VersionMapGenerator = {
   0: {
-    generatorMethod: getVersion0_1DataMap,
+    generatorMethod: getVersion0_1VersionObject,
     baseDefinitions: version0_1BaseData,
-    constructObject: version0_1ConstructObject,
-    deconstructObject: version0_1DeconstructObject as (dataObject: Object, versionObject: VersionObject) => DataValues,
+    constructObject: version0_1ConstructObject as unknown as (dataValues: DataValues, versionObject: VersionObject) => SemanticValues,
+    deconstructObject: version0_1DeconstructObject as unknown as (dataObject: SemanticValues, versionObject: VersionObject) => DataValues,
+    getVersionObjectFromDataObject: version0_1Update as unknown as (vs: SemanticValues) => VersionObject,
   },
 };
 
 export const CreateDefaultURL = (version: 0): string => {
-  const versionObject = dataDefinition[version].generatorMethod();
+  const versionObject = DataDefinition[version].generatorMethod();
   return DataToURLFactory.createUrl(versionObject.defaultValues, versionObject.dataPattern);
 };
 
-export const CreateURL = (versionObject: VersionObject, dataValues: DataValues): string => DataToURLFactory.createUrl(dataValues, versionObject.dataPattern);
+const createURLFromValues = (versionObject: VersionObject, dataValues: DataValues): string => DataToURLFactory.createUrl(dataValues, versionObject.dataPattern);
 
-export const ParseURLData = (url: string) => {
+export const CreateURL = (dataObject: SemanticValues) => {
+  const versionDataParser = DataDefinition[dataObject.version as number];
+  const updatedVersion = versionDataParser.getVersionObjectFromDataObject(dataObject);
+
+  return DataToURLFactory.createUrl(versionDataParser.deconstructObject(dataObject, updatedVersion), updatedVersion.dataPattern);
+};
+
+export const ParseURLData = (url: string): [VersionObject, SemanticValues] => {
   // getting the version number
   const versionNumber = DataToURLFactory.deconstructUrl(url, [DataToURLFactory.createVersion()])[0] as number;
-  const basicDataDefinition = dataDefinition[versionNumber].baseDefinitions;
+  const basicDataDefinition = DataDefinition[versionNumber].baseDefinitions;
   const settingDataValues = DataToURLFactory.deconstructUrl(url, basicDataDefinition).slice(1);
-  const versionObject = dataDefinition[versionNumber].generatorMethod(...settingDataValues);
+  const versionObject = DataDefinition[versionNumber].generatorMethod(...settingDataValues);
   const parsedValues = DataToURLFactory.deconstructUrl(url, versionObject.dataPattern);
-  const getGenerationObject = dataDefinition[versionNumber].constructObject(parsedValues, versionObject);
-  return [versionObject, DataToURLFactory.deconstructUrl(url, versionObject.dataPattern), getGenerationObject];
+  const getGenerationObject = DataDefinition[versionNumber].constructObject(parsedValues, versionObject);
+  return [versionObject, getGenerationObject];
 };

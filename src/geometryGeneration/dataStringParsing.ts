@@ -58,12 +58,17 @@ export interface VersionObject {
   namesMap: { [key: string]: number };
 }
 
+export interface SemanticValues {
+  [key: string]: SemanticValues | DataValue;
+}
+
 export interface VersionMapGenerator {
   [key: number]: {
     generatorMethod: (...args: any[]) => VersionObject;
     baseDefinitions: DataEntry[];
-    constructObject: (values: DataValues, versionObject: VersionObject) => Object;
-    deconstructObject: (dataObject: Object, versionObject: VersionObject) => DataValues;
+    constructObject: (values: DataValues, versionObject: VersionObject) => SemanticValues;
+    deconstructObject: (dataObject: SemanticValues, versionObject: VersionObject) => DataValues;
+    getVersionObjectFromDataObject: (dataObject: SemanticValues) => VersionObject;
   };
 }
 

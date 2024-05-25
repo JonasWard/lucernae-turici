@@ -1,5 +1,6 @@
 import { ExtrusionProfile, ExtrusionProfileType } from '../baseGeometry';
-import { DataEntry, DataToURLFactory, DataValue, DataValues, VersionObject } from '../dataStringParsing';
+import { DataDefinition } from '../dataObject';
+import { DataEntry, DataToURLFactory, DataValue, DataValues, SemanticValues, VersionObject } from '../dataStringParsing';
 import { FloorplanType, FootprintGeometryTypes } from '../footprintgeometrytypes';
 import { HeightGenerator, ProcessingMethodType, ProcessingMethods } from '../geometry';
 
@@ -216,6 +217,9 @@ const parseHeightMethod = (dataValues: DataValues, heightObject: { [key: string]
   };
 };
 
+export const version0_1Update = (dataObject: Version0_1Object): VersionObject =>
+  getVersion0_1VersionObject(dataObject.extrusionTypeParameters.type, dataObject.floorTypeParameters.floorType, dataObject.heightMethodParameters.method.type);
+
 export const version0_1ConstructObject = (values: DataValues, versionObject: VersionObject): Version0_1Object => {
   return {
     version: values[versionObject.namesMap.version as any] as number,
@@ -232,7 +236,9 @@ export const version0_1ConstructObject = (values: DataValues, versionObject: Ver
   };
 };
 
-export const version0_1DeconstructObject = (dataObject: Version0_1Object, versionObject: VersionObject): DataValues => {
+export const version0_1DeconstructObject = (dataObject: Version0_1Object): DataValues => {
+  const updatedVersionObject = DataDefinition[dataObject.version].getVersionObjectFromDataObject(dataObject as unknown as SemanticValues);
+
   // mapping into the flat named map
   const flatObject: { [k: string]: DataValue } = {
     version: dataObject.version,
@@ -256,20 +262,14 @@ export const version0_1DeconstructObject = (dataObject: Version0_1Object, versio
     } else flatObject[k] = v as number;
   });
 
-  versionObject.namesMap = getVersion0_1DataMap(
-    flatObject.extrusionType as ExtrusionProfileType,
-    flatObject.floorType as FootprintGeometryTypes,
-    flatObject.heightProcessingMethod as ProcessingMethodType
-  ).namesMap;
-
-  const sortedKeys = Object.entries(versionObject.namesMap)
+  const sortedKeys = Object.entries(updatedVersionObject.namesMap)
     .sort(([, a], [, b]) => a - b)
     .map(([k]) => k);
 
   return sortedKeys.map((k) => flatObject[k]);
 };
 
-export const getVersion0_1DataMap = (
+export const getVersion0_1VersionObject = (
   extrusionType: ExtrusionProfileType = ExtrusionProfileType.Arc,
   floorType: FootprintGeometryTypes = FootprintGeometryTypes.Cylinder,
   heightMethod: ProcessingMethodType = ProcessingMethodType.IncrementalMethod

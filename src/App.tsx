@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Scene } from '@babylonjs/core';
 import './App.css';
 import { ArcRotateCamera, Vector3, HemisphericLight, SceneLoader, StandardMaterial, Color3 } from '@babylonjs/core';
@@ -25,13 +25,17 @@ import { GeometryStateMap } from './geometryGeneration/voxelComplex.type';
 import { HalfEdgeMeshRenderer } from './geometryGeneration/halfedge.artists';
 import { HalfEdgeMeshFactory } from './geometryGeneration/halfedge.factory';
 import { VoxelComplexMeshArtist } from './geometryGeneration/voxelComplex.artists';
-import { DataToURLFactory } from './geometryGeneration/dataStringParsing';
-import { CreateDefaultURL, ParseURLData } from './geometryGeneration/dataObject';
+import { DataToURLFactory, DataValues, SemanticValues, VersionObject } from './geometryGeneration/dataStringParsing';
+import { CreateDefaultURL, CreateURL, ParseURLData } from './geometryGeneration/dataObject';
+import { useParams } from 'react-router-dom';
 /* eslint-disable */
 
 // import model from "./assets/model2/scene.gltf";
 
 const App: React.FC = () => {
+  const { url } = useParams();
+  const [versionValues, setVersionValues] = useState<SemanticValues | null>(null);
+
   let model: any;
   const [scene, setScene] = useState<null | Scene>(null);
   const [material, setMaterial] = useState<null | StandardMaterial>(null);
@@ -50,6 +54,26 @@ const App: React.FC = () => {
     setProfile(profile);
     rebuildModels(geometry, profile, scene);
   };
+
+  useEffect(() => {
+    if (url)
+      try {
+        setVersionValues(ParseURLData(url)[1]);
+      } catch (e) {
+        setVersionValues(ParseURLData(CreateDefaultURL(0))[1]);
+        console.warn('failed to parse given url');
+        console.log(e);
+      }
+  }, []);
+
+  useEffect(() => {
+    if (versionValues) {
+      const localUrl = CreateURL(versionValues);
+      window.history.replaceState(null, 'Same Page Title', `/${localUrl}`);
+
+      console.log(localUrl);
+    }
+  }, [versionValues]);
 
   const onSceneReady = (scene: any) => {
     const camera = new ArcRotateCamera('camera1', 0, 0, 0, new Vector3(0, 1.0, 0), scene);

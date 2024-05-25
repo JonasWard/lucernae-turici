@@ -26,6 +26,7 @@ import { HalfEdgeMeshRenderer } from './geometryGeneration/halfedge.artists';
 import { HalfEdgeMeshFactory } from './geometryGeneration/halfedge.factory';
 import { VoxelComplexMeshArtist } from './geometryGeneration/voxelComplex.artists';
 import { DataToURLFactory } from './geometryGeneration/dataStringParsing';
+import { CreateDefaultURL, ParseURLData } from './geometryGeneration/dataObject';
 /* eslint-disable */
 
 // import model from "./assets/model2/scene.gltf";
@@ -124,13 +125,13 @@ const App: React.FC = () => {
         insetTop: 0.15,
         insetBottom: 0.15,
         insetSides: 0.25,
-        radius: 0.3,
+        radiusTop: 0.3,
       },
       // extrusionProfile: profile,
     };
 
     const defaultMaterial = new StandardMaterial('normalMaterial', scene);
-    VoxelComplexMeshArtist.render(voxelComplex, scene, gSM, defaultMaterial);
+    // VoxelComplexMeshArtist.render(voxelComplex, scene, gSM, defaultMaterial);
 
     // console.log(voxelComplex.voxels);
 
@@ -156,7 +157,7 @@ const App: React.FC = () => {
 
     DataToURLFactory.test();
 
-    const testMesh = HalfEdgeMeshFactory.createGrid(4, 240, 1, 2);
+    // const testMesh = HalfEdgeMeshFactory.createGrid(4, 240, 1, 2);
     // const localHeMesh = getHalfEdgeMeshFromMesh(testMesh);
     const localHeMesh = shade;
     // renderHalfEdgeMesh(localHeMesh, scene, MALCULMIUS_SHADE_NAME, HalfEdgeRenderMethod.Coloured, material);
@@ -165,6 +166,11 @@ const App: React.FC = () => {
     // runRingSearchingTest();
 
     SceneLoader.ShowLoadingScreen = false;
+
+    const url = CreateDefaultURL(0);
+    console.log(url);
+    const parseUrl = ParseURLData(url);
+    console.log(parseUrl);
 
     // model = SceneLoader.Append('./assets/', 'parisThermes.glb', scene, function (scene) {});
   };

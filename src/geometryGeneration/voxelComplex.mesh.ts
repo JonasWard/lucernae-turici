@@ -100,12 +100,12 @@ export class VoxelMesh {
       case ExtrusionProfileType.Ellipse:
         return [
           VoxelMesh.getArc(
-            { u: 0, v: 1 - gS.extrusionProfile.insetTop - gS.extrusionProfile.radius },
+            { u: 0, v: 1 - gS.extrusionProfile.insetTop - gS.extrusionProfile.radiusTop },
             { u: 1 - gS.extrusionProfile.insetSides, v: gS.extrusionProfile.insetBottom },
             true
           ),
           VoxelMesh.getArc(
-            { u: 0, v: 1 - gS.extrusionProfile.insetTop - gS.extrusionProfile.radius },
+            { u: 0, v: 1 - gS.extrusionProfile.insetTop - gS.extrusionProfile.radiusTop },
             { u: 1 - gS.extrusionProfile.insetSides, v: 1 - gS.extrusionProfile.insetTop }
           ),
         ];
@@ -223,7 +223,7 @@ export class VoxelMesh {
       v00: V3.add(baseFrameSquare.v00, ellipseOrigin),
     };
     const ellipseGSM: GeometryStateMap = {
-      extrusionProfile: { type: ExtrusionProfileType.Ellipse, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1, radius: 0.3 },
+      extrusionProfile: { type: ExtrusionProfileType.Ellipse, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1, radiusTop: 0.3 },
     };
 
     const squareUVs = VoxelMesh.getUVsForGeometryState(squareGSM);

@@ -7,7 +7,7 @@ import { V3 } from './v3';
 import { VoxelComplex } from './voxelComplex.type';
 
 export enum Malculmiuses {
-  One = 'One',
+  One,
 }
 
 export type MalculmiusOneGeometry = {
@@ -23,9 +23,9 @@ export type MalculmiusOneGeometry = {
 };
 
 export enum ProcessingMethodType {
-  None = 'None',
-  IncrementalMethod = 'IncrementalMethod',
-  Sin = 'Sin',
+  None,
+  IncrementalMethod,
+  Sin,
 }
 
 export type NoneMethod = {

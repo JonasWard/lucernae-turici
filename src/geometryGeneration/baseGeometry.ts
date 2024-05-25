@@ -20,9 +20,9 @@ export type Frame = {
 };
 
 export enum ExtrusionProfileType {
-  Arc = 'Arc',
-  Ellipse = 'Ellipse',
-  Square = 'Square',
+  Square,
+  Arc,
+  Ellipse,
 }
 
 export type ArcExtrusionProfile = {
@@ -42,7 +42,7 @@ export type SquareExtrusionProfile = {
 
 export type EllipseExtrusionProfile = {
   type: ExtrusionProfileType.Ellipse;
-  radius: number; // realtive value
+  radiusTop: number; // realtive value
   insetTop: number; // realtive value
   insetBottom: number; // realtive value
   insetSides: number; // realtive value
@@ -146,14 +146,14 @@ const getPointsOnArcFrame = (profile: ArcExtrusionProfile, frame: Frame): Vector
 
 const getPointsOnEllipseFrame = (profile: EllipseExtrusionProfile, frame: Frame): Vector3[] => {
   const { origin, xAxis, yAxis, xAxisMultiplier } = frame;
-  const { radius, insetTop, insetBottom, insetSides } = profile;
+  const { radiusTop, insetTop, insetBottom, insetSides } = profile;
   const lX = 1 / xAxis.length();
   const lY = 1 / yAxis.length();
   const centerBottom = origin.add(xAxis).add(yAxis.scale(insetBottom * lY));
-  const sideBottom = origin.add(xAxis.scale(insetSides * lX * xAxisMultiplier)).add(yAxis.scale((insetBottom + radius) * lY));
-  const originBottomArcFrame = origin.add(xAxis).add(yAxis.scale((insetBottom + radius) * lY));
-  const sideTop = origin.add(xAxis.scale(insetSides * lX * xAxisMultiplier)).add(yAxis.scale(1 - (insetTop + radius) * lY));
-  const originArcFrame = origin.add(xAxis).add(yAxis.scale(1 - (insetTop + radius) * lY));
+  const sideBottom = origin.add(xAxis.scale(insetSides * lX * xAxisMultiplier)).add(yAxis.scale((insetBottom + radiusTop) * lY));
+  const originBottomArcFrame = origin.add(xAxis).add(yAxis.scale((insetBottom + radiusTop) * lY));
+  const sideTop = origin.add(xAxis.scale(insetSides * lX * xAxisMultiplier)).add(yAxis.scale(1 - (insetTop + radiusTop) * lY));
+  const originArcFrame = origin.add(xAxis).add(yAxis.scale(1 - (insetTop + radiusTop) * lY));
   const centerTop = origin.add(xAxis).add(yAxis.scale(1 - insetTop * lY));
   return [
     ...getArc({

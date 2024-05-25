@@ -14,7 +14,7 @@ export interface Version {
   bits: versionRange;
 }
 
-type versionRange = 4 | 8;
+type versionRange = 4 | 8 | 10;
 type integerBitRange = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 type exponentRange = 0 | 1 | 2 | 3;
 type precisionRange = 0 | 1 | 2 | 3;
@@ -46,9 +46,26 @@ export interface Boolean {
   type: StateEnum.BOOLEAN;
 }
 
-export type DataValues = (number | boolean)[];
+export type DataValue = number | boolean;
+export type DataValues = DataValue[];
 export type DataEntry = Version | Int | Float | Boolean;
 export type DataPattern = DataEntry[];
+
+export interface VersionObject {
+  versionName: string;
+  dataPattern: DataEntry[];
+  defaultValues: DataValues;
+  namesMap: { [key: string]: number };
+}
+
+export interface VersionMapGenerator {
+  [key: number]: {
+    generatorMethod: (...args: any[]) => VersionObject;
+    baseDefinitions: DataEntry[];
+    constructObject: (values: DataValues, versionObject: VersionObject) => Object;
+    deconstructObject: (dataObject: Object, versionObject: VersionObject) => DataValues;
+  };
+}
 
 export class DataToURLFactory {
   public static createVersion = (bits: versionRange = 8): Version => ({ type: StateEnum.VERSION, bits });
@@ -119,11 +136,10 @@ export class DataToURLFactory {
 
   public static createFloat = (min: number, max: number, precision: precisionRange): Float => {
     const delta = max - min;
-    const deltaExponent = Math.ceil(Math.log10(delta));
+    const deltaExponent = Math.floor(Math.log10(delta));
     const significatedDelta = delta * 10 ** (precision - deltaExponent);
     const significand = DataToURLFactory.getBitsForIntegerNumber(significatedDelta) as significandBits;
     const exponent = DataToURLFactory.getExponentBitsCountForExponent(deltaExponent);
-
     return {
       type: StateEnum.FLOAT,
       min,
@@ -149,7 +165,7 @@ export class DataToURLFactory {
   private static parseFloatToBits = (v: number, floatEntry: Float): string =>
     `${DataToURLFactory.getSignificantAsBitsForFloat(v, floatEntry)}${DataToURLFactory.getExponentAsBitsForFloat(v, floatEntry)}`;
 
-  private static parseToBits = (v: number | boolean, d: DataEntry): string => {
+  private static parseToBits = (v: DataValue, d: DataEntry): string => {
     switch (d.type) {
       case StateEnum.VERSION:
         return DataToURLFactory.parseIntegerToBits(v as number, d.bits);
@@ -218,6 +234,11 @@ export class DataToURLFactory {
     });
   };
 
+  public static testParse = (n: DataValue, entry: DataEntry) => {
+    const bits = DataToURLFactory.parseToBits(n, entry);
+    return DataToURLFactory.deconstructUrl(DataToURLFactory.parseBitsToBase64(bits), [entry])[0];
+  };
+
   public static base64map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
   public static parseBitsToBase64 = (bits: string): string => {
@@ -239,51 +260,38 @@ export class DataToURLFactory {
   };
 
   public static test = () => {
-    DataToURLFactory.createFloat(0, 1, 3);
+    // DataToURLFactory.createFloat(0, 1, 3);
 
-    const localDataMap = [
-      DataToURLFactory.createVersion(),
+    const dataMap = [
+      DataToURLFactory.createVersion(8),
+      DataToURLFactory.createVersion(4),
       DataToURLFactory.createInt(0, 10),
       DataToURLFactory.createBoolean(),
       DataToURLFactory.createBoolean(),
       DataToURLFactory.createInt(0, 100),
       DataToURLFactory.createInt(0, 1000),
       DataToURLFactory.createInt(5000, 6000),
-    ];
-    const data = [0, 10, true, false, 50, 1, 5500];
-    // console.log(data);
-    // console.log(localDataMap);
-    // console.log(localDataMap.map((e, i) => DataToURLFactory.parseToBits(data[i], e)));
-    // console.log(Number.parseInt(localDataMap.map((e, i) => DataToURLFactory.parseToBits(data[i], e)).join(''), 2));
-    const url = DataToURLFactory.createUrl(data, localDataMap);
-    // console.log(url);
-    const bits = DataToURLFactory.parseBase64ToBits(url);
-    // console.log(bits);
-    const offsets = DataToURLFactory.offsetMapForDataPattern(localDataMap);
-    // console.log(offsets);
-    // console.log(offsets.map(([start, end]) => bits.slice(start, end)));
-    // console.log(DataToURLFactory.deconstructUrl(url, localDataMap));
-
-    //
-    // const floatOnly = [DataToURLFactory.createFloat(0, 1, 1)];
-    // const floatData = [0.45];
-    const floatOnly = [
-      DataToURLFactory.createFloat(0, 1, 1),
+      DataToURLFactory.createFloat(-1, 1, 1),
       DataToURLFactory.createFloat(0, 1, 2),
       DataToURLFactory.createFloat(0, 1, 3),
       DataToURLFactory.createFloat(1, 5, 1),
-      DataToURLFactory.createFloat(0, 1, 2),
-      DataToURLFactory.createFloat(0, 1, 3),
+      DataToURLFactory.createFloat(0, 1, 1),
+      DataToURLFactory.createFloat(0, 1, 1),
+      DataToURLFactory.createFloat(3, 100, 1),
+      DataToURLFactory.createFloat(2, 6, 1),
     ];
-    const floatData = [0.1, 0.02, 0.003, 2, 0.5, 0.6];
+    const values = [0, 1, 10, true, false, 50, 1, 5500, -0.1, 0.02, 0.003, 2, 0.5, 0.6, 3.1, 4.5];
 
-    console.log(floatOnly.map((e, i) => DataToURLFactory.parseToBits(floatData[i], e)));
-    const floatUrl = DataToURLFactory.createUrl(floatData, floatOnly);
-    console.log(floatUrl);
-    const floatBits = DataToURLFactory.parseBase64ToBits(floatUrl);
-    console.log(floatBits);
-    const floatOffsets = DataToURLFactory.offsetMapForDataPattern(floatOnly);
-    console.log(floatOffsets.map(([start, end]) => floatBits.slice(start, end)));
-    console.log(DataToURLFactory.deconstructUrl(floatUrl, floatOnly));
+    values.forEach((e, i) => console.log(e, DataToURLFactory.testParse(e, dataMap[i])));
+
+    // console.log(floatOnly.map((e, i) => DataToURLFactory.parseToBits(floatData[i], e)));
+    const url = DataToURLFactory.createUrl(values, dataMap);
+    console.log(url);
+    console.log(DataToURLFactory.deconstructUrl(url, dataMap));
+    // const floatBits = DataToURLFactory.parseBase64ToBits(floatUrl);
+    // console.log(floatBits);
+    // const floatOffsets = DataToURLFactory.offsetMapForDataPattern(floatOnly);
+    // console.log(floatOffsets.map(([start, end]) => floatBits.slice(start, end)));
+    // console.log(DataToURLFactory.deconstructUrl(floatUrl, floatOnly));
   };
 }

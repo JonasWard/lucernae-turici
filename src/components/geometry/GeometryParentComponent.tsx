@@ -22,7 +22,7 @@ export const DEFAULT_PROFILE_TYPES = {
   } as ArcExtrusionProfile,
   [ExtrusionProfileType.Ellipse]: {
     type: ExtrusionProfileType.Ellipse,
-    radius: 0.35,
+    radiusTop: 0.35,
     insetTop: 0.1,
     insetBottom: 0.1,
     insetSides: 0.1,
@@ -59,8 +59,8 @@ export const DEFAULT_GEOMETRY_TYPES = {
 };
 
 const updateType = (extrusionProfile: ExtrusionProfile): ExtrusionProfile => {
-  const newType = Object.keys(DEFAULT_PROFILE_TYPES)[Object.keys(DEFAULT_PROFILE_TYPES).length * Math.random()] as ExtrusionProfileType;
-  return { ...DEFAULT_PROFILE_TYPES[newType], ...extrusionProfile, type: newType } as ExtrusionProfile;
+  const newValues = DEFAULT_PROFILE_TYPES[Math.floor(Object.keys(DEFAULT_PROFILE_TYPES).length * Math.random()) as 0 | 1 | 2] as ExtrusionProfile;
+  return { ...newValues, ...extrusionProfile } as ExtrusionProfile;
 };
 
 const helperMethodUpdateValues = (limits: { min: number; max: number; int: boolean }): number => {
@@ -79,7 +79,7 @@ const RandomNumberGenerator: React.FC<IInputProps> = ({ extrusionProfile, malcol
     if (extrusionProfile.type === ExtrusionProfileType.Arc) {
       extrusionProfile.radiusTop = helperMethodUpdateValues(defaultRadiusTop);
     } else if (extrusionProfile.type === ExtrusionProfileType.Ellipse) {
-      extrusionProfile.radius = helperMethodUpdateValues(defaultRadius);
+      extrusionProfile.radiusTop = helperMethodUpdateValues(defaultRadius);
     }
 
     setExtrusionProfile(extrusionProfileCopy);

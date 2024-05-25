@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { GeometryRenderer } from './GeometryRenderer';
 import { ExtrusionRenderer } from './GeometryExtrusionSettings';
 import { IInputProps } from './GeometryParentComponent';
+import React from 'react';
 
 export const inputButtonStyle: React.CSSProperties = { position: 'fixed', left: 80, top: 6 };
 

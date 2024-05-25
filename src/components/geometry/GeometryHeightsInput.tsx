@@ -1,7 +1,7 @@
 import React from 'react';
-import { HeightGenerator, ProcessingMethods } from '../../geometryGeneration/voxelComplex';
 import { SliderWrapper } from '../helpers/SliderWrapperComponent';
 import { ProcessingMethodRenderer } from './GeometryProcessingMethodInput';
+import { HeightGenerator, ProcessingMethods } from '../../geometryGeneration/geometry';
 
 const defaultstoryCount = { min: 1, max: 12, step: 1, int: true };
 const defaultbaseHeight = { min: 20, max: 200, step: 1, int: false };

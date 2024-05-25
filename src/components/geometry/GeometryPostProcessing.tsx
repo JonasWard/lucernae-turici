@@ -1,3 +1,4 @@
+import React from 'react';
 import { ProcessingMethods } from '../../geometryGeneration/geometry';
 import { ProcessingMethodRenderer } from './GeometryProcessingMethodInput';
 

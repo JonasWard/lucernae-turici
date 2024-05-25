@@ -2,6 +2,7 @@ import { Form, Select } from 'antd';
 import { ExtrusionProfileType, ExtrusionProfile } from '../../geometryGeneration/baseGeometry';
 import { SliderWrapper } from '../helpers/SliderWrapperComponent';
 import { DEFAULT_PROFILE_TYPES } from './GeometryParentComponent';
+import React from 'react';
 
 interface IExtrusionProfileInputProps {
   extrusionProfile: ExtrusionProfile;
@@ -116,7 +117,7 @@ export const ExtrusionRenderer: React.FC<IExtrusionProfileInputProps> = ({ extru
         </Form>
       );
     case ExtrusionProfileType.Ellipse:
-      const setArc = (value: number) => setExtrusionProfile({ ...extrusionProfile, radius: value });
+      const setArc = (value: number) => setExtrusionProfile({ ...extrusionProfile, radiusTop: value });
       return (
         <Form>
           <UpdateExtrusionTypeComponent type={extrusionProfile.type} updateType={updateType} />
@@ -152,7 +153,7 @@ export const ExtrusionRenderer: React.FC<IExtrusionProfileInputProps> = ({ extru
           </div>
           <div key='arcTop'>
             <span>{'Arc Size'}</span>
-            <SliderWrapper onChange={setArc} value={extrusionProfile.radius} min={defaultRadius.min} max={defaultRadius.max} step={defaultRadius.step} />
+            <SliderWrapper onChange={setArc} value={extrusionProfile.radiusTop} min={defaultRadius.min} max={defaultRadius.max} step={defaultRadius.step} />
           </div>
         </Form>
       );

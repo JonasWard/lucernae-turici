@@ -1,12 +1,13 @@
 // version 0.1
 
-import { DataToURLFactory, DataValues, SemanticValues, VersionMapGenerator, VersionObject } from './dataStringParsing';
+import { DataToURLFactory, DataValues, SemanticBoundsObjects, SemanticValues, VersionMapGenerator, VersionObject } from './dataStringParsing';
 import {
   getVersion0_1VersionObject,
   version0_1BaseData,
   version0_1DeconstructObject,
   version0_1ConstructObject,
   version0_1Update,
+  version0_1ConstructDomainObject,
 } from './versions/version0.1';
 
 export const DataDefinition: VersionMapGenerator = {
@@ -14,6 +15,7 @@ export const DataDefinition: VersionMapGenerator = {
     generatorMethod: getVersion0_1VersionObject,
     baseDefinitions: version0_1BaseData,
     constructObject: version0_1ConstructObject as unknown as (dataValues: DataValues, versionObject: VersionObject) => SemanticValues,
+    getBoundsObject: version0_1ConstructDomainObject as unknown as (dataObject: SemanticValues, versionObject: VersionObject) => SemanticBoundsObjects,
     deconstructObject: version0_1DeconstructObject as unknown as (dataObject: SemanticValues, versionObject: VersionObject) => DataValues,
     getVersionObjectFromDataObject: version0_1Update as unknown as (vs: SemanticValues) => VersionObject,
   },
@@ -25,6 +27,12 @@ export const CreateDefaultURL = (version: 0): string => {
 };
 
 const createURLFromValues = (versionObject: VersionObject, dataValues: DataValues): string => DataToURLFactory.createUrl(dataValues, versionObject.dataPattern);
+
+export const getVersionObjectFromDataObject = (dataObject: SemanticValues): VersionObject =>
+  DataDefinition[dataObject.version].getVersionObjectFromDataObject(dataObject);
+
+export const getBoundsObjectFromDataObject = (dataObject: SemanticValues, versionObject: VersionObject): SemanticBoundsObjects =>
+  DataDefinition[dataObject.version].getBoundsObject(dataObject, versionObject);
 
 export const CreateURL = (dataObject: SemanticValues) => {
   const versionDataParser = DataDefinition[dataObject.version as number];

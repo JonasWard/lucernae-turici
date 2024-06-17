@@ -2,6 +2,8 @@
 // to achieve this, we create an array of numbers with a connected amount of bits assigned to each number in the array
 // the first value will be the version number
 
+import { SemanticValueString } from './dataSemanticsEnums';
+
 export enum StateEnum {
   VERSION,
   FLOAT,
@@ -57,16 +59,28 @@ export interface VersionObject {
   defaultValues: DataValues;
   namesMap: { [key: string]: number };
 }
-
-export interface SemanticValues {
-  [key: string]: SemanticValues | DataValue;
+export interface NestedValueObject {
+  [key: string]: NestedValueObject | DataValue;
 }
+
+export type SemanticValues = { [SemanticValueString.version]: number } & {
+  [k in SemanticValueString]?: NestedValueObject;
+};
+
+export interface NestedBoundsObject {
+  [key: string]: DataEntry | NestedBoundsObject;
+}
+
+export type SemanticBoundsObjects = {
+  [k in SemanticValueString]?: DataEntry | NestedBoundsObject;
+};
 
 export interface VersionMapGenerator {
   [key: number]: {
     generatorMethod: (...args: any[]) => VersionObject;
     baseDefinitions: DataEntry[];
     constructObject: (values: DataValues, versionObject: VersionObject) => SemanticValues;
+    getBoundsObject: (dataObject: SemanticValues, versionObject: VersionObject) => SemanticBoundsObjects;
     deconstructObject: (dataObject: SemanticValues, versionObject: VersionObject) => DataValues;
     getVersionObjectFromDataObject: (dataObject: SemanticValues) => VersionObject;
   };
@@ -145,6 +159,14 @@ export class DataToURLFactory {
     const significatedDelta = delta * 10 ** (precision - deltaExponent);
     const significand = DataToURLFactory.getBitsForIntegerNumber(significatedDelta) as significandBits;
     const exponent = DataToURLFactory.getExponentBitsCountForExponent(deltaExponent);
+
+    console.log('old delta: ', delta);
+    console.log('old deltaExponent: ', deltaExponent);
+    console.log('old exponent: ', exponent);
+
+    console.log('old significatedDelta: ', significatedDelta);
+    console.log('old significand: ', significand);
+
     return {
       type: StateEnum.FLOAT,
       min,
@@ -167,7 +189,7 @@ export class DataToURLFactory {
   private static getExponentAsBitsForFloat = (v: number, floatEntry: Float): string =>
     DataToURLFactory.getExponentBitsForExponent(Math.ceil(Math.log10(v - floatEntry.min)), floatEntry.exponent);
 
-  private static parseFloatToBits = (v: number, floatEntry: Float): string =>
+  public static parseFloatToBits = (v: number, floatEntry: Float): string =>
     `${DataToURLFactory.getSignificantAsBitsForFloat(v, floatEntry)}${DataToURLFactory.getExponentAsBitsForFloat(v, floatEntry)}`;
 
   private static parseToBits = (v: DataValue, d: DataEntry): string => {
@@ -224,6 +246,25 @@ export class DataToURLFactory {
   public static deconstructUrl = (url: string, pattern: DataPattern): DataValues => {
     const bits = DataToURLFactory.parseBase64ToBits(url);
     const offsets = DataToURLFactory.offsetMapForDataPattern(pattern);
+    console.log({
+      url,
+      pattern,
+      bits,
+      offsets,
+      values: pattern.map((entry, i) => {
+        const bitsForEntry = bits.slice(offsets[i][0], offsets[i][1]);
+        switch (entry.type) {
+          case StateEnum.VERSION:
+            return Number.parseInt(bitsForEntry, 2);
+          case StateEnum.INT:
+            return Number.parseInt(bitsForEntry, 2) + entry.min;
+          case StateEnum.FLOAT:
+            return DataToURLFactory.parseFloat(bitsForEntry, entry as Float);
+          case StateEnum.BOOLEAN:
+            return bitsForEntry === '1';
+        }
+      }),
+    });
     return pattern.map((entry, i) => {
       const bitsForEntry = bits.slice(offsets[i][0], offsets[i][1]);
       switch (entry.type) {

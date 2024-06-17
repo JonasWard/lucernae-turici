@@ -1,6 +1,16 @@
 import { ExtrusionProfile, ExtrusionProfileType } from '../baseGeometry';
 import { DataDefinition } from '../dataObject';
-import { DataEntry, DataToURLFactory, DataValue, DataValues, SemanticValues, VersionObject } from '../dataStringParsing';
+import { SemanticValueString } from '../dataSemanticsEnums';
+import {
+  DataEntry,
+  DataToURLFactory,
+  DataValue,
+  DataValues,
+  NestedBoundsObject,
+  SemanticBoundsObjects,
+  SemanticValues,
+  VersionObject,
+} from '../dataStringParsing';
 import { FloorplanType, FootprintGeometryTypes } from '../footprintgeometrytypes';
 import { HeightGenerator, ProcessingMethodType, ProcessingMethods } from '../geometry';
 
@@ -22,6 +32,7 @@ const extrusionMap = (extrusionType: ExtrusionProfileType, offset: number): [Dat
       return [
         [DataToURLFactory.createFloat(0, 1, 2), DataToURLFactory.createFloat(0, 1, 2), DataToURLFactory.createFloat(0, 1, 2)],
         {
+          type: 1,
           insetSides: offset,
           insetTop: offset + 1,
           insetBottom: offset + 2,
@@ -38,6 +49,7 @@ const extrusionMap = (extrusionType: ExtrusionProfileType, offset: number): [Dat
           DataToURLFactory.createFloat(0, 1, 2),
         ],
         {
+          type: 1,
           insetSides: offset,
           insetTop: offset + 1,
           insetBottom: offset + 2,
@@ -45,6 +57,9 @@ const extrusionMap = (extrusionType: ExtrusionProfileType, offset: number): [Dat
         },
         [0.1, 0.1, 0.1, 35],
       ];
+    default:
+      console.log(extrusionType);
+      throw new Error('Extrusion type not found');
   }
 };
 
@@ -54,6 +69,7 @@ const floorMap = (floorType: FootprintGeometryTypes, offset: number): [DataEntry
       return [
         [DataToURLFactory.createInt(200, 600)],
         {
+          type: 2,
           size: offset,
         },
         [400],
@@ -62,6 +78,7 @@ const floorMap = (floorType: FootprintGeometryTypes, offset: number): [DataEntry
       return [
         [DataToURLFactory.createInt(200, 600), DataToURLFactory.createInt(1, 16), DataToURLFactory.createInt(1, 16)],
         {
+          type: 2,
           size: offset,
           xCount: offset + 1,
           yCount: offset + 2,
@@ -72,6 +89,7 @@ const floorMap = (floorType: FootprintGeometryTypes, offset: number): [DataEntry
       return [
         [DataToURLFactory.createInt(200, 600), DataToURLFactory.createInt(1, 16), DataToURLFactory.createInt(1, 16)],
         {
+          type: 2,
           size: offset,
           xCount: offset + 1,
           yCount: offset + 2,
@@ -82,6 +100,7 @@ const floorMap = (floorType: FootprintGeometryTypes, offset: number): [DataEntry
       return [
         [DataToURLFactory.createInt(200, 600), DataToURLFactory.createInt(1, 16), DataToURLFactory.createInt(1, 16)],
         {
+          type: 2,
           size: offset,
           xCount: offset + 1,
           yCount: offset + 2,
@@ -99,6 +118,7 @@ const floorMap = (floorType: FootprintGeometryTypes, offset: number): [DataEntry
           DataToURLFactory.createInt(3, 34),
         ],
         {
+          type: 2,
           bufferInside: offset,
           radius0: offset + 1,
           radius1: offset + 2,
@@ -120,6 +140,7 @@ const floorMap = (floorType: FootprintGeometryTypes, offset: number): [DataEntry
           DataToURLFactory.createInt(50, 350),
         ],
         {
+          type: 2,
           size: offset,
           circleRadius: offset + 1,
           circleDivisions: offset + 2,
@@ -139,6 +160,7 @@ const heightMap = (heightProcessingMethod: ProcessingMethodType, offset: number)
       return [
         [DataToURLFactory.createBoolean(), DataToURLFactory.createFloat(-3, 3, 1), DataToURLFactory.createInt(150, 350), DataToURLFactory.createInt(1, 10)],
         {
+          type: 3,
           total: offset,
           angle: offset + 1,
           baseHeight: offset + 2,
@@ -157,6 +179,7 @@ const heightMap = (heightProcessingMethod: ProcessingMethodType, offset: number)
           DataToURLFactory.createInt(1, 10),
         ],
         {
+          type: 3,
           max: offset,
           min: offset + 1,
           period: offset + 2,
@@ -170,6 +193,7 @@ const heightMap = (heightProcessingMethod: ProcessingMethodType, offset: number)
       return [
         [DataToURLFactory.createInt(150, 350), DataToURLFactory.createInt(1, 10)],
         {
+          type: 3,
           baseHeight: offset,
           storyCount: offset + 1,
         },
@@ -209,6 +233,30 @@ const parseMethod = (dataValues: DataValues, methodObject: { [key: string]: any 
   }
 };
 
+const parseMethodBounds = (methodObject: { [key: string]: any }, dataEntries: DataEntry[], methodType: ProcessingMethodType): NestedBoundsObject => {
+  switch (methodType) {
+    case ProcessingMethodType.IncrementalMethod:
+      return {
+        type: dataEntries[methodObject.heightProcessingMethod],
+        total: dataEntries[methodObject.total],
+        angle: dataEntries[methodObject.angle],
+      };
+    case ProcessingMethodType.Sin:
+      return {
+        type: dataEntries[methodObject.heightProcessingMethod],
+        max: dataEntries[methodObject.max],
+        min: dataEntries[methodObject.min],
+        period: dataEntries[methodObject.period],
+        phaseShift: dataEntries[methodObject.phaseShift],
+      };
+    case ProcessingMethodType.None:
+    default:
+      return {
+        type: dataEntries[methodObject.heightProcessingMethod],
+      };
+  }
+};
+
 const parseHeightMethod = (dataValues: DataValues, heightObject: { [key: string]: any }): HeightGenerator => {
   return {
     baseHeight: dataValues[heightObject.baseHeight] as number,
@@ -217,8 +265,33 @@ const parseHeightMethod = (dataValues: DataValues, heightObject: { [key: string]
   };
 };
 
+const parseHeightMethodBounds = (dataObject: Version0_1Object, heightObject: { [key: string]: any }, dataEntries: DataEntry[]): NestedBoundsObject => {
+  return {
+    baseHeight: dataEntries[heightObject.baseHeight],
+    storyCount: dataEntries[heightObject.storyCount],
+    method: parseMethodBounds(dataEntries, dataEntries, dataObject.heightMethodParameters.method.type),
+  };
+};
+
 export const version0_1Update = (dataObject: Version0_1Object): VersionObject =>
-  getVersion0_1VersionObject(dataObject.extrusionTypeParameters.type, dataObject.floorTypeParameters.floorType, dataObject.heightMethodParameters.method.type);
+  getVersion0_1VersionObject(dataObject.extrusionTypeParameters.type, dataObject.floorTypeParameters.type, dataObject.heightMethodParameters.method.type);
+
+export const version0_1ConstructDomainObject = (dataObject: Version0_1Object, versionObject: VersionObject): SemanticBoundsObjects => {
+  console.log(dataObject);
+  console.log(dataObject.extrusionTypeParameters);
+  console.log(extrusionMap(dataObject.extrusionTypeParameters.type as ExtrusionProfileType, 0));
+
+  return {
+    [SemanticValueString.version]: versionObject.dataPattern[0],
+    [SemanticValueString.extrusionTypeParameters]: Object.fromEntries(
+      Object.entries(extrusionMap(dataObject.extrusionTypeParameters.type as ExtrusionProfileType, 0)[1]).map(([k, i]) => [k, versionObject.dataPattern[i]])
+    ),
+    [SemanticValueString.floorTypeParameters]: Object.fromEntries(
+      Object.entries(floorMap(dataObject.floorTypeParameters.type as FootprintGeometryTypes, 0)[1]).map(([k, i]) => [k, versionObject.dataPattern[i]])
+    ),
+    [SemanticValueString.heightMethodParameters]: parseHeightMethodBounds(dataObject, versionObject.namesMap, versionObject.dataPattern),
+  };
+};
 
 export const version0_1ConstructObject = (values: DataValues, versionObject: VersionObject): Version0_1Object => {
   return {

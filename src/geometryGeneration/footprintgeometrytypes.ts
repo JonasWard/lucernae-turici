@@ -8,33 +8,33 @@ export enum FootprintGeometryTypes {
 }
 
 export interface SquareFootprint {
-  floorType: FootprintGeometryTypes.Square;
+  type: FootprintGeometryTypes.Square;
   size: number;
 }
 
 export interface SquareGridFootprint {
-  floorType: FootprintGeometryTypes.SquareGrid;
+  type: FootprintGeometryTypes.SquareGrid;
   size: number;
   xCount: number;
   yCount: number;
 }
 
 export interface TriangleGridFootprint {
-  floorType: FootprintGeometryTypes.TriangleGrid;
+  type: FootprintGeometryTypes.TriangleGrid;
   size: number;
   xCount: number;
   yCount: number;
 }
 
 export interface HexGridFootprint {
-  floorType: FootprintGeometryTypes.HexGrid;
+  type: FootprintGeometryTypes.HexGrid;
   size: number;
   xCount: number;
   yCount: number;
 }
 
 export interface CylinderFootprint {
-  floorType: FootprintGeometryTypes.Cylinder;
+  type: FootprintGeometryTypes.Cylinder;
   bufferInside: number;
   radius0: number;
   radius1: number;
@@ -44,7 +44,7 @@ export interface CylinderFootprint {
 }
 
 export interface MalculmiusOneFootprint {
-  floorType: FootprintGeometryTypes.MalculmiusOne;
+  type: FootprintGeometryTypes.MalculmiusOne;
   size: number;
   circleRadius: number;
   circleDivisions: number;

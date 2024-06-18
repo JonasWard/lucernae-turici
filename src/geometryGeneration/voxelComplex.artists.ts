@@ -1,7 +1,7 @@
 import { Color3, Scene, StandardMaterial, MeshBuilder, Vector3, Material, Mesh as BabylonMesh } from '@babylonjs/core';
-import { ExtrusionProfile } from './baseGeometry';
+import { ExtrusionProfile, GeometryBaseData } from './baseGeometry';
 import { V3, Mesh } from './v3';
-import { VoxelComplex, Voxel, GeometryStateMap } from './voxelComplex.type';
+import { VoxelComplex, Voxel } from './voxelComplex.type';
 import { getCenterOfVoxelFace, getCenterOfVoxel } from './voxelComplex';
 import { VoxelMesh } from './voxelComplex.mesh';
 
@@ -130,8 +130,8 @@ export class VoxelComplexMeshArtist {
     return material;
   };
 
-  public static render = (vX: VoxelComplex, scene: Scene, gSM: GeometryStateMap, material?: Material | StandardMaterial) => {
-    const mesh = VoxelMesh.getMeshForVoxelComplex(vX, gSM);
+  public static render = (vX: VoxelComplex, scene: Scene, gBD: GeometryBaseData, material?: Material | StandardMaterial) => {
+    const mesh = VoxelMesh.getMeshForVoxelComplex(vX, gBD);
 
     const meshMaterial = material ?? VoxelComplexMeshArtist.defaultMaterial(scene);
     const vertexData = Mesh.getVertexDataForMesh(mesh);

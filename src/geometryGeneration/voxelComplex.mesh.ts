@@ -1,12 +1,11 @@
 // these are the helper methods for filling the cells in the voxel complex
 
-import { ExtrusionProfileType } from './baseGeometry';
+import { ExtrusionProfileType, GeometryBaseData } from './baseGeometry';
 import { HalfEdgeMesh, V2 } from './geometrytypes';
 import { getHalfEdgeMeshFromMesh } from './halfedge';
 import { QuadFace, V3, Mesh } from './v3';
 import { gefFace, getCenterOfVoxelFace, isFaceInVoxelClosed } from './voxelComplex';
-import { isFaceClosed } from './voxelComplex.states';
-import { GeometryStateMap, Voxel, VoxelComplex, VoxelState } from './voxelComplex.type';
+import { Voxel, VoxelComplex, VoxelState } from './voxelComplex.type';
 
 // helper interface that defines the four corner vertices of a frame to be filled in with the frames of the voxel
 export class VoxelMesh {
@@ -87,33 +86,33 @@ export class VoxelMesh {
     return inverse ? square.reverse() : square;
   };
 
-  public static getUVsForGeometryState = (gS: GeometryStateMap): [V2[], V2[]] => {
-    switch (gS.extrusionProfile.type) {
+  public static getUVsForGeometryState = (gBD: GeometryBaseData): [V2[], V2[]] => {
+    switch (gBD.extrusion.type) {
       case ExtrusionProfileType.Arc:
         return [
-          VoxelMesh.getBottom({ u: 0, v: gS.extrusionProfile.insetBottom }, { u: 1 - gS.extrusionProfile.insetSides, v: 1 - gS.extrusionProfile.insetTop }),
+          VoxelMesh.getBottom({ u: 0, v: gBD.extrusion.insetBottom }, { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }),
           VoxelMesh.getArc(
-            { u: 0, v: 1 - gS.extrusionProfile.insetTop - gS.extrusionProfile.radiusTop },
-            { u: 1 - gS.extrusionProfile.insetSides, v: 1 - gS.extrusionProfile.insetTop }
+            { u: 0, v: 1 - gBD.extrusion.insetTop - gBD.extrusion.radiusTop },
+            { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }
           ),
         ];
       case ExtrusionProfileType.Ellipse:
         return [
           VoxelMesh.getArc(
-            { u: 0, v: 1 - gS.extrusionProfile.insetTop - gS.extrusionProfile.radiusTop },
-            { u: 1 - gS.extrusionProfile.insetSides, v: gS.extrusionProfile.insetBottom },
+            { u: 0, v: 1 - gBD.extrusion.insetTop - gBD.extrusion.radiusTop },
+            { u: 1 - gBD.extrusion.insetSides, v: gBD.extrusion.insetBottom },
             true
           ),
           VoxelMesh.getArc(
-            { u: 0, v: 1 - gS.extrusionProfile.insetTop - gS.extrusionProfile.radiusTop },
-            { u: 1 - gS.extrusionProfile.insetSides, v: 1 - gS.extrusionProfile.insetTop }
+            { u: 0, v: 1 - gBD.extrusion.insetTop - gBD.extrusion.radiusTop },
+            { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }
           ),
         ];
 
       case ExtrusionProfileType.Square:
         return [
-          VoxelMesh.getBottom({ u: 0, v: gS.extrusionProfile.insetBottom }, { u: 1 - gS.extrusionProfile.insetSides, v: 1 - gS.extrusionProfile.insetTop }),
-          VoxelMesh.getTop({ u: 0, v: gS.extrusionProfile.insetBottom }, { u: 1 - gS.extrusionProfile.insetSides, v: 1 - gS.extrusionProfile.insetTop }),
+          VoxelMesh.getBottom({ u: 0, v: gBD.extrusion.insetBottom }, { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }),
+          VoxelMesh.getTop({ u: 0, v: gBD.extrusion.insetBottom }, { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }),
         ];
     }
   };
@@ -204,7 +203,9 @@ export class VoxelMesh {
       v01: V3.YAxis,
       v00: V3.Origin,
     };
-    const squareGSM: GeometryStateMap = { extrusionProfile: { type: ExtrusionProfileType.Square, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1 } };
+    const squareGSM: GeometryBaseData = {
+      extrusion: { type: ExtrusionProfileType.Square, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1 },
+    } as GeometryBaseData;
 
     const arcOrigin = { x: 2, y: 0, z: 0 };
     const baseFrameArc: QuadFace = {
@@ -213,7 +214,9 @@ export class VoxelMesh {
       v01: V3.add(baseFrameSquare.v01, arcOrigin),
       v00: V3.add(baseFrameSquare.v00, arcOrigin),
     };
-    const argGSM: GeometryStateMap = { extrusionProfile: { type: ExtrusionProfileType.Arc, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1, radiusTop: 0.4 } };
+    const argGSM: GeometryBaseData = {
+      extrusion: { type: ExtrusionProfileType.Arc, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1, radiusTop: 0.4 },
+    } as GeometryBaseData;
 
     const ellipseOrigin = { x: 4, y: 0, z: 0 };
     const baseFrameEllipse: QuadFace = {
@@ -222,9 +225,9 @@ export class VoxelMesh {
       v01: V3.add(baseFrameSquare.v01, ellipseOrigin),
       v00: V3.add(baseFrameSquare.v00, ellipseOrigin),
     };
-    const ellipseGSM: GeometryStateMap = {
-      extrusionProfile: { type: ExtrusionProfileType.Ellipse, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1, radiusTop: 0.3 },
-    };
+    const ellipseGSM: GeometryBaseData = {
+      extrusion: { type: ExtrusionProfileType.Ellipse, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1, radiusTop: 0.3 },
+    } as GeometryBaseData;
 
     const squareUVs = VoxelMesh.getUVsForGeometryState(squareGSM);
     const arcUVs = VoxelMesh.getUVsForGeometryState(argGSM);
@@ -239,12 +242,12 @@ export class VoxelMesh {
     );
   };
 
-  public static getMeshForVoxelComplex = (vX: VoxelComplex, gS: GeometryStateMap): Mesh => {
-    const uvss = VoxelMesh.getUVsForGeometryState(gS);
+  public static getMeshForVoxelComplex = (vX: VoxelComplex, gBD: GeometryBaseData): Mesh => {
+    const uvss = VoxelMesh.getUVsForGeometryState(gBD);
     return Mesh.joinMeshes(Object.values(vX.voxels).map((v) => VoxelMesh.getMeshForVoxel(v, vX, uvss.flat(), uvss[0].length - 1)));
   };
 
-  public static getHalfEdgeMeshForVoxelComplex = (vX: VoxelComplex, gS: GeometryStateMap): HalfEdgeMesh => {
-    return getHalfEdgeMeshFromMesh(VoxelMesh.getMeshForVoxelComplex(vX, gS));
+  public static getHalfEdgeMeshForVoxelComplex = (vX: VoxelComplex, gBD: GeometryBaseData): HalfEdgeMesh => {
+    return getHalfEdgeMeshFromMesh(VoxelMesh.getMeshForVoxelComplex(vX, gBD));
   };
 }

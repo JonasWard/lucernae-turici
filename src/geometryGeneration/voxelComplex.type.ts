@@ -24,10 +24,6 @@ export enum VoxelInternalFaceState {
   CLOSED = 'CLOSED',
 }
 
-export interface GeometryStateMap {
-  extrusionProfile: ExtrusionProfile;
-}
-
 export interface Voxel {
   id: string;
   vertices: string[];

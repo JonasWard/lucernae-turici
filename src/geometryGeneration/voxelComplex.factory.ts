@@ -1,6 +1,9 @@
-import { BaseFrameFactory, WorldXY, getFrameToFrameTransformation } from './baseGeometry';
+import { Vector3 } from '@babylonjs/core';
+import { BaseFrameFactory, GeometryBaseData, WorldXY, getFrameToFrameTransformation, joinMeshes, polygonToMesh } from './baseGeometry';
+import { FootprintGeometryTypes } from './footprintgeometrytypes';
+import { createCellComplexFromMalculmiusGeometry, createShardOfMalculmiusOne, getHeights } from './geometry';
 import { BaseFrame, HalfEdge, HalfEdgeMesh } from './geometrytypes';
-import { getFaceEdges, markFacesWithOneNakedEdge } from './halfedge';
+import { getFaceEdges, getHalfEdgeMeshFromMesh, markFacesWithOneNakedEdge } from './halfedge';
 import { HalfEdgeMeshFactory } from './halfedge.factory';
 import { getRandomUUID } from './helpermethods';
 import { V3 } from './v3';
@@ -130,7 +133,35 @@ export class VoxelFactory {
     return VoxelFactory.sweepHalfEdgeMesh(baseSpiral, baseFrames);
   };
 
-  // public static getTowerOfBable = (radius: number, floorDelta: number, divisions: number, totalTurningRadius: number): VoxelComplex => {
+  public static getVoxelComplexFromGeometryBaseData = (gBD: GeometryBaseData): VoxelComplex => {
+    const heights = getHeights(gBD.heights);
+    const baseFrames = BaseFrameFactory.getBaseFramArrayAlongDirectionForSpacings(V3.ZAxis, heights);
 
-  // }
+    switch (gBD.footprint.type) {
+      case FootprintGeometryTypes.Cylinder:
+        return VoxelFactory.getCylinder(
+          [
+            ...(gBD.footprint.bufferInside ? [gBD.footprint.radius0 + gBD.footprint.bufferInside] : []),
+            gBD.footprint.radius0,
+            gBD.footprint.radius1,
+            gBD.footprint.radius2,
+            ...(gBD.footprint.bufferOutside ? [gBD.footprint.radius2 + gBD.footprint.bufferOutside] : []),
+          ],
+          heights,
+          gBD.footprint.segments
+        );
+      case FootprintGeometryTypes.Square:
+        return VoxelFactory.sweepHalfEdgeMesh(HalfEdgeMeshFactory.createGrid(4, gBD.footprint.size, 1, 1), baseFrames);
+      case FootprintGeometryTypes.SquareGrid:
+        return VoxelFactory.sweepHalfEdgeMesh(HalfEdgeMeshFactory.createGrid(4, gBD.footprint.size, gBD.footprint.xCount, gBD.footprint.yCount), baseFrames);
+      case FootprintGeometryTypes.TriangleGrid:
+        return VoxelFactory.sweepHalfEdgeMesh(HalfEdgeMeshFactory.createGrid(3, gBD.footprint.size, gBD.footprint.xCount, gBD.footprint.yCount), baseFrames);
+      case FootprintGeometryTypes.HexGrid:
+        return VoxelFactory.sweepHalfEdgeMesh(HalfEdgeMeshFactory.createGrid(6, gBD.footprint.size, gBD.footprint.xCount, gBD.footprint.yCount), baseFrames);
+      case FootprintGeometryTypes.MalculmiusOne:
+        const shard = createShardOfMalculmiusOne(gBD.footprint, new Vector3(0, 0, 0), 0);
+        const heMesh = getHalfEdgeMeshFromMesh(joinMeshes(shard.map((s) => polygonToMesh(s))));
+        return VoxelFactory.sweepHalfEdgeMesh(heMesh, baseFrames);
+    }
+  };
 }

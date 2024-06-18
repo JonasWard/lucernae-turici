@@ -5,6 +5,7 @@ import { getHalfEdgeMeshFromMesh } from './halfedge';
 import { VoxelFactory } from './voxelComplex.factory';
 import { V3 } from './v3';
 import { VoxelComplex } from './voxelComplex.type';
+import { MalculmiusOneFootprint } from './footprintgeometrytypes';
 
 export enum Malculmiuses {
   One = 5,
@@ -118,7 +119,7 @@ const getBaseMethod = (method: ProcessingMethods, total?: number): ((angle: numb
   }
 };
 
-const getHeights = (heightGenerator: HeightGenerator): number[] => {
+export const getHeights = (heightGenerator: HeightGenerator): number[] => {
   const heights: number[] = [];
 
   switch (heightGenerator.method.type) {
@@ -161,7 +162,7 @@ const copyAndRotate = (vss: Vector3[][], origin: Vector3, angle: number): Vector
   );
 };
 
-const createShardOfMalculmiusOne = (geometry: MalculmiusOneGeometry, origin: Vector3, angle: number): Vector3[][] => {
+export const createShardOfMalculmiusOne = (geometry: MalculmiusOneFootprint, origin: Vector3, angle: number): Vector3[][] => {
   // creating the base profiles
   const singleShard = (o: Vector3, v0: Vector3, v1: Vector3, r0: number, r1: number, o0: number): Vector3[][] => {
     const t0 = o.add(v0.scale(r1));
@@ -307,7 +308,7 @@ export const createMalculmiusGeometry = (
 
   switch (geometry.type) {
     case Malculmiuses.One:
-      const shardOfMalculmiusOne = createShardOfMalculmiusOne(geometry, origin, 0);
+      const shardOfMalculmiusOne = createShardOfMalculmiusOne(geometry as unknown as MalculmiusOneFootprint, origin, 0);
       createBase(shardOfMalculmiusOne, heightMap, base);
       createVoxelComplex(shardOfMalculmiusOne, heightMap, extrusionProfile, building);
       createShade(shardOfMalculmiusOne, heightMap, shade);
@@ -326,7 +327,7 @@ export const createCellComplexFromMalculmiusGeometry = (geometry: MalculmiusGeom
   const heightMap = getHeights(geometry.heights);
   const baseFrames = BaseFrameFactory.getBaseFramArrayAlongDirectionForSpacings(originFrame.z, heightMap);
 
-  const shard = createShardOfMalculmiusOne(geometry, new Vector3(originFrame.o.x, originFrame.o.y, originFrame.o.z), 0);
+  const shard = createShardOfMalculmiusOne(geometry as unknown as MalculmiusOneFootprint, new Vector3(originFrame.o.x, originFrame.o.y, originFrame.o.z), 0);
   const heMesh = getHalfEdgeMeshFromMesh(joinMeshes(shard.map((s) => polygonToMesh(s))));
 
   // constructing the voxel complex

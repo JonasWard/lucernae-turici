@@ -142,10 +142,10 @@ const footprintTypeParser = (footprintType: FootprintGeometryTypes, startIndex =
         [VersionParameterNames.footprintType]: DataEntryFactory.createVersion(footprintType, 4, VersionParameterNames.footprintType, startIndex),
         [VersionParameterNames.circleRadius]: DataEntryFactory.createFloat(3.5, 2, 20, 2, VersionParameterNames.circleRadius, baseIndexOtherParameters + 1),
         [VersionParameterNames.circleDivisions]: DataEntryFactory.createInt(5, 3, 30, VersionParameterNames.circleDivisions, baseIndexOtherParameters + 2),
-        [VersionParameterNames.angleSplit]: DataEntryFactory.createFloat(0.5, 0.01, 0.99, 3, VersionParameterNames.angleSplit, baseIndexOtherParameters + 3),
-        [VersionParameterNames.offsetA]: DataEntryFactory.createFloat(0, -10, 10, 1, VersionParameterNames.offsetA, baseIndexOtherParameters + 4),
-        [VersionParameterNames.offsetB]: DataEntryFactory.createFloat(0, -10, 10, 1, VersionParameterNames.offsetB, baseIndexOtherParameters + 5),
-        [VersionParameterNames.innerRadius]: DataEntryFactory.createFloat(1, 0.5, 10, 1, VersionParameterNames.innerRadius, baseIndexOtherParameters + 6),
+        [VersionParameterNames.angleSplit]: DataEntryFactory.createFloat(0.5, 0.01, 0.99, 2, VersionParameterNames.angleSplit, baseIndexOtherParameters + 3),
+        [VersionParameterNames.offsetA]: DataEntryFactory.createFloat(0, -5, 5, 2, VersionParameterNames.offsetA, baseIndexOtherParameters + 4),
+        [VersionParameterNames.offsetB]: DataEntryFactory.createFloat(0, -5, 5, 2, VersionParameterNames.offsetB, baseIndexOtherParameters + 5),
+        [VersionParameterNames.innerRadius]: DataEntryFactory.createFloat(1, 0.5, 10, 2, VersionParameterNames.innerRadius, baseIndexOtherParameters + 6),
       };
     default:
       throw new Error('Footprint type not found');

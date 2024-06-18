@@ -151,7 +151,7 @@ export type MalculmiusGeometryType = Malculmiuses.One;
 
 export type MalculmiusGeometry = MalculmiusOneGeometry;
 
-const MALCULMIUS_TOLERANCE = 1;
+const MALCULMIUS_TOLERANCE = 0.01;
 
 const copyAndRotate = (vss: Vector3[][], origin: Vector3, angle: number): Vector3[][] => {
   const cos = Math.cos(angle);

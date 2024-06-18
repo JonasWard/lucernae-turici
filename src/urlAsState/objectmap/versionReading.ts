@@ -111,6 +111,6 @@ export const getValueObjectFrom = (nestedDataEntry: SemanticlyNestedDataEntry, a
   Object.fromEntries(
     Object.entries(nestedDataEntry).map(([key, value]) => [
       attributeMapper?.hasOwnProperty(key) ? attributeMapper[key] : key,
-      value.hasOwnProperty('type') ? (value as DataEntry).value : getValueObjectFrom(value as SemanticlyNestedDataEntry),
+      value.hasOwnProperty('type') ? (value as DataEntry).value : getValueObjectFrom(value as SemanticlyNestedDataEntry, attributeMapper),
     ])
   );

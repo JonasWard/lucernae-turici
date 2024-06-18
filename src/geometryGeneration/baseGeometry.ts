@@ -3,6 +3,8 @@ import { getCenterOfHalfEdge, getEndVertexOfHalfEdge, getFaceVertices, getStartV
 import { BaseFrame, HalfEdge, HalfEdgeFace, HalfEdgeMesh, TransformationMatrix, V2 } from './geometrytypes';
 import { getColorFromUUID, getV3, getVector3, getVertexHash } from './helpermethods';
 import { V3 } from './v3';
+import { FloorplanType } from './footprintgeometrytypes';
+import { HeightGenerator } from './geometry';
 
 // this mesh assumes a positive oriented coordinate system, which means we will have to transform the mesh when importing them into a babylon scene
 
@@ -49,6 +51,12 @@ export type EllipseExtrusionProfile = {
 };
 
 export type ExtrusionProfile = ArcExtrusionProfile | SquareExtrusionProfile | EllipseExtrusionProfile;
+
+export type GeometryBaseData = {
+  extrusion: ExtrusionProfile;
+  footprint: FloorplanType;
+  heights: HeightGenerator;
+};
 
 const ARC_DIVSION_COUNT = 8;
 export const MALCULMIUS_MESH_NAME = 'malculmius';

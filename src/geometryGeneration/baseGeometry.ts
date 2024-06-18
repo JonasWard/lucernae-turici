@@ -106,9 +106,7 @@ const basePolygonToMesh = (polygon: Vector3[]): Mesh => {
   };
 };
 
-const invertMeshFaces = (mesh: Mesh): void => {
-  mesh.faces.forEach((f) => f.reverse());
-};
+const invertMeshFaces = (mesh: Mesh): void => mesh.faces.forEach((f) => f.reverse());
 
 const closeVoxel = (voxel: Voxel): Mesh => {
   const topMesh = basePolygonToMesh(voxel.baseProfile);
@@ -276,7 +274,7 @@ export const voxelToMesh = (voxel: Voxel, extrusionProfile: ExtrusionProfile): M
     meshes.push(loft(centerCurve, backCurve));
     meshes.push(closeFrame(frontFrame, extrusionProfile));
     const backFrameMesh = closeFrame(backFrame, extrusionProfile);
-    backFrameMesh.faces.map((f) => f.reverse());
+    invertMeshFaces(backFrameMesh);
     meshes.push(backFrameMesh);
     meshes.push(closeVoxel(voxel));
   });

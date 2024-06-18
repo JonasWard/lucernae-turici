@@ -18,4 +18,11 @@ export const getV2 = (v: Vector2): V2 => ({ u: v.x, v: v.y });
 export const getVertexHash = (v: Vector3 | V3): string =>
   `${v.x.toFixed(3).replace('-0.000', '0.000')}_${v.y.toFixed(3).replace('-0.000', '0.000')}_${v.z.toFixed(3).replace('-0.000', '0.000')}`;
 
-export const getColorFromUUID = (s: string) => Color3.FromHexString(`#ff${s.slice(0, 2)}${s.slice(0, 2)}`);
+// red hui
+// export const getColorFromUUID = (s: string) => Color3.FromHexString(`#ff${s.slice(0, 2)}${s.slice(0, 2)}`);
+// green hui
+// export const getColorFromUUID = (s: string) => Color3.FromHexString(`#${s.slice(0, 2)}ff${s.slice(0, 2)}`);
+// blue hui
+// export const getColorFromUUID = (s: string) => Color3.FromHexString(`#${s.slice(0, 2)}${s.slice(0, 2)}ff`);
+// normal colors
+export const getColorFromUUID = (s: string) => Color3.FromHexString(`#${s.slice(0, 6)}`);

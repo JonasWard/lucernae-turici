@@ -14,6 +14,7 @@ root.render(
       <Routes>
         <Route element={<div>hello world</div>} path='/' />
         <Route element={<SimpleApp />} path='/simple' />
+        <Route element={<LampConfigurator />} path='/configurator' />
         <Route element={<LampConfigurator />} path='/configurator/:stateString' />
         <Route element={<TestingDataParser />} path='/dataParserTest' />
       </Routes>

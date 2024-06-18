@@ -478,9 +478,10 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
   const vertexData = getVertexDataForFaceWithData(facedataMain);
   const babylonMesh = new BabylonMesh(he.id, scene);
 
+  const color = getColorFromUUID(he.id);
+
   if (!material) {
-    const material = new StandardMaterial(`${he.id.slice(0, 2)}-material`, scene);
-    const color = getColorFromUUID(he.id);
+    const material = new StandardMaterial(`${color.toHexString()}-material`, scene);
     material.diffuseColor = color;
     material.backFaceCulling = backFaceCulling;
     babylonMesh.material = material;
@@ -491,13 +492,14 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
   const vertexDataStart = getVertexDataForFaceWithData(faceDataStart);
   const babylonMeshStart = new BabylonMesh(`${he.id}-start`, scene);
 
-  const previousMaterialName = `${he.previous.slice(0, 2)}-material`;
+  const startColor = getColorFromUUID(he.previous);
+
+  const previousMaterialName = `${startColor.toHexString()}-material`;
   const startMaterial = scene.materials.find((m) => m.name === previousMaterialName) as undefined | StandardMaterial;
 
   if (!startMaterial) {
     const materialStart = new StandardMaterial(previousMaterialName, scene);
-    const color = getColorFromUUID(he.previous);
-    materialStart.diffuseColor = color;
+    materialStart.diffuseColor = startColor;
     materialStart.backFaceCulling = backFaceCulling;
     babylonMeshStart.material = materialStart;
   } else babylonMeshStart.material = startMaterial;
@@ -508,13 +510,14 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
   const vertexDataEnd = getVertexDataForFaceWithData(faceDataEnd);
   const babylonMeshEnd = new BabylonMesh(`${he.id}-end`, scene);
 
-  const nextMaterialName = `${he.next.slice(0, 2)}-material`;
+  const endColor = getColorFromUUID(he.next);
+
+  const nextMaterialName = `${endColor.toHexString()}-material`;
   const endMaterial = scene.materials.find((m) => m.name === nextMaterialName) as undefined | StandardMaterial;
 
   if (!endMaterial) {
     const materialEnd = new StandardMaterial(previousMaterialName, scene);
-    const color = getColorFromUUID(he.next);
-    materialEnd.diffuseColor = color;
+    materialEnd.diffuseColor = endColor;
     materialEnd.backFaceCulling = backFaceCulling;
     babylonMeshEnd.material = materialEnd;
   } else babylonMeshEnd.material = endMaterial;
@@ -528,12 +531,13 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
 
     const babylonMeshNeighbour = new BabylonMesh(`${he.id}-neighbour`, scene);
 
-    const neighbourMaterialName = `${he.neighbour.slice(0, 2)}-material`;
+    const color = getColorFromUUID(he.neighbour);
+
+    const neighbourMaterialName = `${color.toHexString()}-material`;
     const neighbourMaterial = scene.materials.find((m) => m.name === neighbourMaterialName) as undefined | StandardMaterial;
 
     if (!neighbourMaterial) {
       const neighbourMaterial = new StandardMaterial(neighbourMaterialName, scene);
-      const color = getColorFromUUID(he.neighbour);
       neighbourMaterial.diffuseColor = color;
       neighbourMaterial.backFaceCulling = backFaceCulling;
       babylonMeshNeighbour.material = neighbourMaterial;

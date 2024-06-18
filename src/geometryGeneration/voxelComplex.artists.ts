@@ -80,16 +80,16 @@ const getVertexPairForFaceInVoxel = (voxel: Voxel, vX: VoxelComplex, index: numb
 };
 
 // getting the center of a face in a voxelcomplex
-const getRepresentativeMeshForVoxelFace = (voxel: Voxel, vX: VoxelComplex, index: number, scene: Scene, rootNode?: TransformNode) => {
+const getRepresentativeMeshForVoxelFace = (voxel: Voxel, vX: VoxelComplex, index: number, scene: Scene, rootNode?: TransformNode, scale: number = 1) => {
   // getting the center of the face
   const v = getRepresentativeLocationForVoxelFace(voxel, vX, index);
 
-  getMeshForVertex(v, scene, getColorForUUID(voxel.id), rootNode);
+  getMeshForVertex(v, scene, getColorForUUID(voxel.id), rootNode, scale);
 };
 
 const getAllRepresentativeMeshForVoxelFace = (voxel: Voxel, vX: VoxelComplex, scene: Scene, rootNode?: TransformNode, scale: number = 1) => {
   for (let i = 0; i < voxel.n + 2; i++) {
-    getRepresentativeMeshForVoxelFace(voxel, vX, i, scene);
+    getRepresentativeMeshForVoxelFace(voxel, vX, i, scene, rootNode, scale);
     const pair = getVertexPairForFaceInVoxel(voxel, vX, i);
     if (pair) getMeshForEdge(pair[0], pair[1], scene, `${voxel.id}-${i}`, undefined, rootNode, scale);
   }

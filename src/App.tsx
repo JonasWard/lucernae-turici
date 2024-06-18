@@ -1,30 +1,31 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { Mesh, PointLight, Scene } from '@babylonjs/core';
+import { Mesh, PointLight, Scene, TransformNode } from '@babylonjs/core';
 import './App.css';
 import { ArcRotateCamera, Vector3, HemisphericLight, Color3 } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
 import SceneComponent from './components/SceneComponent';
 import { GeometryBaseData } from './geometryGeneration/baseGeometry';
-import { AddLampGeometryToScene } from './geometryGeneration/geometryEntry';
+import { AddLampGeometryToScene, RenderMethod } from './geometryGeneration/geometryEntry';
 /* eslint-disable */
 
 // import model from "./assets/model2/scene.gltf";
 
 type IAppProps = {
   gBD: GeometryBaseData;
+  renderMethod?: RenderMethod;
   rerender: boolean;
   completedRerender: () => void;
 };
 
-const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender }) => {
+const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMethod }) => {
   const [scene, setScene] = useState<null | Scene>(null);
-  const [mesh, setMesh] = useState<null | Mesh>(null);
+  const [mesh, setMesh] = useState<null | Mesh | TransformNode>(null);
 
-  const updateGeometry = (gBD: GeometryBaseData, mesh: Mesh | null) => {
+  const updateGeometry = (gBD: GeometryBaseData, mesh: Mesh | TransformNode | null, renderMethod?: RenderMethod) => {
     if (!scene?.isReady()) return;
 
-    setMesh(AddLampGeometryToScene(gBD, scene, mesh));
+    setMesh(AddLampGeometryToScene(gBD, scene, mesh, renderMethod));
     completedRerender();
   };
 
@@ -47,14 +48,14 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender }) => {
 
     setScene(scene);
 
-    updateGeometry(gBD, mesh);
+    updateGeometry(gBD, mesh, renderMethod);
   };
 
   const onRender = (scene: Scene) => {};
 
   useEffect(() => {
-    if (rerender) updateGeometry(gBD, mesh);
-  }, [rerender, gBD, mesh]);
+    if (rerender) updateGeometry(gBD, mesh, renderMethod);
+  }, [rerender, gBD, mesh, renderMethod]);
 
   return <SceneComponent antialias onSceneReady={onSceneReady} onRender={onRender} id='my-canvas' />;
 };

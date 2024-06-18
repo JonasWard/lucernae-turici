@@ -45,7 +45,7 @@ export const getMeshForVertex = (c: V3, scene: Scene, color?: string, rootNode?:
 
   babylonMesh.material = material;
 
-  babylonMesh.position.set(c.x, c.z, c.y);
+  babylonMesh.position.set(c.x, c.z, -c.y);
 };
 
 export const getMeshForEdge = (v0: V3, v1: V3, scene: Scene, id: string, color?: string, rootNode?: TransformNode, scale: number = 1) => {
@@ -53,7 +53,7 @@ export const getMeshForEdge = (v0: V3, v1: V3, scene: Scene, id: string, color?:
   const material = getMaterialForColor(localColor, scene);
 
   const babylonMesh = MeshBuilder.CreateTube(id, {
-    path: [new Vector3(v0.x, v0.z, v0.y), new Vector3(v1.x, v1.z, v1.y)],
+    path: [new Vector3(v0.x, v0.z, -v0.y), new Vector3(v1.x, v1.z, -v1.y)],
     tessellation: edgeResolution,
     radius: vHSize * scale,
     cap: 0, // no cap

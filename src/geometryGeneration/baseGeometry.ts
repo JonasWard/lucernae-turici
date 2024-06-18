@@ -423,9 +423,9 @@ export const getVertexDataForFaceWithData = (fs: FaceWithData[]): VertexData => 
   const uvs: number[] = [];
 
   fs.forEach((f, i) => {
-    positions.push(...f.vertices.map((v) => [v.x * UNIT_SCALING, v.z * UNIT_SCALING, v.y * UNIT_SCALING]).flat());
+    positions.push(...f.vertices.map((v) => [v.x * UNIT_SCALING, v.z * UNIT_SCALING, -v.y * UNIT_SCALING]).flat());
     indices.push(i * 3, i * 3 + 1, i * 3 + 2);
-    normals.push(...f.normals.map((v) => [v.x, v.z, v.y]).flat());
+    normals.push(...f.normals.map((v) => [v.x, v.z, -v.y]).flat());
     uvs.push(...f.uvs.map((v) => [v.u, v.v]).flat());
   });
 

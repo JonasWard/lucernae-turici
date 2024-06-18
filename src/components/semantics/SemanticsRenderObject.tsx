@@ -93,7 +93,7 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
             onOpenChange={toggleOpen}
             trigger='click'
             content={
-              <div style={{ width: 300 }}>
+              <div style={{ width: 200 }}>
                 {content}
                 <Button onClick={() => toggleOpen(false)}>ok</Button>
               </div>

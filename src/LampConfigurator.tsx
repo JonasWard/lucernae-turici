@@ -60,7 +60,7 @@ export const LampConfigurator: React.FC = () => {
       />
       <div>
         <Button onClick={resetData}>reset data</Button>
-        <div style={{ position: 'absolute', top: 0, right: 0, padding: 50, width: 120 }}>
+        <div style={{ position: 'absolute', top: 0, right: 0, padding: 15, width: 120 }}>
           <SemanticsRenderObject
             semantics={data}
             name={''}

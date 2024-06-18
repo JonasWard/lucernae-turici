@@ -34,7 +34,7 @@ export const LampConfigurator: React.FC = () => {
 
   const updateURLFromData = (data: SemanticlyNestedDataEntry) => {
     const newUrl = dataObjectAsUrl(data, parserObjects);
-    window.history.replaceState(null, 'Same Page Title', `/configurator/${newUrl}`);
+    window.history.replaceState(null, 'Same Page Title', `/#configurator/${newUrl}`);
     if (lastURLFromData !== newUrl) setRerender(true);
     setLastURLFromData(newUrl);
   };

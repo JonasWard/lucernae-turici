@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Routes, HashRouter as Router } from 'react-router-dom';
 import './index.css';
 import { LampConfigurator } from './LampConfigurator';
 import { TestingDataParser } from './components/dataParsingVisualization/TestingDataParser';

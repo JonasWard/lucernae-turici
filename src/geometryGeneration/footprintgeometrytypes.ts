@@ -45,7 +45,6 @@ export interface CylinderFootprint {
 
 export interface MalculmiusOneFootprint {
   type: FootprintGeometryTypes.MalculmiusOne;
-  size: number;
   circleRadius: number;
   circleDivisions: number;
   angleSplit: number;

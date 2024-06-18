@@ -16,7 +16,7 @@ export const IntDataEntryRenderer: React.FC<IIntDataEntryRendererProps> = ({ int
     value={int.value}
     min={customMin ?? int.min}
     max={customMax ?? int.max}
-    onChange={(value) => value && onChange({ ...int, value })}
+    onChange={(value) => value !== null && onChange({ ...int, value })}
     precision={0}
   />
 );

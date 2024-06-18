@@ -18,7 +18,7 @@ export const FloatDataEntryRenderer: React.FC<IFloatDataEntryRendererProps> = ({
       min={customMin ?? float.min}
       max={customMax ?? float.max}
       step={5 * 10 ** -float.precision}
-      onChange={(value) => value && onChange({ ...float, value })}
+      onChange={(value) => value !== null && onChange({ ...float, value })}
       precision={float.precision}
       status={float.value < float.min || float.value > float.max ? 'error' : float.value === float.min || float.value === float.max ? 'warning' : undefined}
     />

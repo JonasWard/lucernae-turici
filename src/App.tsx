@@ -21,7 +21,7 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender }) => {
   const [scene, setScene] = useState<null | Scene>(null);
   const [mesh, setMesh] = useState<null | Mesh>(null);
 
-  const updateGeometry = () => {
+  const updateGeometry = (gBD: GeometryBaseData, mesh: Mesh | null) => {
     if (!scene?.isReady()) return;
 
     setMesh(AddLampGeometryToScene(gBD, scene, mesh));
@@ -47,14 +47,14 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender }) => {
 
     setScene(scene);
 
-    updateGeometry();
+    updateGeometry(gBD, mesh);
   };
 
   const onRender = (scene: Scene) => {};
 
   useEffect(() => {
-    if (rerender) updateGeometry();
-  }, [rerender]);
+    if (rerender) updateGeometry(gBD, mesh);
+  }, [rerender, gBD, mesh]);
 
   return <SceneComponent antialias onSceneReady={onSceneReady} onRender={onRender} id='my-canvas' />;
 };

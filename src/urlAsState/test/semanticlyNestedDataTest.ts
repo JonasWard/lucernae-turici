@@ -134,7 +134,7 @@ const footprintTypeParser = (footprintType: FootprintGeometryTypes, startIndex =
         [VersionParameterNames.radius1]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.radius1, baseIndexOtherParameters + 3),
         [VersionParameterNames.radius2]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.radius2, baseIndexOtherParameters + 4),
         [VersionParameterNames.bufferOutside]: DataEntryFactory.createFloat(1, 0, 20, 2, VersionParameterNames.bufferOutside, baseIndexOtherParameters + 5),
-        [VersionParameterNames.segments]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.segments, baseIndexOtherParameters + 6),
+        [VersionParameterNames.segments]: DataEntryFactory.createInt(5, 3, 50, VersionParameterNames.segments, baseIndexOtherParameters + 6),
       };
 
     case FootprintGeometryTypes.MalculmiusOne:

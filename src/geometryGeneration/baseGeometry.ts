@@ -1,4 +1,4 @@
-import { Vector3, Mesh as BabylonMesh, VertexData, Scene, StandardMaterial } from '@babylonjs/core';
+import { Vector3, Mesh as BabylonMesh, VertexData, Scene, StandardMaterial, TransformNode } from '@babylonjs/core';
 import { getCenterOfHalfEdge, getEndVertexOfHalfEdge, getFaceVertices, getStartVertexOfHalfEdge } from './halfedge';
 import { BaseFrame, HalfEdge, HalfEdgeFace, HalfEdgeMesh, TransformationMatrix, V2 } from './geometrytypes';
 import { getColorFromUUID, getV3, getVector3, getVertexHash } from './helpermethods';
@@ -450,7 +450,7 @@ export const renderHalfEdgeMesh = (m: HalfEdgeMesh, scene: Scene, name: string, 
 };
 
 // method for rendering / 'visualizing' a singel half edge
-export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, material?: StandardMaterial) => {
+export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, material?: StandardMaterial, rootNode?: TransformNode) => {
   const halfEdgeScale = 0.7;
   if (!he.face) return;
   // getting the face that belong to the half edge
@@ -477,6 +477,7 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
 
   const vertexData = getVertexDataForFaceWithData(facedataMain);
   const babylonMesh = new BabylonMesh(he.id, scene);
+
   if (!material) {
     const material = new StandardMaterial(`${he.id.slice(0, 2)}-material`, scene);
     const color = getColorFromUUID(he.id);
@@ -486,6 +487,7 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
   } else babylonMesh.material = material;
   vertexData.applyToMesh(babylonMesh);
 
+  if (rootNode) babylonMesh.parent = rootNode;
   const vertexDataStart = getVertexDataForFaceWithData(faceDataStart);
   const babylonMeshStart = new BabylonMesh(`${he.id}-start`, scene);
 
@@ -501,6 +503,8 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
   } else babylonMeshStart.material = startMaterial;
   vertexDataStart.applyToMesh(babylonMeshStart);
 
+  if (rootNode) babylonMeshStart.parent = rootNode;
+
   const vertexDataEnd = getVertexDataForFaceWithData(faceDataEnd);
   const babylonMeshEnd = new BabylonMesh(`${he.id}-end`, scene);
 
@@ -515,6 +519,8 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
     babylonMeshEnd.material = materialEnd;
   } else babylonMeshEnd.material = endMaterial;
   vertexDataEnd.applyToMesh(babylonMeshEnd);
+
+  if (rootNode) babylonMeshEnd.parent = rootNode;
 
   if (he.neighbour) {
     const faceDataNeighbour = [makeFaceData([edgeStart, edgeEnd, halfTopVertex])];
@@ -533,6 +539,8 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
       babylonMeshNeighbour.material = neighbourMaterial;
     } else babylonMeshNeighbour.material = neighbourMaterial;
     vertexDataNeighbour.applyToMesh(babylonMeshNeighbour);
+
+    if (rootNode) babylonMeshNeighbour.parent = rootNode;
   }
 };
 

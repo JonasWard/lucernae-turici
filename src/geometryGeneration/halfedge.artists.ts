@@ -78,12 +78,14 @@ export class HalfEdgeMeshRenderer {
     return vertexData;
   };
 
-  public static render = (mesh: HalfEdgeMesh, scene: Scene, material?: Material | StandardMaterial) => {
+  public static render = (mesh: HalfEdgeMesh, scene: Scene, material?: Material | StandardMaterial, name: string = 'halfEdgeMesh') => {
     const meshMaterial = material ?? createStandardLampMaterial(scene);
 
-    const babylonMesh = new Mesh('mesh', scene);
+    const babylonMesh = new Mesh(name, scene);
     const vertexData = HalfEdgeMeshRenderer.getVertexDataForHEMesh(mesh);
     vertexData.applyToMesh(babylonMesh);
     babylonMesh.material = meshMaterial;
+
+    return babylonMesh;
   };
 }

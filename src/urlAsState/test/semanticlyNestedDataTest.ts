@@ -129,11 +129,11 @@ const footprintTypeParser = (footprintType: FootprintGeometryTypes, startIndex =
     case FootprintGeometryTypes.Cylinder:
       return {
         [VersionParameterNames.footprintType]: DataEntryFactory.createVersion(footprintType, 4, VersionParameterNames.footprintType, startIndex),
-        [VersionParameterNames.bufferInside]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.bufferInside, baseIndexOtherParameters + 1),
-        [VersionParameterNames.radius0]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.radius0, baseIndexOtherParameters + 2),
+        [VersionParameterNames.bufferInside]: DataEntryFactory.createFloat(1, 0, 20, 2, VersionParameterNames.bufferInside, baseIndexOtherParameters + 1),
+        [VersionParameterNames.radius0]: DataEntryFactory.createFloat(2, 2, 20, 2, VersionParameterNames.radius0, baseIndexOtherParameters + 2),
         [VersionParameterNames.radius1]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.radius1, baseIndexOtherParameters + 3),
         [VersionParameterNames.radius2]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.radius2, baseIndexOtherParameters + 4),
-        [VersionParameterNames.bufferOutside]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.bufferOutside, baseIndexOtherParameters + 5),
+        [VersionParameterNames.bufferOutside]: DataEntryFactory.createFloat(1, 0, 20, 2, VersionParameterNames.bufferOutside, baseIndexOtherParameters + 5),
         [VersionParameterNames.segments]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.segments, baseIndexOtherParameters + 6),
       };
 

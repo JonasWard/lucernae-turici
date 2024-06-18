@@ -1,16 +1,22 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
+import ReactDOM from 'react-dom/client';
+import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
-import App from './App';
+import { LampConfigurator } from './LampConfigurator';
+import { TestingDataParser } from './components/dataParsingVisualization/TestingDataParser';
 
-ReactDOM.render(
+const SimpleApp = () => <div>Very simple app?</div>;
+
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <Router>
       <Routes>
-        <Route element={<App />} path='/:url' />
+        <Route element={<div>hello world</div>} path='/' />
+        <Route element={<SimpleApp />} path='/simple' />
+        <Route element={<LampConfigurator />} path='/configurator/:stateString' />
+        <Route element={<TestingDataParser />} path='/dataParserTest' />
       </Routes>
-    </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
+    </Router>
+  </React.StrictMode>
 );

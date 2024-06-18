@@ -98,7 +98,7 @@ const extrusionTypeParser = (extrusionType: ExtrusionProfileType, startIndex = 1
     case ExtrusionProfileType.Ellipse:
       return {
         [VersionParameterNames.extrusionType]: DataEntryFactory.createVersion(extrusionType, 4, VersionParameterNames.extrusionType, startIndex),
-        [VersionParameterNames.radiusTop]: DataEntryFactory.createFloat(0.1, 0, 0.5, 3, VersionParameterNames.radiusTop, baseIndexOtherParameters + 1),
+        [VersionParameterNames.radiusTop]: DataEntryFactory.createFloat(0.3, 0, 0.5, 3, VersionParameterNames.radiusTop, baseIndexOtherParameters + 1),
         [VersionParameterNames.insetTop]: DataEntryFactory.createFloat(0.1, 0, 0.5, 3, VersionParameterNames.insetTop, baseIndexOtherParameters + 2),
         [VersionParameterNames.insetBottom]: DataEntryFactory.createFloat(0.1, 0, 0.5, 3, VersionParameterNames.insetBottom, baseIndexOtherParameters + 3),
         [VersionParameterNames.insetSides]: DataEntryFactory.createFloat(0.1, 0, 0.5, 3, VersionParameterNames.insetSides, baseIndexOtherParameters + 4),
@@ -140,15 +140,14 @@ const footprintTypeParser = (footprintType: FootprintGeometryTypes, startIndex =
     case FootprintGeometryTypes.MalculmiusOne:
       return {
         [VersionParameterNames.footprintType]: DataEntryFactory.createVersion(footprintType, 4, VersionParameterNames.footprintType, startIndex),
-        [VersionParameterNames.size]: DataEntryFactory.createFloat(3.5, 2, 20, 2, VersionParameterNames.size, baseIndexOtherParameters + 1),
-        [VersionParameterNames.circleRadius]: DataEntryFactory.createFloat(3.5, 2, 20, 2, VersionParameterNames.circleRadius, baseIndexOtherParameters + 2),
+        [VersionParameterNames.circleRadius]: DataEntryFactory.createFloat(3.5, 2, 20, 2, VersionParameterNames.circleRadius, baseIndexOtherParameters + 1),
         [VersionParameterNames.circleDivisions]: DataEntryFactory.createFloat(
           3.5,
           2,
           20,
           2,
           VersionParameterNames.circleDivisions,
-          baseIndexOtherParameters + 3
+          baseIndexOtherParameters + 2
         ),
         [VersionParameterNames.angleSplit]: DataEntryFactory.createFloat(
           footprintType,
@@ -156,11 +155,11 @@ const footprintTypeParser = (footprintType: FootprintGeometryTypes, startIndex =
           20,
           2,
           VersionParameterNames.angleSplit,
-          baseIndexOtherParameters + 4
+          baseIndexOtherParameters + 3
         ),
-        [VersionParameterNames.offsetA]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.offsetA, baseIndexOtherParameters + 5),
-        [VersionParameterNames.offsetB]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.offsetB, baseIndexOtherParameters + 6),
-        [VersionParameterNames.innerRadius]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.innerRadius, baseIndexOtherParameters + 7),
+        [VersionParameterNames.offsetA]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.offsetA, baseIndexOtherParameters + 4),
+        [VersionParameterNames.offsetB]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.offsetB, baseIndexOtherParameters + 5),
+        [VersionParameterNames.innerRadius]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.innerRadius, baseIndexOtherParameters + 6),
       };
     default:
       throw new Error('Footprint type not found');

@@ -125,18 +125,20 @@ export class VoxelComplexMeshArtist {
     material.cameraExposure = 0.66;
     material.cameraContrast = 1.66;
     material.emissiveColor = new Color3(0.67, 0.64, 0.49);
-    material.wireframe = true;
+    material.wireframe = false;
 
     return material;
   };
 
-  public static render = (vX: VoxelComplex, scene: Scene, gBD: GeometryBaseData, material?: Material | StandardMaterial) => {
+  public static render = (vX: VoxelComplex, scene: Scene, gBD: GeometryBaseData, material?: Material | StandardMaterial, name = 'lampGeometry') => {
     const mesh = VoxelMesh.getMeshForVoxelComplex(vX, gBD);
 
     const meshMaterial = material ?? VoxelComplexMeshArtist.defaultMaterial(scene);
     const vertexData = Mesh.getVertexDataForMesh(mesh);
-    const babylonMesh = new BabylonMesh('voxelComplex', scene);
+    const babylonMesh = new BabylonMesh(name, scene);
     vertexData.applyToMesh(babylonMesh);
     babylonMesh.material = meshMaterial;
+
+    return babylonMesh;
   };
 }

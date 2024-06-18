@@ -1,7 +1,6 @@
-/* eslint-disable */
 import { Engine, Scene } from '@babylonjs/core';
+import React from 'react';
 import { useEffect, useRef } from 'react';
-/* eslint-disable */
 
 export default (props: any) => {
   const reactCanvas = useRef(null);

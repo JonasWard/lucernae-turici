@@ -75,6 +75,7 @@ export const LampConfigurator: React.FC = () => {
           />
           <Select
             style={{ width: '100%' }}
+            value={renderMethod}
             options={Object.entries(RenderMethod).map(([key, s]) => ({ label: key, value: s as RenderMethod }))}
             onSelect={(s: RenderMethod) => {
               setRerender(true);

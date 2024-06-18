@@ -328,7 +328,7 @@ export const createCellComplexFromMalculmiusGeometry = (geometry: MalculmiusGeom
   const baseFrames = BaseFrameFactory.getBaseFramArrayAlongDirectionForSpacings(originFrame.z, heightMap);
 
   const shard = createShardOfMalculmiusOne(geometry as unknown as MalculmiusOneFootprint, new Vector3(originFrame.o.x, originFrame.o.y, originFrame.o.z), 0);
-  const heMesh = getHalfEdgeMeshFromMesh(joinMeshes(shard.map((s) => polygonToMesh(s))));
+  const heMesh = getHalfEdgeMeshFromMesh(joinMeshes(shard.map(polygonToMesh)));
 
   // constructing the voxel complex
   const cellComplex = VoxelFactory.sweepHalfEdgeMesh(heMesh, baseFrames);

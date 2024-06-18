@@ -136,32 +136,8 @@ export class VoxelFactory {
   public static getVoxelComplexFromGeometryBaseData = (gBD: GeometryBaseData): VoxelComplex => {
     const heights = getHeights(gBD.heights);
     const baseFrames = BaseFrameFactory.getBaseFramArrayAlongDirectionForSpacings(V3.ZAxis, heights);
+    const heMesh = HalfEdgeMeshFactory.getFootprintFromGeometryBaseData(gBD);
 
-    switch (gBD.footprint.type) {
-      case FootprintGeometryTypes.Cylinder:
-        return VoxelFactory.getCylinder(
-          [
-            ...(gBD.footprint.bufferInside ? [gBD.footprint.radius0 - gBD.footprint.bufferInside] : []),
-            gBD.footprint.radius0,
-            gBD.footprint.radius1 + gBD.footprint.radius0,
-            gBD.footprint.radius2 + gBD.footprint.radius1 + gBD.footprint.radius0,
-            ...(gBD.footprint.bufferOutside ? [gBD.footprint.radius2 + gBD.footprint.radius1 + gBD.footprint.radius0 + gBD.footprint.bufferOutside] : []),
-          ],
-          heights,
-          gBD.footprint.segments
-        );
-      case FootprintGeometryTypes.Square:
-        return VoxelFactory.sweepHalfEdgeMesh(HalfEdgeMeshFactory.createGrid(4, gBD.footprint.size, 1, 1), baseFrames);
-      case FootprintGeometryTypes.SquareGrid:
-        return VoxelFactory.sweepHalfEdgeMesh(HalfEdgeMeshFactory.createGrid(4, gBD.footprint.size, gBD.footprint.xCount, gBD.footprint.yCount), baseFrames);
-      case FootprintGeometryTypes.TriangleGrid:
-        return VoxelFactory.sweepHalfEdgeMesh(HalfEdgeMeshFactory.createGrid(3, gBD.footprint.size, gBD.footprint.xCount, gBD.footprint.yCount), baseFrames);
-      case FootprintGeometryTypes.HexGrid:
-        return VoxelFactory.sweepHalfEdgeMesh(HalfEdgeMeshFactory.createGrid(6, gBD.footprint.size, gBD.footprint.xCount, gBD.footprint.yCount), baseFrames);
-      case FootprintGeometryTypes.MalculmiusOne:
-        const shard = createShardOfMalculmiusOne(gBD.footprint, new Vector3(0, 0, 0), 0);
-        const heMesh = getHalfEdgeMeshFromMesh(joinMeshes(shard.map((s) => polygonToMesh(s))));
-        return VoxelFactory.sweepHalfEdgeMesh(heMesh, baseFrames);
-    }
+    return VoxelFactory.sweepHalfEdgeMesh(heMesh, baseFrames);
   };
 }

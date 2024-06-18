@@ -56,7 +56,7 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
         const localDisplayType = getDisplayType(semantic, displayTypeMap);
 
         return value.hasOwnProperty('type') ? (
-          <div style={{ padding: 10 }}>
+          <div key={semantic} style={{ padding: 10 }}>
             <DataEntryRenderer key={semantic} dataEntry={value as DataEntry} updateEntry={updateEntry} versionEnumSemantics={versionEnumSemantics} />
           </div>
         ) : (

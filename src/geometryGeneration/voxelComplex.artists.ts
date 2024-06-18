@@ -1,4 +1,4 @@
-import { Color3, Scene, StandardMaterial, MeshBuilder, Vector3, Material, Mesh as BabylonMesh } from '@babylonjs/core';
+import { Color3, Scene, StandardMaterial, MeshBuilder, Vector3, Material, Mesh as BabylonMesh, TransformNode } from '@babylonjs/core';
 import { ExtrusionProfile, GeometryBaseData } from './baseGeometry';
 import { V3, Mesh } from './v3';
 import { VoxelComplex, Voxel } from './voxelComplex.type';
@@ -33,30 +33,34 @@ const getMaterialForColor = (c: string, scene: Scene): StandardMaterial => {
 };
 
 // creates a cube mesh representation for a vertex
-export const getMeshForVertex = (c: V3, scene: Scene, color?: string) => {
+export const getMeshForVertex = (c: V3, scene: Scene, color?: string, rootNode?: TransformNode, scale: number = 1) => {
   const localColor = color ?? getColorForVertex(c);
   const material = getMaterialForColor(localColor, scene);
 
   const vHash = V3.getHash(c);
 
-  const babylonMesh = MeshBuilder.CreateSphere(vHash, { segments: 2, diameter: vSize }, scene);
+  const babylonMesh = MeshBuilder.CreateSphere(vHash, { segments: 2, diameter: vSize * scale }, scene);
+
+  if (rootNode) babylonMesh.parent = rootNode;
+
   babylonMesh.material = material;
 
   babylonMesh.position.set(c.x, c.z, c.y);
 };
 
-export const getMeshForEdge = (v0: V3, v1: V3, scene: Scene, id: string, color?: string) => {
+export const getMeshForEdge = (v0: V3, v1: V3, scene: Scene, id: string, color?: string, rootNode?: TransformNode, scale: number = 1) => {
   const localColor = color ?? getColorForUUID(id);
   const material = getMaterialForColor(localColor, scene);
 
   const babylonMesh = MeshBuilder.CreateTube(id, {
     path: [new Vector3(v0.x, v0.z, v0.y), new Vector3(v1.x, v1.z, v1.y)],
     tessellation: edgeResolution,
-    radius: vHSize,
+    radius: vHSize * scale,
     cap: 0, // no cap
   });
 
   babylonMesh.material = material;
+  if (rootNode) babylonMesh.parent = rootNode;
 };
 
 const getRepresentativeLocationForVoxelFace = (voxel: Voxel, vX: VoxelComplex, index: number): V3 => {
@@ -76,18 +80,18 @@ const getVertexPairForFaceInVoxel = (voxel: Voxel, vX: VoxelComplex, index: numb
 };
 
 // getting the center of a face in a voxelcomplex
-const getRepresentativeMeshForVoxelFace = (voxel: Voxel, vX: VoxelComplex, index: number, scene: Scene) => {
+const getRepresentativeMeshForVoxelFace = (voxel: Voxel, vX: VoxelComplex, index: number, scene: Scene, rootNode?: TransformNode) => {
   // getting the center of the face
   const v = getRepresentativeLocationForVoxelFace(voxel, vX, index);
 
-  getMeshForVertex(v, scene, getColorForUUID(voxel.id));
+  getMeshForVertex(v, scene, getColorForUUID(voxel.id), rootNode);
 };
 
-const getAllRepresentativeMeshForVoxelFace = (voxel: Voxel, vX: VoxelComplex, scene: Scene) => {
+const getAllRepresentativeMeshForVoxelFace = (voxel: Voxel, vX: VoxelComplex, scene: Scene, rootNode?: TransformNode, scale: number = 1) => {
   for (let i = 0; i < voxel.n + 2; i++) {
     getRepresentativeMeshForVoxelFace(voxel, vX, i, scene);
     const pair = getVertexPairForFaceInVoxel(voxel, vX, i);
-    if (pair) getMeshForEdge(pair[0], pair[1], scene, `${voxel.id}-${i}`);
+    if (pair) getMeshForEdge(pair[0], pair[1], scene, `${voxel.id}-${i}`, undefined, rootNode, scale);
   }
 };
 
@@ -100,11 +104,11 @@ export const voxelToMesh = (voxel: Voxel, vX: VoxelComplex, geometryParsing: any
   // voxel by voxel parsing
 };
 
-export const getMeshRepresentationOfVoxelComplexGraph = (vX: VoxelComplex, scene: Scene) => {
-  Object.values(vX.vertices).map((v) => getMeshForVertex(v, scene));
+export const getMeshRepresentationOfVoxelComplexGraph = (vX: VoxelComplex, scene: Scene, rootNode?: TransformNode, scale: number = 1) => {
+  Object.values(vX.vertices).map((v) => getMeshForVertex(v, scene, undefined, rootNode, scale));
 
   // render the face vertices
-  Object.values(vX.voxels).forEach((voxel) => getAllRepresentativeMeshForVoxelFace(voxel, vX, scene));
+  Object.values(vX.voxels).forEach((voxel) => getAllRepresentativeMeshForVoxelFace(voxel, vX, scene, rootNode, scale));
 };
 
 export const createStandardLampMaterial = (scene: Scene) => {

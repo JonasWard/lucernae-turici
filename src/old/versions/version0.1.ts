@@ -1,18 +1,18 @@
-import { ExtrusionProfile, ExtrusionProfileType } from '../baseGeometry';
+import { ExtrusionProfile, ExtrusionProfileType } from '../../geometryGeneration/baseGeometry';
+import { FloorplanType, FootprintGeometryTypes } from '../../geometryGeneration/footprintgeometrytypes';
+import { HeightGenerator, ProcessingMethodType, ProcessingMethods } from '../../geometryGeneration/geometry';
 import { DataDefinition } from '../dataObject';
 import { SemanticValueString } from '../dataSemanticsEnums';
 import {
   DataEntry,
-  DataToURLFactory,
-  DataValue,
   DataValues,
+  DataToURLFactory,
   NestedBoundsObject,
+  VersionObject,
   SemanticBoundsObjects,
   SemanticValues,
-  VersionObject,
+  DataValue,
 } from '../dataStringParsing';
-import { FloorplanType, FootprintGeometryTypes } from '../footprintgeometrytypes';
-import { HeightGenerator, ProcessingMethodType, ProcessingMethods } from '../geometry';
 
 export interface Version0_1Object {
   version: number;

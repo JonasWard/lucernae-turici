@@ -122,9 +122,9 @@ const footprintTypeParser = (footprintType: FootprintGeometryTypes, startIndex =
     case FootprintGeometryTypes.HexGrid:
       return {
         [VersionParameterNames.footprintType]: DataEntryFactory.createVersion(footprintType, 4, VersionParameterNames.footprintType, startIndex),
-        [VersionParameterNames.size]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.size, baseIndexOtherParameters + 1),
-        [VersionParameterNames.xCount]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.xCount, baseIndexOtherParameters + 2),
-        [VersionParameterNames.yCount]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.yCount, baseIndexOtherParameters + 3),
+        [VersionParameterNames.size]: DataEntryFactory.createFloat(3, 2, 20, 1, VersionParameterNames.size, baseIndexOtherParameters + 1),
+        [VersionParameterNames.xCount]: DataEntryFactory.createInt(3, 1, 20, VersionParameterNames.xCount, baseIndexOtherParameters + 2),
+        [VersionParameterNames.yCount]: DataEntryFactory.createInt(3, 1, 20, VersionParameterNames.yCount, baseIndexOtherParameters + 3),
       };
     case FootprintGeometryTypes.Cylinder:
       return {
@@ -141,25 +141,11 @@ const footprintTypeParser = (footprintType: FootprintGeometryTypes, startIndex =
       return {
         [VersionParameterNames.footprintType]: DataEntryFactory.createVersion(footprintType, 4, VersionParameterNames.footprintType, startIndex),
         [VersionParameterNames.circleRadius]: DataEntryFactory.createFloat(3.5, 2, 20, 2, VersionParameterNames.circleRadius, baseIndexOtherParameters + 1),
-        [VersionParameterNames.circleDivisions]: DataEntryFactory.createFloat(
-          3.5,
-          2,
-          20,
-          2,
-          VersionParameterNames.circleDivisions,
-          baseIndexOtherParameters + 2
-        ),
-        [VersionParameterNames.angleSplit]: DataEntryFactory.createFloat(
-          footprintType,
-          2,
-          20,
-          2,
-          VersionParameterNames.angleSplit,
-          baseIndexOtherParameters + 3
-        ),
-        [VersionParameterNames.offsetA]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.offsetA, baseIndexOtherParameters + 4),
-        [VersionParameterNames.offsetB]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.offsetB, baseIndexOtherParameters + 5),
-        [VersionParameterNames.innerRadius]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.innerRadius, baseIndexOtherParameters + 6),
+        [VersionParameterNames.circleDivisions]: DataEntryFactory.createInt(5, 3, 30, VersionParameterNames.circleDivisions, baseIndexOtherParameters + 2),
+        [VersionParameterNames.angleSplit]: DataEntryFactory.createFloat(0.5, 0.01, 0.99, 3, VersionParameterNames.angleSplit, baseIndexOtherParameters + 3),
+        [VersionParameterNames.offsetA]: DataEntryFactory.createFloat(0, -10, 10, 1, VersionParameterNames.offsetA, baseIndexOtherParameters + 4),
+        [VersionParameterNames.offsetB]: DataEntryFactory.createFloat(0, -10, 10, 1, VersionParameterNames.offsetB, baseIndexOtherParameters + 5),
+        [VersionParameterNames.innerRadius]: DataEntryFactory.createFloat(1, 0.5, 10, 1, VersionParameterNames.innerRadius, baseIndexOtherParameters + 6),
       };
     default:
       throw new Error('Footprint type not found');

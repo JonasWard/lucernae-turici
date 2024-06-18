@@ -39,7 +39,7 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
 
     camera.attachControl(canvas, true);
     const light = new HemisphericLight('light', new Vector3(1, 1, 1), scene);
-    light.intensity = 3;
+    light.intensity = 1;
 
     const lampLight = new PointLight('lampLight', new Vector3(0, 0.75, 0), scene);
     lampLight.intensity = 1;

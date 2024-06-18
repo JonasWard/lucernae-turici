@@ -59,11 +59,14 @@ export const dataObjectAsUrl = (data: SemanticlyNestedDataEntry, versionObjects:
   if (!versionParser) throw new Error(`No parser for version ${version.value}`);
 
   const dataEntryArray = parseDownNestedDataDescription(data) as DataEntryArray;
-
-  const defaultDataEntryObject = getDefaultObject(versionParser, version.value);
+  const defaultDataEntryObject = versionParser.objectGenerator(version.value);
   const parsedDownAllParameterObject = parseDownNestedDataDescription(defaultDataEntryObject);
+  const semanticDataEntryObjects = versionParser.objectGenerator(
+    ...parsedDownAllParameterObject.map((value) => dataEntryArray.find((v) => v.name === value.name)).map((value) => value!.value)
+  );
+  const allObjectsParsedDown = parseDownNestedDataDescription(semanticDataEntryObjects);
 
-  const mappedData = parsedDownAllParameterObject.map((value) => {
+  const mappedData = allObjectsParsedDown.map((value) => {
     const result = dataEntryArray.find((v) => v.index === value.index);
     if (!result) {
       console.error(`Data for index ${value.index} with identifier '${value.name}' is not found in the give data`);

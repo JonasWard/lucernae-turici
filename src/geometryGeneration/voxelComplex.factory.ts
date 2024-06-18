@@ -141,11 +141,11 @@ export class VoxelFactory {
       case FootprintGeometryTypes.Cylinder:
         return VoxelFactory.getCylinder(
           [
-            ...(gBD.footprint.bufferInside ? [gBD.footprint.radius0 + gBD.footprint.bufferInside] : []),
+            ...(gBD.footprint.bufferInside ? [gBD.footprint.radius0 - gBD.footprint.bufferInside] : []),
             gBD.footprint.radius0,
-            gBD.footprint.radius1,
-            gBD.footprint.radius2,
-            ...(gBD.footprint.bufferOutside ? [gBD.footprint.radius2 + gBD.footprint.bufferOutside] : []),
+            gBD.footprint.radius1 + gBD.footprint.radius0,
+            gBD.footprint.radius2 + gBD.footprint.radius1 + gBD.footprint.radius0,
+            ...(gBD.footprint.bufferOutside ? [gBD.footprint.radius2 + gBD.footprint.radius1 + gBD.footprint.radius0 + gBD.footprint.bufferOutside] : []),
           ],
           heights,
           gBD.footprint.segments

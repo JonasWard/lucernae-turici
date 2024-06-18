@@ -18,5 +18,5 @@ export const VersionDataEntryRenderer: React.FC<IVersionDataEntryRendererProps> 
     label: <IconRenderer name={v.label} />,
   }));
 
-  return <Select style={{ width: '100%' }} options={options} value={version.value} onChange={(value) => onChange({ ...version, value })} />;
+  return <Select style={{ width: '100%' }} options={options} value={version.value} onSelect={(value) => onChange({ ...version, value })} />;
 };

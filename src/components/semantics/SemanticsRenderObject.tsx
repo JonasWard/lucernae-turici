@@ -26,6 +26,7 @@ export interface ISemtanticsRenderObjectProps {
   displayType?: DisplayType;
   activeName: string;
   setActiveName: (name: string) => void;
+  updateVersion?: (version: number) => void;
 }
 
 export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
@@ -37,6 +38,7 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
   name,
   activeName,
   setActiveName,
+  updateVersion,
 }) => {
   const [open, setOpen] = useState(name === activeName);
 
@@ -57,7 +59,12 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
 
         return value.hasOwnProperty('type') ? (
           <div key={semantic} style={{ padding: 10 }}>
-            <DataEntryRenderer key={semantic} dataEntry={value as DataEntry} updateEntry={updateEntry} versionEnumSemantics={versionEnumSemantics} />
+            <DataEntryRenderer
+              key={semantic}
+              dataEntry={value as DataEntry}
+              updateEntry={updateVersion && value.name === 'version' ? (v: DataEntry) => updateVersion(v.value as number) : updateEntry}
+              versionEnumSemantics={versionEnumSemantics}
+            />
           </div>
         ) : (
           <SemanticsRenderObject

@@ -49,7 +49,7 @@ export const LampConfigurator: React.FC = () => {
     updateURLFromData(data);
   }, [data]);
 
-  const resetData = () => setData(getDefaultObject(parserObjects[0], 0));
+  const resetData = (versionNumber: number) => setData(getDefaultObject(parserObjects[versionNumber], versionNumber));
 
   return (
     <>
@@ -68,8 +68,9 @@ export const LampConfigurator: React.FC = () => {
             activeName={activeName}
             setActiveName={setActiveName}
             displayTypeMap={displayTypeMap}
+            updateVersion={(versionNumber) => resetData(versionNumber)}
           />
-          <Button onClick={resetData}>reset data</Button>
+          {/* <Button onClick={resetData}>reset data</Button> */}
         </div>
       </div>
     </>

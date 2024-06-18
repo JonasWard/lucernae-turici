@@ -43,15 +43,15 @@ enum VersionParameterNames {
   phaseShift = 'phaseShift',
 }
 
-const globalDataAttributeMapper: Record<VersionParameterNames, string> = {
+export const globalDataAttributeMapper: Record<VersionParameterNames, string> = {
   [VersionParameterNames.version]: 'version',
-  [VersionParameterNames.extrusion]: 'extrusionTypeParameters',
+  [VersionParameterNames.extrusion]: 'extrusion',
   [VersionParameterNames.extrusionType]: 'type',
   [VersionParameterNames.radiusTop]: 'radiusTop',
   [VersionParameterNames.insetTop]: 'insetTop',
   [VersionParameterNames.insetBottom]: 'insetBottom',
   [VersionParameterNames.insetSides]: 'insetSides',
-  [VersionParameterNames.footprint]: 'floorTypeParameters',
+  [VersionParameterNames.footprint]: 'footprint',
   [VersionParameterNames.footprintType]: 'type',
   [VersionParameterNames.size]: 'size',
   [VersionParameterNames.xCount]: 'xCount',
@@ -68,7 +68,7 @@ const globalDataAttributeMapper: Record<VersionParameterNames, string> = {
   [VersionParameterNames.offsetA]: 'offsetA',
   [VersionParameterNames.offsetB]: 'offsetB',
   [VersionParameterNames.innerRadius]: 'innerRadius',
-  [VersionParameterNames.heights]: 'heightMethodParameters',
+  [VersionParameterNames.heights]: 'heights',
   [VersionParameterNames.heightProcessingMethod]: 'method',
   [VersionParameterNames.baseHeight]: 'baseHeight',
   [VersionParameterNames.storyCount]: 'storyCount',

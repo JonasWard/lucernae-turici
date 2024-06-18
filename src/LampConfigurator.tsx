@@ -59,7 +59,6 @@ export const LampConfigurator: React.FC = () => {
         completedRerender={() => setRerender(false)}
       />
       <div>
-        <Button onClick={resetData}>reset data</Button>
         <div style={{ position: 'absolute', top: 0, right: 0, padding: 15, width: 120 }}>
           <SemanticsRenderObject
             semantics={data}
@@ -70,6 +69,7 @@ export const LampConfigurator: React.FC = () => {
             setActiveName={setActiveName}
             displayTypeMap={displayTypeMap}
           />
+          <Button onClick={resetData}>reset data</Button>
         </div>
       </div>
     </>

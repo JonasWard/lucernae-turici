@@ -7,7 +7,7 @@ import { V3 } from './v3';
 import { VoxelComplex } from './voxelComplex.type';
 
 export enum Malculmiuses {
-  One,
+  One = 5,
 }
 
 export type MalculmiusOneGeometry = {

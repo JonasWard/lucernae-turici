@@ -90,18 +90,18 @@ const extrusionTypeParser = (extrusionType: ExtrusionProfileType, startIndex = 1
     case ExtrusionProfileType.Square:
       return {
         [VersionParameterNames.extrusionType]: DataEntryFactory.createVersion(extrusionType, 4, VersionParameterNames.extrusionType, startIndex),
-        [VersionParameterNames.insetTop]: DataEntryFactory.createFloat(0.1, 0, 0.5, 3, VersionParameterNames.insetTop, baseIndexOtherParameters + 1),
-        [VersionParameterNames.insetBottom]: DataEntryFactory.createFloat(0.1, 0, 0.5, 3, VersionParameterNames.insetBottom, baseIndexOtherParameters + 2),
-        [VersionParameterNames.insetSides]: DataEntryFactory.createFloat(0.1, 0, 0.5, 3, VersionParameterNames.insetSides, baseIndexOtherParameters + 3),
+        [VersionParameterNames.insetTop]: DataEntryFactory.createFloat(0.25, 0.1, 0.5, 2, VersionParameterNames.insetTop, baseIndexOtherParameters + 1),
+        [VersionParameterNames.insetBottom]: DataEntryFactory.createFloat(0.25, 0.1, 0.5, 2, VersionParameterNames.insetBottom, baseIndexOtherParameters + 2),
+        [VersionParameterNames.insetSides]: DataEntryFactory.createFloat(0.25, 0.1, 0.5, 2, VersionParameterNames.insetSides, baseIndexOtherParameters + 3),
       };
     case ExtrusionProfileType.Arc:
     case ExtrusionProfileType.Ellipse:
       return {
         [VersionParameterNames.extrusionType]: DataEntryFactory.createVersion(extrusionType, 4, VersionParameterNames.extrusionType, startIndex),
-        [VersionParameterNames.radiusTop]: DataEntryFactory.createFloat(0.3, 0, 0.5, 3, VersionParameterNames.radiusTop, baseIndexOtherParameters + 1),
-        [VersionParameterNames.insetTop]: DataEntryFactory.createFloat(0.1, 0, 0.5, 3, VersionParameterNames.insetTop, baseIndexOtherParameters + 2),
-        [VersionParameterNames.insetBottom]: DataEntryFactory.createFloat(0.1, 0, 0.5, 3, VersionParameterNames.insetBottom, baseIndexOtherParameters + 3),
-        [VersionParameterNames.insetSides]: DataEntryFactory.createFloat(0.1, 0, 0.5, 3, VersionParameterNames.insetSides, baseIndexOtherParameters + 4),
+        [VersionParameterNames.radiusTop]: DataEntryFactory.createFloat(0.35, 0.1, 0.5, 2, VersionParameterNames.radiusTop, baseIndexOtherParameters + 1),
+        [VersionParameterNames.insetTop]: DataEntryFactory.createFloat(0.25, 0.1, 0.5, 2, VersionParameterNames.insetTop, baseIndexOtherParameters + 2),
+        [VersionParameterNames.insetBottom]: DataEntryFactory.createFloat(0.25, 0.1, 0.5, 2, VersionParameterNames.insetBottom, baseIndexOtherParameters + 3),
+        [VersionParameterNames.insetSides]: DataEntryFactory.createFloat(0.25, 0.1, 0.5, 2, VersionParameterNames.insetSides, baseIndexOtherParameters + 4),
       };
     default:
       throw new Error('Extrusion type not found');
@@ -129,11 +129,11 @@ const footprintTypeParser = (footprintType: FootprintGeometryTypes, startIndex =
     case FootprintGeometryTypes.Cylinder:
       return {
         [VersionParameterNames.footprintType]: DataEntryFactory.createVersion(footprintType, 4, VersionParameterNames.footprintType, startIndex),
-        [VersionParameterNames.bufferInside]: DataEntryFactory.createFloat(1, 0, 20, 2, VersionParameterNames.bufferInside, baseIndexOtherParameters + 1),
-        [VersionParameterNames.radius0]: DataEntryFactory.createFloat(2, 2, 20, 2, VersionParameterNames.radius0, baseIndexOtherParameters + 2),
-        [VersionParameterNames.radius1]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.radius1, baseIndexOtherParameters + 3),
-        [VersionParameterNames.radius2]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.radius2, baseIndexOtherParameters + 4),
-        [VersionParameterNames.bufferOutside]: DataEntryFactory.createFloat(1, 0, 20, 2, VersionParameterNames.bufferOutside, baseIndexOtherParameters + 5),
+        [VersionParameterNames.bufferInside]: DataEntryFactory.createFloat(0.5, 0, 5, 2, VersionParameterNames.bufferInside, baseIndexOtherParameters + 1),
+        [VersionParameterNames.radius0]: DataEntryFactory.createFloat(2.5, 2, 20, 2, VersionParameterNames.radius0, baseIndexOtherParameters + 2),
+        [VersionParameterNames.radius1]: DataEntryFactory.createFloat(4, 2, 20, 2, VersionParameterNames.radius1, baseIndexOtherParameters + 3),
+        [VersionParameterNames.radius2]: DataEntryFactory.createFloat(2.5, 2, 20, 2, VersionParameterNames.radius2, baseIndexOtherParameters + 4),
+        [VersionParameterNames.bufferOutside]: DataEntryFactory.createFloat(0.5, 0, 5, 2, VersionParameterNames.bufferOutside, baseIndexOtherParameters + 5),
         [VersionParameterNames.segments]: DataEntryFactory.createInt(5, 3, 50, VersionParameterNames.segments, baseIndexOtherParameters + 6),
       };
 
@@ -156,8 +156,8 @@ const heightProcessingMethodParser = (heightMethodType: ProcessingMethodType, st
   const baseIndexOtherParameters = startIndex * parameterOffset;
 
   return {
-    [VersionParameterNames.baseHeight]: DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.baseHeight, baseIndexOtherParameters + 1),
-    [VersionParameterNames.storyCount]: DataEntryFactory.createInt(3, 2, 20, VersionParameterNames.storyCount, baseIndexOtherParameters + 2),
+    [VersionParameterNames.baseHeight]: DataEntryFactory.createFloat(3, 0.5, 20, 1, VersionParameterNames.baseHeight, baseIndexOtherParameters + 1),
+    [VersionParameterNames.storyCount]: DataEntryFactory.createInt(7, 2, 20, VersionParameterNames.storyCount, baseIndexOtherParameters + 2),
     [VersionParameterNames.heightProcessingMethod]: (() => {
       switch (heightMethodType) {
         case ProcessingMethodType.IncrementalMethod:
@@ -179,9 +179,9 @@ const heightProcessingMethodParser = (heightMethodType: ProcessingMethodType, st
               VersionParameterNames.processingMethodType,
               startIndex
             ),
-            [VersionParameterNames.maxAmplitude]: DataEntryFactory.createFloat(4, 2, 20, 2, VersionParameterNames.maxAmplitude, baseIndexOtherParameters + 3),
-            [VersionParameterNames.minAmplitude]: DataEntryFactory.createFloat(4, 2, 20, 2, VersionParameterNames.minAmplitude, baseIndexOtherParameters + 4),
-            [VersionParameterNames.period]: DataEntryFactory.createFloat(4, 2, 20, 2, VersionParameterNames.period, baseIndexOtherParameters + 5),
+            [VersionParameterNames.maxAmplitude]: DataEntryFactory.createFloat(4, 0, 15, 1, VersionParameterNames.maxAmplitude, baseIndexOtherParameters + 3),
+            [VersionParameterNames.minAmplitude]: DataEntryFactory.createFloat(1, 0, 5, 2, VersionParameterNames.minAmplitude, baseIndexOtherParameters + 4),
+            [VersionParameterNames.period]: DataEntryFactory.createFloat(1, 0.2, 20, 2, VersionParameterNames.period, baseIndexOtherParameters + 5),
             [VersionParameterNames.phaseShift]: DataEntryFactory.createFloat(4, 0, 90, 1, VersionParameterNames.phaseShift, baseIndexOtherParameters + 6),
           };
         case ProcessingMethodType.None:
@@ -207,8 +207,8 @@ const version0DataDescriptionObjectGenerator = (
   if (extrusionType === undefined && footprintType === undefined && heightMethodType === undefined) {
     return {
       [VersionParameterNames.version]: DataEntryFactory.createVersion(version, 8, VersionParameterNames.version, 0),
-      [VersionParameterNames.extrusionType]: DataEntryFactory.createVersion(0, 4, VersionParameterNames.extrusionType, 1),
-      [VersionParameterNames.footprintType]: DataEntryFactory.createVersion(0, 4, VersionParameterNames.footprintType, 2),
+      [VersionParameterNames.extrusionType]: DataEntryFactory.createVersion(1, 4, VersionParameterNames.extrusionType, 1),
+      [VersionParameterNames.footprintType]: DataEntryFactory.createVersion(5, 4, VersionParameterNames.footprintType, 2),
       [VersionParameterNames.processingMethodType]: DataEntryFactory.createVersion(0, 4, VersionParameterNames.processingMethodType, 3),
     };
   } else if (extrusionType === undefined || footprintType === undefined || heightMethodType === undefined) {

@@ -14,8 +14,8 @@ const getInternalVoxelFaceState = (vState: VoxelState, oVState?: VoxelState): Vo
   return VoxelInternalFaceState.OPEN;
 };
 
-export const getNeighbourState = (v: Voxel, vX: VoxelComplex, idx: number): VoxelState | undefined =>
-  v.neighbourMap[idx] !== null ? vX.voxels[v.neighbourMap[idx]![0]].state : undefined;
+export const getNeighbourState = (v: Voxel, vX: VoxelComplex, idx: number): VoxelState =>
+  v.neighbourMap[idx] !== null ? vX.voxels[v.neighbourMap[idx]![0]].state : VoxelState.NONE;
 
 export const isFaceClosed = (vState: VoxelState, oVState?: VoxelState): boolean =>
   vState === VoxelState.NONE ? false : oVState ? oVState === VoxelState.NONE : true;

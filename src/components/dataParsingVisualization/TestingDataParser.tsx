@@ -83,37 +83,35 @@ export const TestingDataParser: React.FC = () => {
 
   const updateData = (dataEntry: DataEntry) => setData(updateDataEntry(data, dataEntry, parserObjects));
 
-  const initialiseData = () => setData(getDefaultObject(parserObjects[0], 0));
-
   const secondaryData = getSecondaryData(base64String);
 
   allTests();
 
   return (
-    <div>
-      <button onClick={initialiseData}>initialise data</button>
-      <hr />
-      <span>NestedData: </span>
-      <RendererSemanticlyNestedDataEntry data={data} />
-      <hr />
-      <RendereDataArray data={parseDownNestedDataDescription(data) as DataEntryArray} />
-      <hr />
-      <div style={{ fontFamily: 'monospace', fontSize: 10 }}>url: {base64String}</div>
-      <div style={{ fontFamily: 'monospace', fontSize: 10 }}>bit: {bitsString}</div>
-      <div style={{ fontFamily: 'monospace', fontSize: 10 }}>x64: {base64BitString}</div>
-      <div style={{ fontFamily: 'monospace', fontSize: 10 }}>url: {base64SplitString}</div>
-      <div style={{ fontFamily: 'monospace', fontSize: 10 }}>raw: {raw}</div>
-      <hr />
-      <div>Reading out the data:</div>
+    <>
+      <div style={{ overflowY: 'scroll', height: '100svh' }}>
+        <span>NestedData: </span>
+        <RendererSemanticlyNestedDataEntry data={data} />
+        <hr />
+        <RendereDataArray data={parseDownNestedDataDescription(data) as DataEntryArray} />
+        <hr />
+        <div style={{ fontFamily: 'monospace', fontSize: 10 }}>url: {base64String}</div>
+        <div style={{ fontFamily: 'monospace', fontSize: 10 }}>bit: {bitsString}</div>
+        <div style={{ fontFamily: 'monospace', fontSize: 10 }}>x64: {base64BitString}</div>
+        <div style={{ fontFamily: 'monospace', fontSize: 10 }}>url: {base64SplitString}</div>
+        <div style={{ fontFamily: 'monospace', fontSize: 10 }}>raw: {raw}</div>
+        <hr />
+        <div>Reading out the data:</div>
 
-      {JSON.stringify(secondaryData) === JSON.stringify(data) ? (
-        <div>data is the same</div>
-      ) : (
-        <div style={{ color: 'red' }}>
-          <span>data is not the same</span>
-          <RendererSemanticlyNestedDataEntry data={secondaryData} />
-        </div>
-      )}
+        {JSON.stringify(secondaryData) === JSON.stringify(data) ? (
+          <div>data is the same</div>
+        ) : (
+          <div style={{ color: 'red' }}>
+            <span>data is not the same</span>
+            <RendererSemanticlyNestedDataEntry data={secondaryData} />
+          </div>
+        )}
+      </div>
       <div style={{ position: 'absolute', top: 0, right: 0, padding: 50, width: 120 }}>
         <SemanticsRenderObject
           semantics={data}
@@ -125,6 +123,6 @@ export const TestingDataParser: React.FC = () => {
           setActiveName={setActiveName}
         />
       </div>
-    </div>
+    </>
   );
 };

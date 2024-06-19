@@ -187,9 +187,9 @@ export class VoxelMesh {
   public static getMeshForVoxel = (voxel: Voxel, vX: VoxelComplex, uvs: V2[], splitIndex: number): Mesh => {
     switch (voxel.state) {
       case VoxelState.MASSIVE:
+      case VoxelState.OPEN:
         return VoxelMesh.getMeshForVoxelStandard(voxel, vX, uvs, splitIndex);
       case VoxelState.NONE:
-      case VoxelState.OPEN:
         return { vertices: [], faces: [] };
       case VoxelState.ONEDIRECTION:
         return VoxelMesh.getMeshForVoxelOneDirection(voxel, vX, uvs, splitIndex);

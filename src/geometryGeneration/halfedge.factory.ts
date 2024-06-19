@@ -184,8 +184,11 @@ export abstract class HalfEdgeMeshFactory {
     yAxis = V3.YAxis
   ): HalfEdgeMesh => getHalfEdgeMeshFromMesh(MeshFactory.createGrid(gridType, sideSpacing, xCount, yCount, origin, xAxis, yAxis), true);
 
-  public static createCylinder = (radiuses: number[], divisions: number): HalfEdgeMesh =>
-    getHalfEdgeMeshFromMesh(MeshFactory.createCylinder(radiuses, divisions), true);
+  public static createCylinder = (radiuses: number[], divisions: number): HalfEdgeMesh => {
+    const heMesh = getHalfEdgeMeshFromMesh(MeshFactory.createCylinder(radiuses, divisions), true);
+    markFacesWithOneNakedEdge(heMesh);
+    return heMesh;
+  };
 
   public static getFootprintFromGeometryBaseData = (gBD: GeometryBaseData): HalfEdgeMesh => {
     const footprint = gBD.footprint;

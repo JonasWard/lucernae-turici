@@ -27,7 +27,7 @@ abstract class MeshFactory {
     sideSpacing = 1,
     xCount: number,
     yCount: number,
-    origin = V3.Origin,
+    origin?: V3,
     xAxis = V3.XAxis,
     yAxis = V3.YAxis
   ): Mesh => {
@@ -38,6 +38,9 @@ abstract class MeshFactory {
 
     let vectorSpacingX: V3;
     let vectorSpacingY: V3;
+
+    // centering grid
+    origin = origin ?? V3.add(V3.mul(xAxis, sideSpacing * xCount * -0.5), V3.mul(yAxis, sideSpacing * yCount * -0.5));
 
     const scaledX = V3.mul(xAxis, sideSpacing);
 
@@ -179,7 +182,7 @@ export abstract class HalfEdgeMeshFactory {
     sideSpacing = 1,
     xCount: number,
     yCount: number,
-    origin = V3.Origin,
+    origin?: V3,
     xAxis = V3.XAxis,
     yAxis = V3.YAxis
   ): HalfEdgeMesh => getHalfEdgeMeshFromMesh(MeshFactory.createGrid(gridType, sideSpacing, xCount, yCount, origin, xAxis, yAxis), true);

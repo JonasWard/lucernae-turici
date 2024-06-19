@@ -8,7 +8,6 @@
 // the others go clockwise around the axis defined by the center point of the top and bottom face during construction
 // the neighbourmap is the map that gives for every face i the neighbouring cell id and the corresponding face on the other cell or null (no neighbour)
 
-import { ExtrusionProfile } from './baseGeometry';
 import { V3 } from './v3';
 
 export enum VoxelState {

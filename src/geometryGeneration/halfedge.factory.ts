@@ -3,7 +3,7 @@ import { GeometryBaseData, joinMeshes, polygonToMesh } from './baseGeometry';
 import { FootprintGeometryTypes } from './footprintgeometrytypes';
 import { createShardOfMalculmiusOne } from './geometry';
 import { HalfEdgeMesh } from './geometrytypes';
-import { getHalfEdgeMeshFromMesh } from './halfedge';
+import { getHalfEdgeMeshFromMesh, linkingHalfEdges, markFacesWithOneNakedEdge } from './halfedge';
 import { Mesh, V3 } from './v3';
 
 abstract class MeshFactory {

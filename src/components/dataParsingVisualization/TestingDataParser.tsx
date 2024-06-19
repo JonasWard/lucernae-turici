@@ -80,7 +80,7 @@ export const TestingDataParser: React.FC = () => {
   const [data, setData] = useState<SemanticlyNestedDataEntry>(getDefaultObject(parserObjects[0], 0));
   const [activeName, setActiveName] = useState<string>('');
 
-  const { bitsString, base64BitString, base64SplitString, base64String } = getTestStringValues(data);
+  const { bitsString, base64BitString, base64SplitString, base64String, raw } = getTestStringValues(data);
 
   const updateData = (dataEntry: DataEntry) => setData(updateDataEntry(data, dataEntry, parserObjects));
 
@@ -103,10 +103,18 @@ export const TestingDataParser: React.FC = () => {
       <div style={{ fontFamily: 'monospace', fontSize: 10 }}>bit: {bitsString}</div>
       <div style={{ fontFamily: 'monospace', fontSize: 10 }}>x64: {base64BitString}</div>
       <div style={{ fontFamily: 'monospace', fontSize: 10 }}>url: {base64SplitString}</div>
+      <div style={{ fontFamily: 'monospace', fontSize: 10 }}>raw: {raw}</div>
       <hr />
       <div>Reading out the data:</div>
-      <RendererSemanticlyNestedDataEntry data={secondaryData} />
-      {JSON.stringify(secondaryData) === JSON.stringify(data) ? <div>data is the same</div> : <div style={{ color: 'red' }}>data is not the same</div>}
+
+      {JSON.stringify(secondaryData) === JSON.stringify(data) ? (
+        <div>data is the same</div>
+      ) : (
+        <div style={{ color: 'red' }}>
+          <span>data is not the same</span>
+          <RendererSemanticlyNestedDataEntry data={secondaryData} />
+        </div>
+      )}
       <div style={{ position: 'absolute', top: 0, right: 0, padding: 50, width: 120 }}>
         <SemanticsRenderObject
           semantics={data}

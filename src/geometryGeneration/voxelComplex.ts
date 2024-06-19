@@ -17,6 +17,7 @@ const getFaceIndexArraysForVoxel = (v: Voxel, vX: VoxelComplex, includeFacesWith
   return faceIndexes;
 };
 
+// key method for knowing whether to not close a face
 export const isFaceInVoxelClosed = (v: Voxel, vX: VoxelComplex, faceIndex: number): boolean => isFaceClosed(v.state, getNeighbourState(v, vX, faceIndex));
 
 const getTopFace = (v: Voxel): string[] => v.vertices.slice(v.n, 2 * v.n);

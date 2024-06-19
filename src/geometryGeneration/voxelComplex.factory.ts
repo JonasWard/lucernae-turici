@@ -1,9 +1,7 @@
-import { Vector3 } from '@babylonjs/core';
-import { BaseFrameFactory, GeometryBaseData, WorldXY, getFrameToFrameTransformation, joinMeshes, polygonToMesh } from './baseGeometry';
-import { FootprintGeometryTypes } from './footprintgeometrytypes';
-import { createCellComplexFromMalculmiusGeometry, createShardOfMalculmiusOne, getHeights } from './geometry';
+import { BaseFrameFactory, GeometryBaseData, WorldXY, getFrameToFrameTransformation } from './baseGeometry';
+import { getHeights } from './geometry';
 import { BaseFrame, HalfEdge, HalfEdgeMesh } from './geometrytypes';
-import { getFaceEdges, getHalfEdgeMeshFromMesh, markFacesWithOneNakedEdge } from './halfedge';
+import { getFaceEdges, markFacesWithOneNakedEdge } from './halfedge';
 import { HalfEdgeMeshFactory } from './halfedge.factory';
 import { getRandomUUID } from './helpermethods';
 import { V3 } from './v3';

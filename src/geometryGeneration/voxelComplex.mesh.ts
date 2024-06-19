@@ -140,11 +140,11 @@ export class VoxelMesh {
       const leftFrontQuad = VoxelMesh.getLeftFrontFaceQuad(voxel, vX, i);
       const leftFrontProfile = V3.curveForQuad(leftFrontQuad, uvs);
       meshes.push(Mesh.makeLoft(side, leftFrontProfile, false));
-      if (isFaceInVoxelClosed(voxel, vX, i + 2)) meshes.push(VoxelMesh.getClosingMesh(leftFrontQuad, leftFrontProfile, splitIndex));
+      if (isFaceInVoxelClosed(voxel, vX, 2 + ((i + voxel.n - 1) % voxel.n))) meshes.push(VoxelMesh.getClosingMesh(leftFrontQuad, leftFrontProfile, splitIndex));
       const rightFrontQuad = VoxelMesh.getRightFrontFaceQuad(voxel, vX, i);
       const rightFrontProfile = V3.curveForQuad(rightFrontQuad, uvs);
       meshes.push(Mesh.makeLoft(rightFrontProfile, side, false));
-      if (isFaceInVoxelClosed(voxel, vX, 2 + ((i + 1) % voxel.n))) meshes.push(VoxelMesh.getClosingMesh(rightFrontQuad, rightFrontProfile, splitIndex, true));
+      if (isFaceInVoxelClosed(voxel, vX, 2 + i)) meshes.push(VoxelMesh.getClosingMesh(rightFrontQuad, rightFrontProfile, splitIndex, true));
     }
 
     if (isFaceInVoxelClosed(voxel, vX, 0)) meshes.push(Mesh.makeFromPolygon(VoxelMesh.getTopFaceVertexes(voxel, vX)));

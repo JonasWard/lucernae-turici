@@ -1,4 +1,4 @@
-import { Engine, Scene } from '@babylonjs/core';
+import { Engine, EngineOptions, Scene } from '@babylonjs/core';
 import React from 'react';
 import { useEffect, useRef } from 'react';
 
@@ -8,7 +8,7 @@ export default (props: any) => {
 
   useEffect(() => {
     if (reactCanvas.current) {
-      const engine = new Engine(reactCanvas.current, antialias, engineOptions, adaptToDeviceRatio);
+      const engine = new Engine(reactCanvas.current, antialias, engineOptions as EngineOptions, adaptToDeviceRatio);
       const scene = new Scene(engine, sceneOptions);
       if (scene.isReady()) {
         props.onSceneReady(scene);

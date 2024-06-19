@@ -57,7 +57,9 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
     if (rerender) updateGeometry(gBD, mesh, renderMethod);
   }, [rerender, gBD, mesh, renderMethod]);
 
-  return <SceneComponent antialias onSceneReady={onSceneReady} onRender={onRender} id='my-canvas' />;
+  return (
+    <SceneComponent antialias onSceneReady={onSceneReady} onRender={onRender} id='my-canvas' sceneOptions={{ adaptToDeviceRatio: true, antialias: true }} />
+  );
 };
 
 export default App;

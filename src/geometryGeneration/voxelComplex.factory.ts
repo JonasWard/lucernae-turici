@@ -127,7 +127,7 @@ export class VoxelFactory {
 
   public static getCylinder = (radiusses: number[], heights: number[], divisions: number): VoxelComplex => {
     const baseSpiral = HalfEdgeMeshFactory.createCylinder(radiusses, divisions);
-    markFacesWithOneNakedEdge(baseSpiral);
+
     const baseFrames = BaseFrameFactory.getBaseFramArrayAlongDirectionForSpacings(V3.ZAxis, heights);
 
     return VoxelFactory.sweepHalfEdgeMesh(baseSpiral, baseFrames);

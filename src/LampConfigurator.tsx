@@ -10,6 +10,7 @@ import { Button, Select } from 'antd';
 import App from './App';
 import { GeometryBaseData } from './geometryGeneration/baseGeometry';
 import { RenderMethod } from './geometryGeneration/geometryEntry';
+import { UndoRedo } from './components/semantics/UndoRedo';
 
 const displayTypeMap = {
   ['extrusion']: DisplayType.POPOVER,
@@ -43,6 +44,14 @@ export const LampConfigurator: React.FC = () => {
 
   const [data, setData] = useState<SemanticlyNestedDataEntry>(tryParse(stateString ?? '0'));
 
+  const tryToHandelUndoRedo = (url: string) => {
+    try {
+      setData(readingUrlAsDataObject(url, parserObjects));
+    } catch (e) {
+      console.warn(e);
+    }
+  };
+
   const [activeName, setActiveName] = useState<string>('');
 
   const updateData = (dataEntry: DataEntry) => setData(updateDataEntry(data, dataEntry, parserObjects));
@@ -61,29 +70,28 @@ export const LampConfigurator: React.FC = () => {
         completedRerender={() => setRerender(false)}
         renderMethod={renderMethod}
       />
-      <div>
-        <div style={{ position: 'absolute', top: 0, right: 0, padding: 15, width: 120 }}>
-          <SemanticsRenderObject
-            semantics={data}
-            name={''}
-            updateEntry={updateData}
-            versionEnumSemantics={parserObjects[0].versionEnumSemantics}
-            activeName={activeName}
-            setActiveName={setActiveName}
-            displayTypeMap={displayTypeMap}
-            updateVersion={(versionNumber) => resetData(versionNumber)}
-          />
-          <Select
-            style={{ width: '100%' }}
-            value={renderMethod}
-            options={Object.entries(RenderMethod).map(([key, s]) => ({ label: key, value: s as RenderMethod }))}
-            onSelect={(s: RenderMethod) => {
-              setRerender(true);
-              setRenderMethod(s);
-            }}
-          />
-        </div>
+      <div style={{ position: 'absolute', top: 0, right: 0, padding: 15, width: 120 }}>
+        <SemanticsRenderObject
+          semantics={data}
+          name={''}
+          updateEntry={updateData}
+          versionEnumSemantics={parserObjects[0].versionEnumSemantics}
+          activeName={activeName}
+          setActiveName={setActiveName}
+          displayTypeMap={displayTypeMap}
+          updateVersion={(versionNumber) => resetData(versionNumber)}
+        />
+        <Select
+          style={{ width: '100%' }}
+          value={renderMethod}
+          options={Object.entries(RenderMethod).map(([key, s]) => ({ label: key, value: s as RenderMethod }))}
+          onSelect={(s: RenderMethod) => {
+            setRerender(true);
+            setRenderMethod(s);
+          }}
+        />
       </div>
+      <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />
     </>
   );
 };

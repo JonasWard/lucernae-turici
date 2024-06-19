@@ -48,7 +48,7 @@ export class VoxelFactory {
 
       const vertexIndexes = [...halfEdges.map((he) => bottomVertexMap[he.vertex]), ...halfEdges.map((he) => topVertexMap[he.vertex])];
       voxels[faceVoxelIdMap[face.id]] = {
-        state: face?.metaData?.voxelState ?? VoxelState.MASSIVE,
+        state: face?.metaData?.voxelState ?? VoxelState.OPEN,
         id: faceVoxelIdMap[face.id],
         n: halfEdges.length,
         vertices: vertexIndexes,

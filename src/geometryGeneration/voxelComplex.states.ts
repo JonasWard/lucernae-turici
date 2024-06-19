@@ -17,8 +17,7 @@ const getInternalVoxelFaceState = (vState: VoxelState, oVState?: VoxelState): Vo
 export const getNeighbourState = (v: Voxel, vX: VoxelComplex, idx: number): VoxelState =>
   v.neighbourMap[idx] !== null ? vX.voxels[v.neighbourMap[idx]![0]].state : VoxelState.NONE;
 
-export const isFaceClosed = (vState: VoxelState, oVState?: VoxelState): boolean =>
-  vState === VoxelState.NONE ? false : oVState ? oVState === VoxelState.NONE : true;
+export const isFaceClosed = (vState: VoxelState, oVState: VoxelState): boolean => (vState !== VoxelState.NONE ? oVState === VoxelState.NONE : false);
 
 // simple method that goes through a voxel complex and based on the position of its voxels activates / deactivates the voxel
 export const setVoxelComplexState = (vX: VoxelComplex, sdfMethod: (v: V3) => number) =>

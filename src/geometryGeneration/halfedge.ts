@@ -139,6 +139,9 @@ export const getHalfEdgeMeshFromMesh = (mesh: Mesh, withNeighbours: boolean = fa
 
   const halfEdges = Object.fromEntries(allHalfEdges.map((e) => [e.id, e]));
 
+  // apparently above algorithm doesn't work yet for the joining, need to tweak it!
+  linkingHalfEdges(halfEdges);
+
   return {
     faces,
     vertices,

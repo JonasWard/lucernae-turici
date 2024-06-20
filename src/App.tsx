@@ -10,15 +10,17 @@ import { AddLampGeometryToScene, RenderMethod } from './geometryGeneration/geome
 /* eslint-disable */
 
 // import model from "./assets/model2/scene.gltf";
+export const BABYLON_CANVAS_ID = 'my-canvas';
 
 type IAppProps = {
   gBD: GeometryBaseData;
   renderMethod?: RenderMethod;
   rerender: boolean;
   completedRerender: () => void;
+  setActiveName: (s: string) => void;
 };
 
-const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMethod }) => {
+const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMethod, setActiveName }) => {
   const [scene, setScene] = useState<null | Scene>(null);
   const [mesh, setMesh] = useState<null | Mesh | TransformNode>(null);
 
@@ -29,11 +31,19 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
     completedRerender();
   };
 
+  const onClickWindowClearActiveName = () => setActiveName('');
+
   const onSceneReady = (scene: any) => {
     const camera = new ArcRotateCamera('camera1', 1, 1, 50, new Vector3(0, 10.0, 0), scene);
     camera.lowerRadiusLimit = 0.6;
     camera.upperRadiusLimit = 200.0;
     camera.panningSensibility = 1000;
+
+    const node = document.getElementById(BABYLON_CANVAS_ID);
+    if (node) {
+      node.addEventListener('click', onClickWindowClearActiveName);
+      node.addEventListener('mousedown', onClickWindowClearActiveName);
+    }
 
     const canvas = scene.getEngine().getRenderingCanvas();
 
@@ -58,7 +68,13 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
   }, [rerender, gBD, mesh, renderMethod]);
 
   return (
-    <SceneComponent antialias onSceneReady={onSceneReady} onRender={onRender} id='my-canvas' sceneOptions={{ adaptToDeviceRatio: true, antialias: true }} />
+    <SceneComponent
+      antialias
+      onSceneReady={onSceneReady}
+      onRender={onRender}
+      id={BABYLON_CANVAS_ID}
+      sceneOptions={{ adaptToDeviceRatio: true, antialias: true }}
+    />
   );
 };
 

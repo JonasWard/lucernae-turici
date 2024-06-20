@@ -5,7 +5,7 @@ import { DataEntryRenderer } from './dataentryrenderers/DataEntryRenderer';
 import { VersionEnumSemantics } from '../../urlAsState/types/versionParser';
 import { Button, Drawer, Popover } from 'antd';
 import { IconRenderer, getIconForKey } from './IconRenderer';
-import { PopoverWrapper } from './PopoverWrapper';
+import { PopoverWrapper } from '../PopoverWrapper';
 
 export enum DisplayType {
   NESTED,

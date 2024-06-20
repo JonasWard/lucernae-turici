@@ -11,6 +11,7 @@ import App from './App';
 import { GeometryBaseData } from './geometryGeneration/baseGeometry';
 import { RenderMethod } from './geometryGeneration/geometryEntry';
 import { UndoRedo } from './components/semantics/UndoRedo';
+import { ViewSettings } from './components/ViewSettings';
 
 const displayTypeMap = {
   ['extrusion']: DisplayType.POPOVER,
@@ -31,7 +32,7 @@ const tryParse = (s: string): SemanticlyNestedDataEntry => {
 
 export const LampConfigurator: React.FC = () => {
   const { stateString } = useParams();
-  const [sliderInput, setSliderInput] = useState<boolean>(false);
+  const [sliderInput, setSliderInput] = useState<boolean>(true);
   const [rerender, setRerender] = useState<boolean>(false);
   const [lastURLFromData, setLastURLFromData] = useState<string>('');
   const [renderMethod, setRenderMethod] = useState<RenderMethod>(RenderMethod.NORMAL);
@@ -83,25 +84,15 @@ export const LampConfigurator: React.FC = () => {
           displayTypeMap={displayTypeMap}
           updateVersion={(versionNumber) => resetData(versionNumber)}
         />
-        <div style={{ width: '100%', padding: 8 }}>
-          <Select
-            value={renderMethod}
-            options={Object.entries(RenderMethod).map(([key, s]) => ({ label: key, value: s as RenderMethod }))}
-            onSelect={(s: RenderMethod) => {
-              setRerender(true);
-              setRenderMethod(s);
-            }}
-          />
-        </div>
-        <div style={{ width: '100%', padding: 8 }}>
-          <Switch
-            checkedChildren={'slider'}
-            unCheckedChildren={'numeric'}
-            style={{ width: 'calc(100% - 16px)' }}
-            value={sliderInput}
-            onChange={(s) => setSliderInput(s)}
-          />
-        </div>
+        <ViewSettings
+          activeName={activeName}
+          setActiveName={setActiveName}
+          renderMethod={renderMethod}
+          setRerender={setRerender}
+          sliderInput={sliderInput}
+          setSliderInput={setSliderInput}
+          setRenderMethod={setRenderMethod}
+        />
       </div>
       <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />
     </>

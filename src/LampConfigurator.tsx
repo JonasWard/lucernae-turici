@@ -6,8 +6,7 @@ import { updateDataEntry } from './urlAsState/objectmap/versionUpdate';
 import { globalDataAttributeMapper, parserObjects } from './urlAsState/test/semanticlyNestedDataTest';
 import { SemanticlyNestedDataEntry } from './urlAsState/types/semanticlyNestedDataEntry';
 import { DataEntry } from './urlAsState/types/dataEntry';
-import { Button, Select, Switch } from 'antd';
-import App from './App';
+import App, { BABYLON_CANVAS_ID } from './App';
 import { GeometryBaseData } from './geometryGeneration/baseGeometry';
 import { RenderMethod } from './geometryGeneration/geometryEntry';
 import { UndoRedo } from './components/semantics/UndoRedo';
@@ -36,6 +35,7 @@ export const LampConfigurator: React.FC = () => {
   const [rerender, setRerender] = useState<boolean>(false);
   const [lastURLFromData, setLastURLFromData] = useState<string>('');
   const [renderMethod, setRenderMethod] = useState<RenderMethod>(RenderMethod.NORMAL);
+  const [activeName, setActiveName] = useState<string>('');
 
   const updateURLFromData = (data: SemanticlyNestedDataEntry) => {
     const newUrl = dataObjectAsUrl(data, parserObjects);
@@ -54,8 +54,6 @@ export const LampConfigurator: React.FC = () => {
     }
   };
 
-  const [activeName, setActiveName] = useState<string>('');
-
   const updateData = (dataEntry: DataEntry) => setData(updateDataEntry(data, dataEntry, parserObjects));
 
   useEffect(() => {
@@ -67,6 +65,7 @@ export const LampConfigurator: React.FC = () => {
   return (
     <>
       <App
+        setActiveName={setActiveName}
         gBD={getValueObjectFrom(data, globalDataAttributeMapper) as unknown as GeometryBaseData}
         rerender={rerender}
         completedRerender={() => setRerender(false)}

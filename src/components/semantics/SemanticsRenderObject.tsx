@@ -92,7 +92,7 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
     case DisplayType.NESTED:
       return (
         <div key={name}>
-          <div style={{ margin: '3px 8px', paddingBottom: 3, borderBottom: '1px solid #00000033' }}>{name}</div>
+          {name !== '' ? <div style={{ margin: '3px 8px', paddingBottom: 3, borderBottom: '1px solid #00000033' }}>{name}</div> : null}
           {content}
         </div>
       );
@@ -101,7 +101,7 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
         <PopoverWrapper
           open={open}
           toggleOpen={toggleOpen}
-          content={content}
+          children={content}
           title={getIconForKey(name).mainIcon !== name ? <IconRenderer name={name} /> : name}
           buttonIcon={<IconRenderer name={name} noName />}
         />

@@ -4,12 +4,12 @@ import React, { ReactNode } from 'react';
 interface IPopoverWrapperProps {
   open: boolean;
   toggleOpen: (open: boolean) => void;
-  content: ReactNode;
+  children: ReactNode;
   title: ReactNode;
   buttonIcon: ReactNode;
 }
 
-export const PopoverWrapper: React.FC<IPopoverWrapperProps> = ({ open, toggleOpen, content, title, buttonIcon }) => {
+export const PopoverWrapper: React.FC<IPopoverWrapperProps> = ({ open, toggleOpen, children, title, buttonIcon }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'end' }}>
       <Popover
@@ -20,7 +20,7 @@ export const PopoverWrapper: React.FC<IPopoverWrapperProps> = ({ open, toggleOpe
         color='#ffffffb0'
         content={
           <div style={{ width: 250 }}>
-            {content}
+            {children}
             <Button style={{ margin: 8 }} onClick={() => toggleOpen(false)}>
               ok
             </Button>

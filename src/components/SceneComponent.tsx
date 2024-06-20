@@ -10,33 +10,23 @@ export default (props: any) => {
     if (reactCanvas.current) {
       const engine = new Engine(reactCanvas.current, antialias, engineOptions as EngineOptions, adaptToDeviceRatio);
       const scene = new Scene(engine, sceneOptions);
-      if (scene.isReady()) {
-        props.onSceneReady(scene);
-      } else {
-        scene.onReadyObservable.addOnce((scene) => props.onSceneReady(scene));
-      }
+
+      if (scene.isReady()) props.onSceneReady(scene);
+      else scene.onReadyObservable.addOnce((scene) => props.onSceneReady(scene));
 
       engine.runRenderLoop(() => {
-        if (typeof onRender === 'function') {
-          onRender(scene);
-        }
+        if (typeof onRender === 'function') onRender(scene);
+
         scene.render();
       });
 
-      const resize = () => {
-        scene.getEngine().resize();
-      };
+      const resize = () => scene.getEngine().resize();
 
-      if (window) {
-        window.addEventListener('resize', resize);
-      }
+      window.addEventListener('resize', resize);
 
       return () => {
         scene.getEngine().dispose();
-
-        if (window) {
-          window.removeEventListener('resize', resize);
-        }
+        window.removeEventListener('resize', resize);
       };
     }
   }, [reactCanvas]);

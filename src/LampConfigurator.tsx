@@ -94,7 +94,13 @@ export const LampConfigurator: React.FC = () => {
           />
         </div>
         <div style={{ width: '100%', padding: 10 }}>
-          <Switch style={{ width: 'calc(100% - 20px)' }} value={sliderInput} onChange={(s) => setSliderInput(s)} />
+          <Switch
+            checkedChildren={'slider'}
+            unCheckedChildren={'numeric'}
+            style={{ width: 'calc(100% - 20px)' }}
+            value={sliderInput}
+            onChange={(s) => setSliderInput(s)}
+          />
         </div>
       </div>
       <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />

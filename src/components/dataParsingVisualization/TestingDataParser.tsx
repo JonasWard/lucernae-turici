@@ -112,7 +112,7 @@ export const TestingDataParser: React.FC = () => {
           </div>
         )}
       </div>
-      <div style={{ position: 'absolute', top: 0, right: 0, padding: 50, width: 120 }}>
+      <div style={{ position: 'absolute', top: 0, right: 0, padding: 10, width: 120 }}>
         <SemanticsRenderObject
           semantics={data}
           name={''}

@@ -6,7 +6,7 @@ import { updateDataEntry } from './urlAsState/objectmap/versionUpdate';
 import { globalDataAttributeMapper, parserObjects } from './urlAsState/test/semanticlyNestedDataTest';
 import { SemanticlyNestedDataEntry } from './urlAsState/types/semanticlyNestedDataEntry';
 import { DataEntry } from './urlAsState/types/dataEntry';
-import { Button, Select } from 'antd';
+import { Button, Select, Switch } from 'antd';
 import App from './App';
 import { GeometryBaseData } from './geometryGeneration/baseGeometry';
 import { RenderMethod } from './geometryGeneration/geometryEntry';
@@ -31,6 +31,7 @@ const tryParse = (s: string): SemanticlyNestedDataEntry => {
 
 export const LampConfigurator: React.FC = () => {
   const { stateString } = useParams();
+  const [sliderInput, setSliderInput] = useState<boolean>(false);
   const [rerender, setRerender] = useState<boolean>(false);
   const [lastURLFromData, setLastURLFromData] = useState<string>('');
   const [renderMethod, setRenderMethod] = useState<RenderMethod>(RenderMethod.NORMAL);
@@ -42,7 +43,7 @@ export const LampConfigurator: React.FC = () => {
     setLastURLFromData(newUrl);
   };
 
-  const [data, setData] = useState<SemanticlyNestedDataEntry>(tryParse(stateString ?? '0'));
+  const [data, setData] = useState<SemanticlyNestedDataEntry>(tryParse(stateString ?? ''));
 
   const tryToHandelUndoRedo = (url: string) => {
     try {
@@ -72,6 +73,7 @@ export const LampConfigurator: React.FC = () => {
       />
       <div style={{ position: 'absolute', top: 0, right: 0, padding: 15, width: 120 }}>
         <SemanticsRenderObject
+          asSlider={sliderInput}
           semantics={data}
           name={''}
           updateEntry={updateData}
@@ -81,15 +83,19 @@ export const LampConfigurator: React.FC = () => {
           displayTypeMap={displayTypeMap}
           updateVersion={(versionNumber) => resetData(versionNumber)}
         />
-        <Select
-          style={{ width: '100%' }}
-          value={renderMethod}
-          options={Object.entries(RenderMethod).map(([key, s]) => ({ label: key, value: s as RenderMethod }))}
-          onSelect={(s: RenderMethod) => {
-            setRerender(true);
-            setRenderMethod(s);
-          }}
-        />
+        <div style={{ width: '100%', padding: 10 }}>
+          <Select
+            value={renderMethod}
+            options={Object.entries(RenderMethod).map(([key, s]) => ({ label: key, value: s as RenderMethod }))}
+            onSelect={(s: RenderMethod) => {
+              setRerender(true);
+              setRenderMethod(s);
+            }}
+          />
+        </div>
+        <div style={{ width: '100%', padding: 10 }}>
+          <Switch style={{ width: 'calc(100% - 20px)' }} value={sliderInput} onChange={(s) => setSliderInput(s)} />
+        </div>
       </div>
       <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />
     </>

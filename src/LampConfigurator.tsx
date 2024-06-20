@@ -71,11 +71,11 @@ export const LampConfigurator: React.FC = () => {
         completedRerender={() => setRerender(false)}
         renderMethod={renderMethod}
       />
-      <div style={{ position: 'absolute', top: 0, right: 0, padding: 15, width: 120 }}>
+      <div style={{ position: 'absolute', top: 0, right: 0, padding: 8 }}>
         <SemanticsRenderObject
           asSlider={sliderInput}
           semantics={data}
-          name={''}
+          name={''} // name is not used in this context
           updateEntry={updateData}
           versionEnumSemantics={parserObjects[0].versionEnumSemantics}
           activeName={activeName}
@@ -83,7 +83,7 @@ export const LampConfigurator: React.FC = () => {
           displayTypeMap={displayTypeMap}
           updateVersion={(versionNumber) => resetData(versionNumber)}
         />
-        <div style={{ width: '100%', padding: 10 }}>
+        <div style={{ width: '100%', padding: 8 }}>
           <Select
             value={renderMethod}
             options={Object.entries(RenderMethod).map(([key, s]) => ({ label: key, value: s as RenderMethod }))}
@@ -93,11 +93,11 @@ export const LampConfigurator: React.FC = () => {
             }}
           />
         </div>
-        <div style={{ width: '100%', padding: 10 }}>
+        <div style={{ width: '100%', padding: 8 }}>
           <Switch
             checkedChildren={'slider'}
             unCheckedChildren={'numeric'}
-            style={{ width: 'calc(100% - 20px)' }}
+            style={{ width: 'calc(100% - 16px)' }}
             value={sliderInput}
             onChange={(s) => setSliderInput(s)}
           />

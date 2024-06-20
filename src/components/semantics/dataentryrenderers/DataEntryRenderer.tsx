@@ -11,14 +11,15 @@ export interface IDatyEntryRendererProps {
   dataEntry: DataEntry;
   updateEntry: (newValue: DataEntry) => void;
   versionEnumSemantics?: VersionEnumSemantics;
+  asSlider?: boolean;
 }
 
-export const DataEntryRenderer: React.FC<IDatyEntryRendererProps> = ({ dataEntry, updateEntry, versionEnumSemantics }) => {
+export const DataEntryRenderer: React.FC<IDatyEntryRendererProps> = ({ asSlider, dataEntry, updateEntry, versionEnumSemantics }) => {
   switch (dataEntry.type) {
     case DataType.INT:
-      return <IntDataEntryRenderer int={dataEntry} onChange={updateEntry} />;
+      return <IntDataEntryRenderer asSlider={asSlider} int={dataEntry} onChange={updateEntry} />;
     case DataType.FLOAT:
-      return <FloatDataEntryRenderer float={dataEntry} onChange={updateEntry} />;
+      return <FloatDataEntryRenderer asSlider={asSlider} float={dataEntry} onChange={updateEntry} />;
     case DataType.VERSION:
       return <VersionDataEntryRenderer version={dataEntry} onChange={updateEntry} versionEnumSemantics={versionEnumSemantics} />;
     case DataType.BOOLEAN:

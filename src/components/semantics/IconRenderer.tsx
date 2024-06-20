@@ -73,6 +73,8 @@ export const getIconForKey = (
       return { mainIcon: <PiStackPlusFill size={size} /> };
     case 'alpha':
       return { mainIcon: 'α' };
+    case 'settings':
+      return { mainIcon: '⚙️' };
     default:
       return { mainIcon: name };
   }

@@ -103,6 +103,7 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
             open={open}
             onOpenChange={toggleOpen}
             trigger='click'
+            color='#ffffff55'
             content={
               <div style={{ width: 200 }}>
                 {content}

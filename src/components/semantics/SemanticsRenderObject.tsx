@@ -5,6 +5,7 @@ import { DataEntryRenderer } from './dataentryrenderers/DataEntryRenderer';
 import { VersionEnumSemantics } from '../../urlAsState/types/versionParser';
 import { Button, Drawer, Popover } from 'antd';
 import { IconRenderer, getIconForKey } from './IconRenderer';
+import { PopoverWrapper } from './PopoverWrapper';
 
 export enum DisplayType {
   NESTED,
@@ -60,7 +61,7 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
         const localDisplayType = getDisplayType(semantic, displayTypeMap);
 
         return value.hasOwnProperty('type') ? (
-          <div key={semantic} style={{ padding: 10, width: 'calc(100% - 20px)' }}>
+          <div key={semantic} style={{ padding: 8 }}>
             <DataEntryRenderer
               asSlider={asSlider}
               key={semantic}
@@ -91,32 +92,19 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
     case DisplayType.NESTED:
       return (
         <div key={name}>
-          <div>{name}</div>
+          <div style={{ margin: '3px 8px', paddingBottom: 3, borderBottom: '1px solid #00000033' }}>{name}</div>
           {content}
         </div>
       );
     case DisplayType.POPOVER:
       return (
-        <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'end' }}>
-          <Popover
-            placement='leftTop'
-            open={open}
-            onOpenChange={toggleOpen}
-            trigger='click'
-            color='#ffffff55'
-            content={
-              <div style={{ width: 200 }}>
-                {content}
-                <Button onClick={() => toggleOpen(false)}>ok</Button>
-              </div>
-            }
-            title={getIconForKey(name).mainIcon !== name ? <IconRenderer name={name} /> : name}
-          >
-            <Button style={{ margin: 10, width: 20 }}>
-              <IconRenderer name={name} noName />
-            </Button>
-          </Popover>
-        </div>
+        <PopoverWrapper
+          open={open}
+          toggleOpen={toggleOpen}
+          content={content}
+          title={getIconForKey(name).mainIcon !== name ? <IconRenderer name={name} /> : name}
+          buttonIcon={<IconRenderer name={name} noName />}
+        />
       );
     case DisplayType.DRAWER:
       return (

@@ -16,7 +16,7 @@ export const SliderWrapper: React.FC<{
         <div>{icon}</div>
         <div>{value.toFixed(precision)}</div>
       </div>
-      <Slider style={{ width: '100%' }} value={value} onChange={onChange} min={min} max={max} step={step} />
+      <Slider style={{ width: '100%', height: 0, marginBottom: -4 }} value={value} onChange={onChange} min={min} max={max} step={step} />
     </div>
   ) : (
     <span>Value is not valid</span>

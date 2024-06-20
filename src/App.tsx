@@ -43,6 +43,7 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
     if (node) {
       node.addEventListener('click', onClickWindowClearActiveName);
       node.addEventListener('mousedown', onClickWindowClearActiveName);
+      node.addEventListener('touchstart', onClickWindowClearActiveName);
     }
 
     const canvas = scene.getEngine().getRenderingCanvas();

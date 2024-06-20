@@ -12,6 +12,12 @@ const UNDO_LOCALSTORAGE_STACK_NAME = 'undoStack';
 const REDO_LOCALSTORAGE_STACK_NAME = 'redoStack';
 const LAST_LOCALSTORAGE_ENTRY_NAME = 'lastActive';
 
+export const clearLocalStorage = () => {
+  localStorage.removeItem(UNDO_LOCALSTORAGE_STACK_NAME);
+  localStorage.removeItem(REDO_LOCALSTORAGE_STACK_NAME);
+  localStorage.removeItem(LAST_LOCALSTORAGE_ENTRY_NAME);
+};
+
 export const UndoRedo: React.FC<IUndoRedoProps> = ({ activeUrl, setActiveUrl }) => {
   const [command, setCommand] = useState<'undo' | 'redo' | undefined>();
   const [undoStack, setUndoStack] = useState<string[]>([]);

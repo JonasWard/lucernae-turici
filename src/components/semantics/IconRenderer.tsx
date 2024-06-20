@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { DataType } from '../../urlAsState/enums/dataTypes';
 import { CiLineHeight } from 'react-icons/ci';
-import { FaArchway, FaVectorSquare } from 'react-icons/fa';
+import { FaArchway, FaCog, FaVectorSquare } from 'react-icons/fa';
 import { FaRegSquareFull, FaRegCircle } from 'react-icons/fa6';
 import { PiRainbowLight, PiStackPlusFill, PiWaveSine } from 'react-icons/pi';
 import { BsFillGrid3X3GapFill } from 'react-icons/bs';
@@ -74,7 +74,7 @@ export const getIconForKey = (
     case 'alpha':
       return { mainIcon: 'α' };
     case 'settings':
-      return { mainIcon: '⚙️' };
+      return { mainIcon: <FaCog size={size} /> };
     default:
       return { mainIcon: name };
   }

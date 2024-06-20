@@ -3,7 +3,7 @@ import { SemanticlyNestedDataEntry } from '../../urlAsState/types/semanticlyNest
 import { DataEntry } from '../../urlAsState/types/dataEntry';
 import { DataEntryRenderer } from './dataentryrenderers/DataEntryRenderer';
 import { VersionEnumSemantics } from '../../urlAsState/types/versionParser';
-import { Button, Drawer, Popover } from 'antd';
+import { Button, Drawer } from 'antd';
 import { IconRenderer, getIconForKey } from './IconRenderer';
 import { PopoverWrapper } from '../PopoverWrapper';
 
@@ -110,9 +110,7 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
       return (
         <>
           <Button onClick={() => toggleOpen(true)}>{name}</Button>
-          <Drawer open={open} title={name} onClose={() => toggleOpen(false)}>
-            {content}
-          </Drawer>
+          <Drawer children={content} open={open} title={name} onClose={() => toggleOpen(false)} />
         </>
       );
   }

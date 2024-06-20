@@ -1,5 +1,5 @@
 import { Button, Popover } from 'antd';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode } from 'react';
 
 interface IPopoverWrapperProps {
   open: boolean;

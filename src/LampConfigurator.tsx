@@ -11,10 +11,10 @@ import { GeometryBaseData } from './geometryGeneration/baseGeometry';
 import { RenderMethod } from './geometryGeneration/geometryEntry';
 import { UndoRedo } from './components/semantics/UndoRedo';
 import { ViewSettings } from './components/ViewSettings';
-import { CameraParameters, ViewCube } from './components/ViewCube';
+import { CameraParameters, ViewCube, ViewCubePosition } from './components/ViewCube';
 
 const displayTypeMap =
-  window.innerWidth < 800
+  window.innerHeight < 800
     ? { ['extrusion']: DisplayType.DRAWER, ['footprint']: DisplayType.DRAWER, ['heights']: DisplayType.DRAWER, ['version']: DisplayType.DRAWER }
     : {
         ['extrusion']: DisplayType.POPOVER,
@@ -66,6 +66,7 @@ export const LampConfigurator: React.FC = () => {
   }, [data]);
 
   const resetData = (versionNumber: number) => setData(getDefaultObject(parserObjects[versionNumber], versionNumber));
+  const viewCubePosition = window.innerWidth < 600 ? ViewCubePosition.AllCorners : ViewCubePosition.LeftBottomCorner;
 
   return (
     <>
@@ -77,7 +78,7 @@ export const LampConfigurator: React.FC = () => {
         renderMethod={renderMethod}
         lastCameraParameters={lastCameraParameters}
       />
-      <div style={{ position: 'absolute', top: 0, right: 0, padding: 8 }}>
+      <div style={{ position: 'absolute', top: viewCubePosition === ViewCubePosition.AllCorners ? 30 : 0, right: 0, padding: 8 }}>
         <SemanticsRenderObject
           asSlider={sliderInput}
           semantics={data}
@@ -100,7 +101,7 @@ export const LampConfigurator: React.FC = () => {
         />
       </div>
       <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />
-      <ViewCube size={15} onSideChange={setLastCameraParameters} />
+      <ViewCube size={15} viewCubePosition={viewCubePosition} onSideChange={setLastCameraParameters} />
     </>
   );
 };

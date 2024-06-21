@@ -17,16 +17,17 @@ export enum RenderMethod {
 }
 
 export const LAMP_MESH = 'lampMesh';
+export const ROOT_NODE = 'rootNode';
 
 export const AddLampGeometryToScene = (
   lampGeometry: GeometryBaseData,
   scene: Scene,
   renderMethod: RenderMethod = RenderMethod.NORMAL
 ): Mesh | TransformNode => {
-  scene.meshes.filter((m) => m.name === LAMP_MESH).forEach((m) => m.dispose());
+  scene.meshes.filter((m) => m.name === LAMP_MESH).forEach((m) => m.dispose(false, true));
 
-  const existingRootNode = scene.getTransformNodeByName('rootNode');
-  const rootNode = existingRootNode ? existingRootNode : new TransformNode('rootNode', scene);
+  const rootNode = scene.getTransformNodeByName(ROOT_NODE) ?? new TransformNode(ROOT_NODE, scene);
+  rootNode.getChildMeshes().forEach((m) => m.dispose(false, true));
 
   const voxelComplex = VoxelFactory.getVoxelComplexFromGeometryBaseData(lampGeometry);
   switch (renderMethod) {

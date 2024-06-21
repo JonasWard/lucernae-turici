@@ -88,7 +88,7 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
       onSceneReady={onSceneReady}
       onRender={onRender}
       id={BABYLON_CANVAS_ID}
-      sceneOptions={{ adaptToDeviceRatio: true, antialias: true }}
+      engineOptions={{ adaptToDeviceRatio: true, antialias: true }}
     />
   );
 };

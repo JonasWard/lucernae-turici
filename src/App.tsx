@@ -7,6 +7,7 @@ import '@babylonjs/loaders/glTF';
 import SceneComponent from './components/SceneComponent';
 import { GeometryBaseData } from './geometryGeneration/baseGeometry';
 import { AddLampGeometryToScene, RenderMethod } from './geometryGeneration/geometryEntry';
+import { CameraParameters } from './components/ViewCube';
 /* eslint-disable */
 
 // import model from "./assets/model2/scene.gltf";
@@ -18,11 +19,13 @@ type IAppProps = {
   rerender: boolean;
   completedRerender: () => void;
   setActiveName: (s: string) => void;
+  lastCameraParameters?: CameraParameters;
 };
 
-const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMethod, setActiveName }) => {
+const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMethod, setActiveName, lastCameraParameters }) => {
   const [scene, setScene] = useState<null | Scene>(null);
   const [mesh, setMesh] = useState<null | Mesh | TransformNode>(null);
+  const [camera, setCamera] = useState<null | ArcRotateCamera>(null);
 
   const updateGeometry = (gBD: GeometryBaseData, mesh: Mesh | TransformNode | null, renderMethod?: RenderMethod) => {
     if (!scene?.isReady()) return;
@@ -38,6 +41,8 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
     camera.lowerRadiusLimit = 0.6;
     camera.upperRadiusLimit = 200.0;
     camera.panningSensibility = 1000;
+
+    setCamera(camera);
 
     const node = document.getElementById(BABYLON_CANVAS_ID);
     if (node) {
@@ -61,6 +66,15 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
 
     updateGeometry(gBD, mesh, renderMethod);
   };
+
+  useEffect(() => {
+    if (camera && lastCameraParameters) {
+      camera.alpha = lastCameraParameters.alfa;
+      camera.beta = lastCameraParameters.beta;
+      camera.radius = lastCameraParameters.radius;
+      camera.setTarget(new Vector3(lastCameraParameters.target.x, lastCameraParameters.target.y, lastCameraParameters.target.z));
+    }
+  }, [lastCameraParameters]);
 
   const onRender = (scene: Scene) => {};
 

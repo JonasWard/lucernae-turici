@@ -19,14 +19,20 @@ export const PopoverWrapper: React.FC<IPopoverWrapperProps> = ({ open, toggleOpe
         trigger='click'
         color='#ffffffb0'
         content={
-          <div style={{ width: 250 }}>
+          <div style={{ width: 'min(250px, calc(100vw - 96px))' }}>
             {children}
             <Button style={{ margin: 8 }} onClick={() => toggleOpen(false)}>
               ok
             </Button>
           </div>
         }
-        title={<div style={{ margin: '8px 8px 4px 8px', paddingBottom: '6px', width: 250 - 16, borderBottom: '1px solid black' }}>{title}</div>}
+        title={
+          <div
+            style={{ margin: '8px 8px 4px 8px', paddingBottom: '6px', width: 'calc(min(250px, calc(100vw - 96px)) -16px)', borderBottom: '1px solid black' }}
+          >
+            {title}
+          </div>
+        }
       >
         <Button style={{ margin: 8, width: 20 }}>{buttonIcon}</Button>
       </Popover>

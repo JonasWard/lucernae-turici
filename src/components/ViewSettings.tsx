@@ -29,9 +29,9 @@ export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
     title={<IconRenderer name={'settings'} />}
     buttonIcon={<IconRenderer name={'settings'} noName />}
   >
-    <div style={{ width: '100%', padding: 8 }}>
+    <div style={{ padding: '8px' }}>
       <Select
-        style={{ width: 'calc(100% - 16px)' }}
+        style={{ width: '100%' }}
         value={renderMethod}
         options={Object.entries(RenderMethod).map(([key, s]) => ({ label: key, value: s as RenderMethod }))}
         onSelect={(s: RenderMethod) => {
@@ -40,14 +40,8 @@ export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
         }}
       />
     </div>
-    <div style={{ width: '100%', padding: 8 }}>
-      <Switch
-        checkedChildren={'slider'}
-        unCheckedChildren={'numeric'}
-        style={{ width: 'calc(100% - 16px)' }}
-        value={sliderInput}
-        onChange={(s) => setSliderInput(s)}
-      />
+    <div style={{ padding: '8px' }}>
+      <Switch checkedChildren={'slider'} unCheckedChildren={'numeric'} value={sliderInput} onChange={(s) => setSliderInput(s)} />
     </div>
   </PopoverWrapper>
 );

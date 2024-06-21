@@ -6,8 +6,8 @@ import { getFaceEdges, getFaceNormal, getVerticesFacesMap } from './halfedge';
 export const createStandardLampMaterial = (scene: Scene) => {
   const material = new StandardMaterial('lamp', scene);
   material.diffuseColor = new Color3(1, 1, 1);
-  material.specularColor = new Color3(1, 1, 1);
-  material.emissiveColor = new Color3(1, 1, 1);
+  // material.specularColor = new Color3(1, 1, 1);
+  // material.emissiveColor = new Color3(1, 1, 1);
   return material;
 };
 

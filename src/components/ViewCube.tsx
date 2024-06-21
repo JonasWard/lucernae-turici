@@ -1,5 +1,6 @@
 import React from 'react';
-import { CiLocationArrow1 } from 'react-icons/ci';
+import { GiBeastEye } from 'react-icons/gi';
+import { PiEyes } from 'react-icons/pi';
 
 export enum ViewCubeSide {
   NORTHEAST = 'NE',
@@ -70,47 +71,47 @@ interface IArrowProps {
   viewCubePosition: ViewCubePosition;
 }
 
-const getAngleForSide = (side: ViewCubeSide) => {
+const getAngleForSide = (side: ViewCubeSide, viewCubePosition: ViewCubePosition) => {
   switch (side) {
     case ViewCubeSide.NORTHEAST:
-      return 0.5;
+      return (viewCubePosition === ViewCubePosition.LeftBottomCorner ? -0.125 : 0.375) + 0.5;
     case ViewCubeSide.SOUTHEAST:
-      return 0.75;
+      return (viewCubePosition === ViewCubePosition.LeftBottomCorner ? -0.125 : 0.375) + 0.75;
     case ViewCubeSide.SOUTHWEST:
-      return 1;
+      return (viewCubePosition === ViewCubePosition.LeftBottomCorner ? -0.125 : 0.375) + 1;
     case ViewCubeSide.NORTHWEST:
-      return 1.25;
+      return (viewCubePosition === ViewCubePosition.LeftBottomCorner ? -0.125 : 0.375) + 1.25;
   }
 };
 
 const getStyleAlignmentForSide = (side: ViewCubeSide, size: number, viewCubePosition: ViewCubePosition) => {
-  const arrowInset = viewCubePosition ? size * 0.25 : 0;
-  const textInset = 0;
+  const arrowInset = (viewCubePosition === ViewCubePosition.LeftBottomCorner ? 0.75 : 0.125) * size;
+  const textInset = (viewCubePosition === ViewCubePosition.LeftBottomCorner ? 1.1 : -0.125) * size;
 
   switch (side) {
     case ViewCubeSide.NORTHEAST:
       return {
-        arrowPosition: { left: arrowInset, bottom: arrowInset },
-        arrowTransform: { transform: `rotate(${getAngleForSide(side)}turn)` },
-        text: { right: textInset, top: textInset },
+        arrowPosition: { right: arrowInset, top: arrowInset },
+        arrowTransform: { transform: `rotate(${getAngleForSide(side, viewCubePosition)}turn)` },
+        text: { left: textInset, bottom: textInset },
       };
     case ViewCubeSide.NORTHWEST:
       return {
-        arrowPosition: { right: arrowInset, bottom: arrowInset },
-        arrowTransform: { transform: `rotate(${getAngleForSide(side)}turn)` },
-        text: { left: textInset, top: textInset },
+        arrowPosition: { left: arrowInset, top: arrowInset },
+        arrowTransform: { transform: `rotate(${getAngleForSide(side, viewCubePosition)}turn)` },
+        text: { right: textInset, bottom: textInset },
       };
     case ViewCubeSide.SOUTHWEST:
       return {
-        arrowPosition: { right: arrowInset, top: arrowInset },
-        arrowTransform: { transform: `rotate(${getAngleForSide(side)}turn)` },
-        text: { left: textInset, bottom: textInset },
+        arrowPosition: { left: arrowInset, bottom: arrowInset },
+        arrowTransform: { transform: `rotate(${getAngleForSide(side, viewCubePosition)}turn)` },
+        text: { right: textInset, top: textInset },
       };
     case ViewCubeSide.SOUTHEAST:
       return {
-        arrowPosition: { left: arrowInset, top: arrowInset },
-        arrowTransform: { transform: `rotate(${getAngleForSide(side)}turn)` },
-        text: { right: textInset, bottom: textInset },
+        arrowPosition: { right: arrowInset, bottom: arrowInset },
+        arrowTransform: { transform: `rotate(${getAngleForSide(side, viewCubePosition)}turn)` },
+        text: { left: textInset, top: textInset },
       };
   }
 };
@@ -124,7 +125,7 @@ export const Arrow: React.FC<IArrowProps> = ({ setSide, side, size, viewCubePosi
 
   return (
     <div style={{ position: 'absolute', ...arrowPosition, cursor: 'pointer', height, width }} onClick={() => setSide(side)}>
-      <CiLocationArrow1 size={size * 1.2} fill={color} style={{ position: 'absolute', ...arrowTransform, ...arrowPosition }} />
+      <PiEyes size={size * 1.2} fill={color} style={{ position: 'absolute', ...arrowTransform, ...arrowPosition }} />
       <span style={{ position: 'absolute', textAnchor: 'middle', verticalAlign: 'middle', color, ...text, fontSize: size * 0.9 }}>{side}</span>
     </div>
   );

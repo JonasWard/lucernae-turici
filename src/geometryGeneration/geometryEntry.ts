@@ -15,15 +15,17 @@ export enum RenderMethod {
   BASEMESH = 'BaseMesh',
 }
 
+export const LAMP_MESH = 'lampMesh';
+
 export const AddLampGeometryToScene = (
   lampGeometry: GeometryBaseData,
   scene: Scene,
-  existingMesh: Mesh | TransformNode | null,
   renderMethod: RenderMethod = RenderMethod.NORMAL
 ): Mesh | TransformNode => {
   const name = 'lampGeometry';
 
-  if (existingMesh) existingMesh.dispose(false);
+  scene.meshes.filter((m) => m.name === name).forEach((m) => m.dispose());
+
   const existingRootNode = scene.getTransformNodeByName('rootNode');
   const rootNode = existingRootNode ? existingRootNode : new TransformNode('rootNode', scene);
 

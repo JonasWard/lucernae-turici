@@ -1,85 +1,10 @@
-import { ExtrusionProfileType } from '../../geometryGeneration/baseGeometry';
-import { FootprintGeometryTypes } from '../../geometryGeneration/footprintgeometrytypes';
-import { ProcessingMethodType } from '../../geometryGeneration/geometry';
-import { DataEntryFactory } from '../factory/factory';
-import { dataObjectAsUrl } from '../objectmap/versionReading';
-import { ObjectGeneratorMethod, ParserForVersion } from '../types/versionParser';
-
-enum VersionParameterNames {
-  version = 'version',
-  extrusion = 'extrusion',
-  extrusionType = 'extrusionType',
-  radiusTop = 'radiusTop',
-  insetTop = 'insetTop',
-  insetBottom = 'insetBottom',
-  insetSides = 'insetSides',
-  footprint = 'footprint',
-  footprintType = 'footprintType',
-  size = 'size',
-  xCount = 'xCount',
-  yCount = 'yCount',
-  bufferInside = 'bufferInside',
-  radius0 = 'radius0',
-  radius1 = 'radius1',
-  radius2 = 'radius2',
-  bufferOutside = 'bufferOutside',
-  segments = 'segments',
-  circleRadius = 'circleRadius',
-  circleDivisions = 'circleDivisions',
-  angleSplit = 'angleSplit',
-  offsetA = 'offsetA',
-  offsetB = 'offsetB',
-  innerRadius = 'innerRadius',
-  heights = 'heights',
-  heightProcessingMethod = 'heightProcessingMethod',
-  baseHeight = 'baseHeight',
-  storyCount = 'storyCount',
-  processingMethodType = 'processingMethodType',
-  total = 'total',
-  linearTwist = 'linearTwist',
-  maxAmplitude = 'maxAmplitude',
-  minAmplitude = 'minAmplitude',
-  period = 'period',
-  phaseShift = 'phaseShift',
-}
-
-export const globalDataAttributeMapper: Record<VersionParameterNames, string> = {
-  [VersionParameterNames.version]: 'version',
-  [VersionParameterNames.extrusion]: 'extrusion',
-  [VersionParameterNames.extrusionType]: 'type',
-  [VersionParameterNames.radiusTop]: 'radiusTop',
-  [VersionParameterNames.insetTop]: 'insetTop',
-  [VersionParameterNames.insetBottom]: 'insetBottom',
-  [VersionParameterNames.insetSides]: 'insetSides',
-  [VersionParameterNames.footprint]: 'footprint',
-  [VersionParameterNames.footprintType]: 'type',
-  [VersionParameterNames.size]: 'size',
-  [VersionParameterNames.xCount]: 'xCount',
-  [VersionParameterNames.yCount]: 'yCount',
-  [VersionParameterNames.bufferInside]: 'bufferInside',
-  [VersionParameterNames.radius0]: 'radius0',
-  [VersionParameterNames.radius1]: 'radius1',
-  [VersionParameterNames.radius2]: 'radius2',
-  [VersionParameterNames.bufferOutside]: 'bufferOutside',
-  [VersionParameterNames.segments]: 'segments',
-  [VersionParameterNames.circleRadius]: 'circleRadius',
-  [VersionParameterNames.circleDivisions]: 'circleDivisions',
-  [VersionParameterNames.angleSplit]: 'angleSplit',
-  [VersionParameterNames.offsetA]: 'offsetA',
-  [VersionParameterNames.offsetB]: 'offsetB',
-  [VersionParameterNames.innerRadius]: 'innerRadius',
-  [VersionParameterNames.heights]: 'heights',
-  [VersionParameterNames.heightProcessingMethod]: 'method',
-  [VersionParameterNames.baseHeight]: 'baseHeight',
-  [VersionParameterNames.storyCount]: 'storyCount',
-  [VersionParameterNames.processingMethodType]: 'type',
-  [VersionParameterNames.total]: 'total',
-  [VersionParameterNames.linearTwist]: 'angle',
-  [VersionParameterNames.maxAmplitude]: 'max',
-  [VersionParameterNames.minAmplitude]: 'min',
-  [VersionParameterNames.period]: 'period',
-  [VersionParameterNames.phaseShift]: 'phaseShift',
-};
+import { ExtrusionProfileType } from '../baseGeometry';
+import { FootprintGeometryTypes } from '../footprintgeometrytypes';
+import { ProcessingMethodType } from '../geometry';
+import { DataEntryFactory } from '../../urlAsState/factory/factory';
+import { dataObjectAsUrl } from '../../urlAsState/objectmap/versionReading';
+import { ObjectGeneratorMethod, ParserForVersion } from '../../urlAsState/types/versionParser';
+import { VersionParameterNames } from './parameterNames';
 
 const parameterOffset = 100;
 
@@ -223,7 +148,7 @@ const version0DataDescriptionObjectGenerator = (
   };
 };
 
-const parserVersion0: ParserForVersion = {
+export const parserVersion0: ParserForVersion = {
   version: 0,
   versionName: 'alpha',
   versionEnumSemantics: {
@@ -250,8 +175,6 @@ const parserVersion0: ParserForVersion = {
   versionValueAttributeMapper: {},
   objectGenerator: version0DataDescriptionObjectGenerator as unknown as ObjectGeneratorMethod,
 };
-
-export const parserObjects: ParserForVersion[] = [parserVersion0];
 
 export const testSemanticlyNesting = () => {
   console.log(dataObjectAsUrl(parserVersion0.objectGenerator(0, 0, 0, 0), [parserVersion0]));

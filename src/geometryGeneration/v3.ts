@@ -21,7 +21,7 @@ export interface Mesh {
 
 export class V3 {
   private static zeroTolerance = 1e-3;
-  private static zeroToleranceSquared = 1e-6;
+  private static zeroToleranceSquared = V3.zeroTolerance ** 2;
   private static massAdd = (vertices: V3[]): V3 => vertices.reduce((a, b) => ({ x: a.x + b.x, y: a.y + b.y, z: a.z + b.z }), { x: 0, y: 0, z: 0 });
   public static add = (...vertices: V3[]): V3 => V3.massAdd(vertices);
   public static sub = (v1: V3, v2: V3): V3 => ({ x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z });

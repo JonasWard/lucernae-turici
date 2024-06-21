@@ -1,7 +1,7 @@
 import { DataEntryFactory } from '../factory/factory';
 import { VersionRangeType } from '../types/versionData';
 import { toStringTest as generalStringTest, fromStringTest as generalFromStringTest } from './helperMethods';
-import { testSemanticlyNesting } from './semanticlyNestedDataTest';
+import { testSemanticlyNesting } from '../../geometryGeneration/versions/version0';
 
 export const values: [number, VersionRangeType, string][] = [
   [0, 4, '0000'], // min

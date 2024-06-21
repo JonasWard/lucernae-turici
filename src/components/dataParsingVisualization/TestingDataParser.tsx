@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SemanticlyNestedDataEntry } from '../../urlAsState/types/semanticlyNestedDataEntry';
 import React from 'react';
 import { DataEntry, DataEntryArray } from '../../urlAsState/types/dataEntry';
-import { parserObjects } from '../../urlAsState/test/semanticlyNestedDataTest';
+import { parserObjects } from '../../geometryGeneration/versions/parserObjects';
 import { getDefaultObject, getTestStringValues, parseDownNestedDataDescription, readingUrlAsDataObject } from '../../urlAsState/objectmap/versionReading';
 import { dataBitsStringifier } from '../../urlAsState/parsers/parsers';
 import { DisplayType, SemanticsRenderObject } from '../semantics/SemanticsRenderObject';

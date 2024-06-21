@@ -3,6 +3,7 @@ import { RenderMethod } from '../geometryGeneration/geometryEntry';
 import { Select, Switch } from 'antd';
 import { DisplayType, getDisplayType } from './semantics/SemanticsRenderObject';
 import { ViewWrapper } from './ViewWrapper';
+import { MaterialFactory, MaterialUUIDColorStates } from '../geometryGeneration/materialFactory';
 
 type IViewPortSettingsProps = {
   activeName: string;
@@ -44,6 +45,17 @@ export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
     </div>
     <div style={{ padding: '8px' }}>
       <Switch checkedChildren={'slider'} unCheckedChildren={'numeric'} value={sliderInput} onChange={(s) => setSliderInput(s)} />
+    </div>
+    <div style={{ padding: '8px' }}>
+      <Select
+        style={{ width: '100%' }}
+        value={MaterialFactory.UUIDColorOptions}
+        options={Object.entries(MaterialUUIDColorStates).map(([key, s]) => ({ label: key, value: s as MaterialUUIDColorStates }))}
+        onSelect={(s: MaterialUUIDColorStates) => {
+          MaterialFactory.UUIDColorOptions = s;
+          setRerender(true);
+        }}
+      />
     </div>
   </ViewWrapper>
 );

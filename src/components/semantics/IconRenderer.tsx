@@ -7,6 +7,7 @@ import { PiRainbowLight, PiStackPlusFill, PiWaveSine } from 'react-icons/pi';
 import { BsFillGrid3X3GapFill } from 'react-icons/bs';
 import { TbCylinder, TbHexagonalPrism, TbHexagons, TbSum } from 'react-icons/tb';
 import { GiFootprint, GiPoolTriangle } from 'react-icons/gi';
+import { MdFormatListNumbered } from 'react-icons/md';
 
 export interface IconRendererProps {
   name: string;
@@ -75,6 +76,8 @@ export const getIconForKey = (
       return { mainIcon: 'α' };
     case 'settings':
       return { mainIcon: <FaCog size={size} /> };
+    case 'version':
+      return { mainIcon: <MdFormatListNumbered size={size} /> };
     default:
       return { mainIcon: name };
   }

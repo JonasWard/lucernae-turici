@@ -4,13 +4,13 @@ import { VIRIDIS } from './materialColors/viridis';
 import { TWILIGHT } from './materialColors/twilight';
 
 export enum MaterialUUIDColorStates {
-  RED,
-  GREEN,
-  BLUE,
-  RGB,
-  BLACK_AND_WHITE,
-  VIRIDIS,
-  TWILIGHT,
+  RED = 'Red',
+  GREEN = 'Green',
+  BLUE = 'Blue',
+  RGB = 'RGB',
+  BLACK_AND_WHITE = 'Black and White',
+  VIRIDIS = 'Viridis',
+  TWILIGHT = 'Twilight',
 }
 
 export class MaterialFactory {

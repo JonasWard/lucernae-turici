@@ -50,7 +50,7 @@ export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
       <Select
         style={{ width: '100%' }}
         value={MaterialFactory.UUIDColorOptions}
-        options={Object.entries(MaterialUUIDColorStates).map(([key, s]) => ({ label: key, value: s as MaterialUUIDColorStates }))}
+        options={Object.values(MaterialUUIDColorStates).map((s) => ({ label: s, value: s as MaterialUUIDColorStates }))}
         onSelect={(s: MaterialUUIDColorStates) => {
           MaterialFactory.UUIDColorOptions = s;
           setRerender(true);

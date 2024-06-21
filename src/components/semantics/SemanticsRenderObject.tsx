@@ -14,7 +14,7 @@ export enum DisplayType {
   DRAWER,
 }
 
-const getDisplayType = (key: string, displayTypeMap?: { [key: string]: DisplayType }) => {
+export const getDisplayType = (key: string, displayTypeMap?: { [key: string]: DisplayType }) => {
   if (displayTypeMap?.hasOwnProperty(key)) return displayTypeMap[key];
   return DisplayType.NESTED;
 };

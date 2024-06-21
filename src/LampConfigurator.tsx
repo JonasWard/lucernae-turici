@@ -15,12 +15,19 @@ import { CameraParameters, ViewCube, ViewCubePosition } from './components/ViewC
 
 const displayTypeMap =
   window.innerHeight < 800
-    ? { ['extrusion']: DisplayType.DRAWER, ['footprint']: DisplayType.DRAWER, ['heights']: DisplayType.DRAWER, ['version']: DisplayType.DRAWER }
+    ? {
+        ['extrusion']: DisplayType.DRAWER,
+        ['footprint']: DisplayType.DRAWER,
+        ['heights']: DisplayType.DRAWER,
+        ['version']: DisplayType.DRAWER,
+        ['settings']: DisplayType.DRAWER,
+      }
     : {
         ['extrusion']: DisplayType.POPOVER,
         ['footprint']: DisplayType.POPOVER,
         ['heights']: DisplayType.POPOVER,
         ['version']: DisplayType.POPOVER,
+        ['settings']: DisplayType.POPOVER,
       };
 
 const tryParse = (s: string): SemanticlyNestedDataEntry => {
@@ -98,6 +105,7 @@ export const LampConfigurator: React.FC = () => {
           sliderInput={sliderInput}
           setSliderInput={setSliderInput}
           setRenderMethod={setRenderMethod}
+          displayTypeMap={displayTypeMap}
         />
       </div>
       <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />

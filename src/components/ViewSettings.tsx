@@ -1,8 +1,8 @@
 import React from 'react';
 import { RenderMethod } from '../geometryGeneration/geometryEntry';
-import { PopoverWrapper } from './PopoverWrapper';
 import { Select, Switch } from 'antd';
-import { IconRenderer, getIconForKey } from './semantics/IconRenderer';
+import { DisplayType, getDisplayType } from './semantics/SemanticsRenderObject';
+import { ViewWrapper } from './ViewWrapper';
 
 type IViewPortSettingsProps = {
   activeName: string;
@@ -12,6 +12,7 @@ type IViewPortSettingsProps = {
   setRerender: (rerender: boolean) => void;
   sliderInput: boolean;
   setSliderInput: (sliderInput: boolean) => void;
+  displayTypeMap?: { [key: string]: DisplayType };
 };
 
 export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
@@ -22,12 +23,13 @@ export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
   setRerender,
   sliderInput,
   setSliderInput,
+  displayTypeMap,
 }) => (
-  <PopoverWrapper
-    open={activeName === 'settings'}
-    toggleOpen={(b: boolean) => setActiveName(b ? 'settings' : '')}
-    title={<IconRenderer name={'settings'} />}
-    buttonIcon={<IconRenderer name={'settings'} noName />}
+  <ViewWrapper
+    displayType={displayTypeMap ? getDisplayType('settings', displayTypeMap) : DisplayType.POPOVER}
+    name={'settings'}
+    activeName={activeName}
+    setActiveName={setActiveName}
   >
     <div style={{ padding: '8px' }}>
       <Select
@@ -43,5 +45,5 @@ export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
     <div style={{ padding: '8px' }}>
       <Switch checkedChildren={'slider'} unCheckedChildren={'numeric'} value={sliderInput} onChange={(s) => setSliderInput(s)} />
     </div>
-  </PopoverWrapper>
+  </ViewWrapper>
 );

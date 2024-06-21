@@ -6,6 +6,7 @@ import { VersionEnumSemantics } from '../../urlAsState/types/versionParser';
 import { Button, Drawer } from 'antd';
 import { IconRenderer, getIconForKey } from './IconRenderer';
 import { PopoverWrapper } from '../PopoverWrapper';
+import { ViewWrapper } from '../ViewWrapper';
 
 export enum DisplayType {
   NESTED,
@@ -36,32 +37,19 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
   updateEntry,
   versionEnumSemantics,
   displayTypeMap,
-  displayType = DisplayType.NESTED,
   name,
   activeName,
   setActiveName,
   updateVersion,
   asSlider,
 }) => {
-  const [open, setOpen] = useState(name === activeName);
-
-  const toggleOpen = (open: boolean) => {
-    setOpen(open);
-    if (!open) setActiveName('');
-    setActiveName(name);
-  };
-
-  useEffect(() => {
-    if (activeName !== name) setOpen(false);
-  }, [activeName, name]);
-
-  const content = (
-    <>
+  return (
+    <ViewWrapper displayType={getDisplayType(name, displayTypeMap)} name={name} activeName={activeName} setActiveName={setActiveName}>
       {Object.entries(semantics).map(([semantic, value]) => {
         const localDisplayType = getDisplayType(semantic, displayTypeMap);
 
         return value.hasOwnProperty('type') ? (
-          <div key={semantic} style={{ padding: 8 }}>
+          <ViewWrapper displayType={getDisplayType(semantic, displayTypeMap)} name={semantic} activeName={activeName} setActiveName={setActiveName}>
             <DataEntryRenderer
               asSlider={asSlider}
               key={semantic}
@@ -69,7 +57,7 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
               updateEntry={updateVersion && value.name === 'version' ? (v: DataEntry) => updateVersion(v.value as number) : updateEntry}
               versionEnumSemantics={versionEnumSemantics}
             />
-          </div>
+          </ViewWrapper>
         ) : (
           <SemanticsRenderObject
             asSlider={asSlider}
@@ -85,33 +73,6 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
           />
         );
       })}
-    </>
+    </ViewWrapper>
   );
-
-  switch (displayType) {
-    case DisplayType.NESTED:
-      return (
-        <div key={name}>
-          {name !== '' ? <div style={{ margin: '3px 8px', paddingBottom: 3, borderBottom: '1px solid #00000033' }}>{name}</div> : null}
-          {content}
-        </div>
-      );
-    case DisplayType.POPOVER:
-      return (
-        <PopoverWrapper
-          open={open}
-          toggleOpen={toggleOpen}
-          children={content}
-          title={getIconForKey(name).mainIcon !== name ? <IconRenderer name={name} /> : name}
-          buttonIcon={<IconRenderer name={name} noName />}
-        />
-      );
-    case DisplayType.DRAWER:
-      return (
-        <>
-          <Button onClick={() => toggleOpen(true)}>{name}</Button>
-          <Drawer children={content} open={open} title={name} onClose={() => toggleOpen(false)} />
-        </>
-      );
-  }
 };

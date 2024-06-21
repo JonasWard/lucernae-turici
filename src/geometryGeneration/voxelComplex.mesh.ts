@@ -244,10 +244,11 @@ export class VoxelMesh {
 
   public static getMeshForVoxelComplex = (vX: VoxelComplex, gBD: GeometryBaseData): Mesh => {
     const uvss = VoxelMesh.getUVsForGeometryState(gBD);
-    return Mesh.joinMeshes(Object.values(vX.voxels).map((v) => VoxelMesh.getMeshForVoxel(v, vX, uvss.flat(), uvss[0].length - 1)));
+    const mesh = Mesh.joinMeshes(Object.values(vX.voxels).map((v) => VoxelMesh.getMeshForVoxel(v, vX, uvss.flat(), uvss[0].length - 1)));
+    console.table([{ vertexCount: mesh.vertices.length, faceCount: mesh.faces.length }]);
+    return mesh;
   };
 
-  public static getHalfEdgeMeshForVoxelComplex = (vX: VoxelComplex, gBD: GeometryBaseData): HalfEdgeMesh => {
-    return getHalfEdgeMeshFromMesh(VoxelMesh.getMeshForVoxelComplex(vX, gBD));
-  };
+  public static getHalfEdgeMeshForVoxelComplex = (vX: VoxelComplex, gBD: GeometryBaseData): HalfEdgeMesh =>
+    getHalfEdgeMeshFromMesh(VoxelMesh.getMeshForVoxelComplex(vX, gBD));
 }

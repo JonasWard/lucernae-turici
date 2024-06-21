@@ -1,5 +1,6 @@
 import { Button, Popover } from 'antd';
 import React, { ReactNode } from 'react';
+import { IoClose } from 'react-icons/io5';
 
 interface IPopoverWrapperProps {
   open: boolean;
@@ -18,19 +19,22 @@ export const PopoverWrapper: React.FC<IPopoverWrapperProps> = ({ open, toggleOpe
         onOpenChange={toggleOpen}
         trigger='click'
         color='#ffffffb0'
-        content={
-          <div style={{ width: 'min(250px, calc(100vw - 96px))' }}>
-            {children}
-            <Button style={{ margin: 8 }} onClick={() => toggleOpen(false)}>
-              ok
-            </Button>
-          </div>
-        }
+        content={<div style={{ width: 'min(250px, calc(100vw - 96px))' }}>{children}</div>}
         title={
           <div
-            style={{ margin: '8px 8px 4px 8px', paddingBottom: '6px', width: 'calc(min(250px, calc(100vw - 96px)) -16px)', borderBottom: '1px solid black' }}
+            style={{
+              margin: '0px 0px 4px 0px',
+              paddingBottom: '6px',
+              width: 'calc(min(250px, calc(100vw - 96px)) -16px)',
+              borderBottom: '1px solid black',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
           >
-            {title}
+            <span>{title}</span>
+            <IoClose style={{ cursor: 'pointer' }} size={20} onClick={() => toggleOpen(false)} />
           </div>
         }
       >

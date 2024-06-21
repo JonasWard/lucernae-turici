@@ -12,9 +12,9 @@ const edgeResolution = 5;
 const colorScale = 200;
 
 const getColorForVertex = (v: V3): string => {
-  const r = Math.ceil((v.x * colorScale) % 255).toString(16);
-  const g = Math.ceil((v.y * colorScale) % 255).toString(16);
-  const b = Math.ceil((v.z * colorScale) % 255).toString(16);
+  const r = Math.ceil((((v.x * colorScale) % 255) + 255) % 255).toString(16);
+  const g = Math.ceil((((v.y * colorScale) % 255) + 255) % 255).toString(16);
+  const b = Math.ceil((((v.z * colorScale) % 255) + 255) % 255).toString(16);
   return `${r.length < 2 ? '0' + r : r}${g.length < 2 ? '0' + g : g}${b.length < 2 ? '0' + b : b}`;
 };
 
@@ -37,7 +37,7 @@ export const getMeshForEdge = (v0: V3, v1: V3, scene: Scene, id: string, color?:
     cap: 0, // no cap
   });
 
-  babylonMesh.material = MaterialFactory.getMaterialForUuid(scene, id, 'color-', false);
+  babylonMesh.material = MaterialFactory.getMaterialForUuid(scene, color ?? id, 'color-', false);
   if (rootNode) babylonMesh.parent = rootNode;
 };
 

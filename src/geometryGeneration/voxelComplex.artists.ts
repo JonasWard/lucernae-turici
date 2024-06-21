@@ -1,9 +1,10 @@
-import { Color3, Scene, StandardMaterial, MeshBuilder, Vector3, Material, Mesh as BabylonMesh, TransformNode } from '@babylonjs/core';
+import { Scene, MeshBuilder, Vector3, Material, Mesh as BabylonMesh, TransformNode } from '@babylonjs/core';
 import { ExtrusionProfile, GeometryBaseData } from './baseGeometry';
 import { V3, Mesh } from './v3';
 import { VoxelComplex, Voxel } from './voxelComplex.type';
 import { getCenterOfVoxelFace, getCenterOfVoxel } from './voxelComplex';
 import { VoxelMesh } from './voxelComplex.mesh';
+import { MaterialFactory } from './materialFactory';
 
 const vSize = 0.02;
 const vHSize = vSize * 0.2;
@@ -14,44 +15,21 @@ const getColorForVertex = (v: V3): string => {
   const r = Math.ceil((v.x * colorScale) % 255).toString(16);
   const g = Math.ceil((v.y * colorScale) % 255).toString(16);
   const b = Math.ceil((v.z * colorScale) % 255).toString(16);
-  return `#${r.length < 2 ? '0' + r : r}${g.length < 2 ? '0' + g : g}${b.length < 2 ? '0' + b : b}`;
-};
-
-const getColorForUUID = (s: string): string => `#${s.slice(0, 6)}`;
-
-const getMaterialForColor = (c: string, scene: Scene): StandardMaterial => {
-  let material = scene.materials.find((m) => m.name === c) as StandardMaterial | undefined;
-  if (!material) {
-    material = new StandardMaterial(c, scene);
-    const c3 = Color3.FromHexString(c);
-    material.diffuseColor = c3;
-    material.ambientColor = c3;
-    // material.emissiveColor = c3;
-  }
-
-  return material;
+  return `${r.length < 2 ? '0' + r : r}${g.length < 2 ? '0' + g : g}${b.length < 2 ? '0' + b : b}`;
 };
 
 // creates a cube mesh representation for a vertex
-export const getMeshForVertex = (c: V3, scene: Scene, color?: string, rootNode?: TransformNode, scale: number = 1) => {
-  const localColor = color ?? getColorForVertex(c);
-  const material = getMaterialForColor(localColor, scene);
-
+export const getMeshForVertex = (c: V3, scene: Scene, color: string, rootNode?: TransformNode, scale: number = 1) => {
   const vHash = V3.getHash(c);
-
   const babylonMesh = MeshBuilder.CreateSphere(vHash, { segments: 2, diameter: vSize * scale }, scene);
 
   if (rootNode) babylonMesh.parent = rootNode;
 
-  babylonMesh.material = material;
-
+  babylonMesh.material = MaterialFactory.getMaterialForUuid(scene, color, 'color-', false);
   babylonMesh.position.set(c.x, c.z, -c.y);
 };
 
 export const getMeshForEdge = (v0: V3, v1: V3, scene: Scene, id: string, color?: string, rootNode?: TransformNode, scale: number = 1) => {
-  const localColor = color ?? getColorForUUID(id);
-  const material = getMaterialForColor(localColor, scene);
-
   const babylonMesh = MeshBuilder.CreateTube(id, {
     path: [new Vector3(v0.x, v0.z, -v0.y), new Vector3(v1.x, v1.z, -v1.y)],
     tessellation: edgeResolution,
@@ -59,7 +37,7 @@ export const getMeshForEdge = (v0: V3, v1: V3, scene: Scene, id: string, color?:
     cap: 0, // no cap
   });
 
-  babylonMesh.material = material;
+  babylonMesh.material = MaterialFactory.getMaterialForUuid(scene, id, 'color-', false);
   if (rootNode) babylonMesh.parent = rootNode;
 };
 
@@ -84,7 +62,7 @@ const getRepresentativeMeshForVoxelFace = (voxel: Voxel, vX: VoxelComplex, index
   // getting the center of the face
   const v = getRepresentativeLocationForVoxelFace(voxel, vX, index);
 
-  getMeshForVertex(v, scene, getColorForUUID(voxel.id), rootNode, scale);
+  getMeshForVertex(v, scene, voxel.id, rootNode, scale);
 };
 
 const getAllRepresentativeMeshForVoxelFace = (voxel: Voxel, vX: VoxelComplex, scene: Scene, rootNode?: TransformNode, scale: number = 1) => {
@@ -105,44 +83,23 @@ export const voxelToMesh = (voxel: Voxel, vX: VoxelComplex, geometryParsing: any
 };
 
 export const getMeshRepresentationOfVoxelComplexGraph = (vX: VoxelComplex, scene: Scene, rootNode?: TransformNode, scale: number = 1) => {
-  Object.values(vX.vertices).map((v) => getMeshForVertex(v, scene, undefined, rootNode, scale));
+  Object.values(vX.vertices).map((v) => getMeshForVertex(v, scene, getColorForVertex(v), rootNode, scale));
 
-  // render the face vertices
+  // render the face verticess
   Object.values(vX.voxels).forEach((voxel) => getAllRepresentativeMeshForVoxelFace(voxel, vX, scene, rootNode, scale));
-};
-
-export const createStandardLampMaterial = (scene: Scene) => {
-  const material = new StandardMaterial('lamp', scene);
-  material.diffuseColor = new Color3(1, 1, 1);
-  material.specularColor = new Color3(1, 1, 1);
-  material.emissiveColor = new Color3(1, 1, 1);
-  return material;
 };
 
 // artist that renderers a voxel complex using a mesh representation
 export class VoxelComplexMeshArtist {
-  public static defaultMaterial = (scene: Scene) => {
-    const material = new StandardMaterial('material', scene);
-    // material.ambientColor = new Color3(0.23, 0.23, 0.23);
-    // material.indexOfRefraction = 0.52;
-    // material.alpha = 0.99;
-    // material.cameraExposure = 0.66;
-    // material.cameraContrast = 1.66;
-    // material.backFaceCulling = true;
-    material.emissiveColor = new Color3(0.67, 0.64, 0.49);
-    material.wireframe = false;
+  public static defaultMaterial = (scene: Scene) => MaterialFactory.getLampMaterial(scene);
 
-    return material;
-  };
-
-  public static render = (vX: VoxelComplex, scene: Scene, gBD: GeometryBaseData, material?: Material | StandardMaterial, name = 'lampGeometry') => {
+  public static render = (vX: VoxelComplex, scene: Scene, gBD: GeometryBaseData, material?: Material, name = 'lampGeometry') => {
     const mesh = VoxelMesh.getMeshForVoxelComplex(vX, gBD);
 
-    const meshMaterial = material ?? VoxelComplexMeshArtist.defaultMaterial(scene);
     const vertexData = Mesh.getVertexDataForMesh(mesh);
     const babylonMesh = new BabylonMesh(name, scene);
     vertexData.applyToMesh(babylonMesh);
-    babylonMesh.material = meshMaterial;
+    babylonMesh.material = material ?? VoxelComplexMeshArtist.defaultMaterial(scene);
 
     return babylonMesh;
   };

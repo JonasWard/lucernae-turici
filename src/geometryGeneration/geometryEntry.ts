@@ -1,10 +1,11 @@
-import { Mesh, Scene, StandardMaterial, TransformNode } from '@babylonjs/core';
+import { Mesh, Scene, TransformNode } from '@babylonjs/core';
 import { GeometryBaseData, renderHalfEdge } from './baseGeometry';
 import { VoxelComplexMeshArtist, getMeshRepresentationOfVoxelComplexGraph } from './voxelComplex.artists';
 import { VoxelFactory } from './voxelComplex.factory';
 import { getHalfEdgeMeshForVoxelEnclosure } from './voxelComplex';
 import { HalfEdgeMeshRenderer } from './halfedge.artists';
 import { HalfEdgeMeshFactory } from './halfedge.factory';
+import { MaterialFactory } from './materialFactory';
 
 export enum RenderMethod {
   NORMAL = 'Normal',
@@ -32,22 +33,20 @@ export const AddLampGeometryToScene = (
     case RenderMethod.NORMAL:
       return VoxelComplexMeshArtist.render(voxelComplex, scene, lampGeometry, undefined, LAMP_MESH);
     case RenderMethod.WIREFRAME:
-      const exisitingWireframeMaterial = scene.getMaterialByName('wireframeMaterial');
-      const wireframeMaterial = exisitingWireframeMaterial ? exisitingWireframeMaterial : new StandardMaterial('wireframeMaterial', scene);
-      wireframeMaterial.wireframe = true;
-      return VoxelComplexMeshArtist.render(voxelComplex, scene, lampGeometry, wireframeMaterial, LAMP_MESH);
+      return VoxelComplexMeshArtist.render(voxelComplex, scene, lampGeometry, MaterialFactory.getWireframeMaterial(scene), LAMP_MESH);
     case RenderMethod.ENCLOSURE:
     case RenderMethod.HALFEDGESENCLOSURE:
       const enclosureMesh = getHalfEdgeMeshForVoxelEnclosure(voxelComplex);
-      if (renderMethod === RenderMethod.ENCLOSURE) return HalfEdgeMeshRenderer.render(enclosureMesh, scene, undefined, LAMP_MESH);
-      Object.values(enclosureMesh.halfEdges).map((he) => renderHalfEdge(he, enclosureMesh, scene, undefined, rootNode));
+      if (renderMethod === RenderMethod.ENCLOSURE)
+        return HalfEdgeMeshRenderer.render(enclosureMesh, scene, MaterialFactory.getDefaultMaterial(scene), LAMP_MESH);
+      Object.values(enclosureMesh.halfEdges).map((he) => renderHalfEdge(he, enclosureMesh, scene, rootNode, false));
       return rootNode;
     case RenderMethod.NEIGHHBOURMAP:
       getMeshRepresentationOfVoxelComplexGraph(voxelComplex, scene, rootNode, 20);
       return rootNode;
     case RenderMethod.BASEMESH:
       const footprintHeMesh = HalfEdgeMeshFactory.getFootprintFromGeometryBaseData(lampGeometry);
-      Object.values(footprintHeMesh.halfEdges).map((he) => renderHalfEdge(he, footprintHeMesh, scene, undefined, rootNode, false));
+      Object.values(footprintHeMesh.halfEdges).map((he) => renderHalfEdge(he, footprintHeMesh, scene, rootNode, false));
       return rootNode;
   }
 };

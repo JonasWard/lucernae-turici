@@ -1,10 +1,11 @@
-import { Vector3, Mesh as BabylonMesh, VertexData, Scene, StandardMaterial, TransformNode } from '@babylonjs/core';
+import { Vector3, Mesh as BabylonMesh, VertexData, Scene, TransformNode, Material } from '@babylonjs/core';
 import { getCenterOfHalfEdge, getEndVertexOfHalfEdge, getFaceVertices, getStartVertexOfHalfEdge } from './halfedge';
 import { BaseFrame, HalfEdge, HalfEdgeFace, HalfEdgeMesh, TransformationMatrix, V2 } from './geometrytypes';
-import { getColorFromUUID, getV3, getVector3, getVertexHash } from './helpermethods';
+import { getV3, getVector3, getVertexHash } from './helpermethods';
 import { V3 } from './v3';
 import { FloorplanType } from './footprintgeometrytypes';
 import { HeightGenerator } from './geometry';
+import { MaterialFactory } from './materialFactory';
 
 // this mesh assumes a positive oriented coordinate system, which means we will have to transform the mesh when importing them into a babylon scene
 
@@ -282,24 +283,6 @@ export const voxelToMesh = (voxel: Voxel, extrusionProfile: ExtrusionProfile): M
   return joinMeshes(meshes);
 };
 
-export const meshToBabylonMesh = (mesh: Mesh, scene: Scene, centerPoint: Vector3, name: string, material?: StandardMaterial): BabylonMesh => {
-  const babylonMesh = new BabylonMesh(name, scene);
-  if (material) babylonMesh.material = material;
-  const vertexData = new VertexData();
-  vertexData.positions = mesh.vertices.flatMap((v) => [
-    (v.x - centerPoint.x) * UNIT_SCALING + centerPoint.x,
-    (v.z - centerPoint.y) * UNIT_SCALING + centerPoint.y,
-    (-v.y - centerPoint.z) * UNIT_SCALING + centerPoint.z,
-  ]);
-  vertexData.indices = mesh.faces.flatMap((f) => (f.length === 4 ? [f[0], f[1], f[2], f[0], f[2], f[3]] : f));
-
-  const normals: number[] = [];
-  VertexData.ComputeNormals(vertexData.positions, vertexData.indices, normals);
-  vertexData.normals = normals;
-  vertexData.applyToMesh(babylonMesh);
-  return babylonMesh;
-};
-
 export enum HalfEdgeRenderMethod {
   Flat = 'flat',
   Coloured = 'coloured',
@@ -436,26 +419,26 @@ export const getVertexDataForFaceWithData = (fs: FaceWithData[]): VertexData => 
 };
 
 // method for rendering an entire half edge mesh
-export const renderHalfEdgeMesh = (m: HalfEdgeMesh, scene: Scene, name: string, renderMethod?: HalfEdgeRenderMethod, material?: StandardMaterial) => {
+export const renderHalfEdgeMesh = (m: HalfEdgeMesh, scene: Scene, name: string, renderMethod?: HalfEdgeRenderMethod, material?: Material) => {
   const facedata = getFacesWithDataForHalfEdgeMesh(m, renderMethod);
-
   const vertexData = getVertexDataForFaceWithData(facedata);
 
-  // toda add material
   const babylonMesh = new BabylonMesh(name, scene);
-  if (material) babylonMesh.material = material;
   vertexData.applyToMesh(babylonMesh);
+
+  if (material) babylonMesh.material = material ?? MaterialFactory.getDefaultMaterial(scene);
+};
+
+const meshFromFaceData = (faceData: FaceWithData[], scene: Scene, uuid: string, name: string, rootNode?: TransformNode, backFaceCulling?: boolean) => {
+  const vertexData = getVertexDataForFaceWithData(faceData);
+  const babylonMesh = new BabylonMesh(`${name}-${uuid}`, scene);
+  vertexData.applyToMesh(babylonMesh);
+  babylonMesh.material = MaterialFactory.getMaterialForUuid(scene, uuid, 'material-', backFaceCulling);
+  if (rootNode) babylonMesh.parent = rootNode;
 };
 
 // method for rendering / 'visualizing' a singel half edge
-export const renderHalfEdge = (
-  he: HalfEdge,
-  m: HalfEdgeMesh,
-  scene: Scene,
-  material?: StandardMaterial,
-  rootNode?: TransformNode,
-  backFaceCulling: boolean = true
-) => {
+export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, rootNode?: TransformNode, backFaceCulling: boolean = true) => {
   const halfEdgeScale = 0.7;
   if (!he.face) return;
   // getting the face that belong to the half edge
@@ -472,83 +455,14 @@ export const renderHalfEdge = (
   const sideEdgeStart: V3 = V3.add(edgeStart, V3.mul(V3.sub(faceCenter, edgeStart), halfEdgeScale));
   const sideEdgeEnd: V3 = V3.add(edgeEnd, V3.mul(V3.sub(faceCenter, edgeEnd), halfEdgeScale));
 
-  const facedataMain = [makeFaceData([edgeStart, halfTopVertex, topVertex]), makeFaceData([halfTopVertex, edgeEnd, topVertex])];
+  const facedata: { uuid: string; name: string; vertices: FaceWithData[] }[] = [
+    { name: 'main', vertices: [makeFaceData([edgeStart, halfTopVertex, topVertex]), makeFaceData([halfTopVertex, edgeEnd, topVertex])], uuid: he.id }, // main
+    { name: 'start', vertices: [makeFaceData([sideEdgeStart, edgeStart, topVertex])], uuid: he.previous }, // start
+    { name: 'end', vertices: [makeFaceData([edgeEnd, sideEdgeEnd, topVertex])], uuid: he.next }, // end
+    { name: 'neighbour', vertices: [makeFaceData([edgeStart, edgeEnd, halfTopVertex])], uuid: he.neighbour ?? 'ffffff' }, // neighbour
+  ];
 
-  const faceDataStart = [makeFaceData([sideEdgeStart, edgeStart, topVertex])];
-
-  const faceDataEnd = [makeFaceData([edgeEnd, sideEdgeEnd, topVertex])];
-
-  const vertexData = getVertexDataForFaceWithData(facedataMain);
-  const babylonMesh = new BabylonMesh(he.id, scene);
-
-  const color = getColorFromUUID(he.id);
-
-  if (!material) {
-    const material = new StandardMaterial(`${color.toHexString()}-material`, scene);
-    material.emissiveColor = color;
-    material.backFaceCulling = backFaceCulling;
-    babylonMesh.material = material;
-  } else babylonMesh.material = material;
-  vertexData.applyToMesh(babylonMesh);
-
-  if (rootNode) babylonMesh.parent = rootNode;
-  const vertexDataStart = getVertexDataForFaceWithData(faceDataStart);
-  const babylonMeshStart = new BabylonMesh(`${he.id}-start`, scene);
-
-  const startColor = getColorFromUUID(he.previous);
-
-  const previousMaterialName = `${startColor.toHexString()}-material`;
-  const startMaterial = scene.materials.find((m) => m.name === previousMaterialName) as undefined | StandardMaterial;
-
-  if (!startMaterial) {
-    const materialStart = new StandardMaterial(previousMaterialName, scene);
-    materialStart.emissiveColor = startColor;
-    materialStart.backFaceCulling = backFaceCulling;
-    babylonMeshStart.material = materialStart;
-  } else babylonMeshStart.material = startMaterial;
-  vertexDataStart.applyToMesh(babylonMeshStart);
-
-  if (rootNode) babylonMeshStart.parent = rootNode;
-
-  const vertexDataEnd = getVertexDataForFaceWithData(faceDataEnd);
-  const babylonMeshEnd = new BabylonMesh(`${he.id}-end`, scene);
-
-  const endColor = getColorFromUUID(he.next);
-
-  const nextMaterialName = `${endColor.toHexString()}-material`;
-  const endMaterial = scene.materials.find((m) => m.name === nextMaterialName) as undefined | StandardMaterial;
-
-  if (!endMaterial) {
-    const materialEnd = new StandardMaterial(previousMaterialName, scene);
-    materialEnd.emissiveColor = endColor;
-    materialEnd.backFaceCulling = backFaceCulling;
-    babylonMeshEnd.material = materialEnd;
-  } else babylonMeshEnd.material = endMaterial;
-  vertexDataEnd.applyToMesh(babylonMeshEnd);
-
-  if (rootNode) babylonMeshEnd.parent = rootNode;
-
-  if (he.neighbour) {
-    const faceDataNeighbour = [makeFaceData([edgeStart, edgeEnd, halfTopVertex])];
-    const vertexDataNeighbour = getVertexDataForFaceWithData(faceDataNeighbour);
-
-    const babylonMeshNeighbour = new BabylonMesh(`${he.id}-neighbour`, scene);
-
-    const color = getColorFromUUID(he.neighbour);
-
-    const neighbourMaterialName = `${color.toHexString()}-material`;
-    const neighbourMaterial = scene.materials.find((m) => m.name === neighbourMaterialName) as undefined | StandardMaterial;
-
-    if (!neighbourMaterial) {
-      const neighbourMaterial = new StandardMaterial(neighbourMaterialName, scene);
-      neighbourMaterial.emissiveColor = color;
-      neighbourMaterial.backFaceCulling = backFaceCulling;
-      babylonMeshNeighbour.material = neighbourMaterial;
-    } else babylonMeshNeighbour.material = neighbourMaterial;
-    vertexDataNeighbour.applyToMesh(babylonMeshNeighbour);
-
-    if (rootNode) babylonMeshNeighbour.parent = rootNode;
-  }
+  facedata.forEach((fd) => meshFromFaceData(fd.vertices, scene, fd.uuid, fd.name, rootNode, backFaceCulling));
 };
 
 export const getWorldXYToFrameTransformation = (f: BaseFrame): TransformationMatrix => [

@@ -1,15 +1,8 @@
-import { Scene, Material, VertexData, Color3, StandardMaterial, Mesh } from '@babylonjs/core';
+import { Scene, Material, VertexData, Mesh } from '@babylonjs/core';
 import { HalfEdgeFace, HalfEdgeMesh } from './geometrytypes';
 import { V3 } from './v3';
 import { getFaceEdges, getFaceNormal, getVerticesFacesMap } from './halfedge';
-
-export const createStandardLampMaterial = (scene: Scene) => {
-  const material = new StandardMaterial('lamp', scene);
-  material.diffuseColor = new Color3(1, 1, 1);
-  // material.specularColor = new Color3(1, 1, 1);
-  // material.emissiveColor = new Color3(1, 1, 1);
-  return material;
-};
+import { MaterialFactory } from './materialFactory';
 
 export class HalfEdgeMeshRenderer {
   static getNormalsForFacesMap = (heMesh: HalfEdgeMesh): { [k: string]: V3 } =>
@@ -78,13 +71,11 @@ export class HalfEdgeMeshRenderer {
     return vertexData;
   };
 
-  public static render = (mesh: HalfEdgeMesh, scene: Scene, material?: Material | StandardMaterial, name: string = 'halfEdgeMesh') => {
-    const meshMaterial = material ?? createStandardLampMaterial(scene);
-
+  public static render = (mesh: HalfEdgeMesh, scene: Scene, material?: Material, name: string = 'halfEdgeMesh') => {
     const babylonMesh = new Mesh(name, scene);
     const vertexData = HalfEdgeMeshRenderer.getVertexDataForHEMesh(mesh);
     vertexData.applyToMesh(babylonMesh);
-    babylonMesh.material = meshMaterial;
+    babylonMesh.material = material ?? MaterialFactory.getDefaultMaterial(scene);
 
     return babylonMesh;
   };

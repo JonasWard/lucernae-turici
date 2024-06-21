@@ -1,12 +1,16 @@
 import React from 'react';
 import { CiLocationArrow1 } from 'react-icons/ci';
-import { FaLocationArrow } from 'react-icons/fa';
 
 export enum ViewCubeSide {
   NORTHEAST = 'NE',
   NORTHWEST = 'NW',
   SOUTHEAST = 'SE',
   SOUTHWEST = 'SW',
+}
+
+export enum ViewCubePosition {
+  LeftBottomCorner = 'LeftCorner',
+  AllCorners = 'AllCorners',
 }
 
 export interface CameraParameters {
@@ -17,14 +21,15 @@ export interface CameraParameters {
 }
 
 interface IViewCubeProps {
+  viewCubePosition?: ViewCubePosition;
   size?: number;
   onSideChange: (cameraParameters: CameraParameters | undefined) => void;
 }
 
-export const ViewCube: React.FC<IViewCubeProps> = ({ onSideChange, size = 15 }) => {
+export const ViewCube: React.FC<IViewCubeProps> = ({ onSideChange, viewCubePosition = ViewCubePosition.AllCorners, size = 15 }) => {
   const setSide = (side: ViewCubeSide) => {
     const target = { x: 0, y: 8, z: 0 };
-    const radius = 40;
+    const radius = 80;
     const beta = 1.2;
 
     switch (side) {
@@ -43,12 +48,17 @@ export const ViewCube: React.FC<IViewCubeProps> = ({ onSideChange, size = 15 }) 
     }
   };
 
+  const position: React.CSSProperties =
+    viewCubePosition === ViewCubePosition.LeftBottomCorner
+      ? { position: 'absolute', left: size * (0.5 + 2.3), bottom: size * (0.5 + 2), width: 0, height: 0 }
+      : {};
+
   return (
-    <div style={{ position: 'absolute', left: size * (0.5 + 2.3), bottom: size * (0.5 + 2), width: 0, height: 0 }}>
-      <Arrow size={size} setSide={setSide} side={ViewCubeSide.NORTHEAST} />
-      <Arrow size={size} setSide={setSide} side={ViewCubeSide.NORTHWEST} />
-      <Arrow size={size} setSide={setSide} side={ViewCubeSide.SOUTHEAST} />
-      <Arrow size={size} setSide={setSide} side={ViewCubeSide.SOUTHWEST} />
+    <div style={position}>
+      <Arrow size={size} setSide={setSide} side={ViewCubeSide.NORTHEAST} viewCubePosition={viewCubePosition} />
+      <Arrow size={size} setSide={setSide} side={ViewCubeSide.NORTHWEST} viewCubePosition={viewCubePosition} />
+      <Arrow size={size} setSide={setSide} side={ViewCubeSide.SOUTHEAST} viewCubePosition={viewCubePosition} />
+      <Arrow size={size} setSide={setSide} side={ViewCubeSide.SOUTHWEST} viewCubePosition={viewCubePosition} />
     </div>
   );
 };
@@ -57,6 +67,7 @@ interface IArrowProps {
   size: number;
   setSide: (side: ViewCubeSide) => void;
   side: ViewCubeSide;
+  viewCubePosition: ViewCubePosition;
 }
 
 const getAngleForSide = (side: ViewCubeSide) => {
@@ -72,8 +83,8 @@ const getAngleForSide = (side: ViewCubeSide) => {
   }
 };
 
-const getStyleAlignmentForSide = (side: ViewCubeSide, size: number) => {
-  const arrowInset = 0;
+const getStyleAlignmentForSide = (side: ViewCubeSide, size: number, viewCubePosition: ViewCubePosition) => {
+  const arrowInset = viewCubePosition ? size * 0.25 : 0;
   const textInset = 0;
 
   switch (side) {
@@ -104,12 +115,12 @@ const getStyleAlignmentForSide = (side: ViewCubeSide, size: number) => {
   }
 };
 
-export const Arrow: React.FC<IArrowProps> = ({ setSide, side, size }) => {
+export const Arrow: React.FC<IArrowProps> = ({ setSide, side, size, viewCubePosition }) => {
   const color = 'blue';
-  const { arrowPosition, arrowTransform, text } = getStyleAlignmentForSide(side, size);
+  const { arrowPosition, arrowTransform, text } = getStyleAlignmentForSide(side, size, viewCubePosition);
 
-  const height = size * 1.8;
-  const width = size * 2.1;
+  const height = size * (1.8 + (viewCubePosition === ViewCubePosition.AllCorners ? 0.25 : 0));
+  const width = size * (2.1 + (viewCubePosition === ViewCubePosition.AllCorners ? 0.25 : 0));
 
   return (
     <div style={{ position: 'absolute', ...arrowPosition, cursor: 'pointer', height, width }} onClick={() => setSide(side)}>

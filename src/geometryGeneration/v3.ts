@@ -117,8 +117,10 @@ export class Mesh {
     const vertexData = new VertexData();
 
     // const normalsForVertices = HalfEdgeMeshRenderer.getNormalsForVertices(mesh);
-    vertexData.positions = mesh.vertices.map((v) => [v.x, v.z, -v.y]).flat();
+    vertexData.positions = mesh.vertices.map((v) => [v.x, v.z, -v.y]).flat(); // translation from cad to world space
     vertexData.indices = mesh.faces.map((face) => Mesh.getTriangularVertexIndexesForFace(face)).flat(2);
+
+    console.log({ vertexCount: mesh.vertices.length, faceCount: mesh.faces.length });
 
     const normals: number[] = [];
 

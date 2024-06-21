@@ -97,7 +97,7 @@ export const LampConfigurator: React.FC = () => {
         />
       </div>
       <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />
-      <ViewCube onSideChange={setLastCameraParameters} />
+      <ViewCube size={15} onSideChange={setLastCameraParameters} />
     </>
   );
 };

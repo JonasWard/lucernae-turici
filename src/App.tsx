@@ -55,10 +55,10 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
 
     camera.attachControl(canvas, true);
     const light = new HemisphericLight('light', new Vector3(1, 1, 1), scene);
-    light.intensity = 1;
+    light.intensity = 0.2;
 
     const lampLight = new PointLight('lampLight', new Vector3(0, 0.75, 0), scene);
-    lampLight.intensity = 1;
+    lampLight.intensity = 0.2;
 
     scene.clearColor = Color3.Red();
 

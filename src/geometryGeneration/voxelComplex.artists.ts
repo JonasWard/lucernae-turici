@@ -123,11 +123,12 @@ export const createStandardLampMaterial = (scene: Scene) => {
 export class VoxelComplexMeshArtist {
   public static defaultMaterial = (scene: Scene) => {
     const material = new StandardMaterial('material', scene);
-    material.ambientColor = new Color3(0.23, 0.23, 0.23);
-    material.indexOfRefraction = 0.52;
-    material.alpha = 1;
-    material.cameraExposure = 0.66;
-    material.cameraContrast = 1.66;
+    // material.ambientColor = new Color3(0.23, 0.23, 0.23);
+    // material.indexOfRefraction = 0.52;
+    // material.alpha = 0.99;
+    // material.cameraExposure = 0.66;
+    // material.cameraContrast = 1.66;
+    // material.backFaceCulling = true;
     material.emissiveColor = new Color3(0.67, 0.64, 0.49);
     material.wireframe = false;
 

@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react';
 import { PopoverWrapper } from './PopoverWrapper';
 import { getIconForKey, IconRenderer } from './semantics/IconRenderer';
 import { DisplayType } from './semantics/SemanticsRenderObject';
+import { DrawerWrapper } from './DrawerWrapper';
 
 interface IViewWrapperProps {
   children: ReactNode;
@@ -28,10 +29,13 @@ export const ViewWrapper: React.FC<IViewWrapperProps> = ({ children, displayType
       );
     case DisplayType.DRAWER:
       return (
-        <>
-          <Button onClick={() => setActiveName(name)}>{name}</Button>
-          <Drawer children={children} open={activeName === name} title={name} onClose={() => setActiveName('')} />
-        </>
+        <DrawerWrapper
+          open={activeName === name}
+          toggleOpen={(v: boolean) => setActiveName(v ? name : '')}
+          children={children}
+          title={getIconForKey(name).mainIcon !== name ? <IconRenderer name={name} /> : name}
+          buttonIcon={<IconRenderer name={name} noName />}
+        />
       );
   }
 };

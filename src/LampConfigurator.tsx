@@ -6,7 +6,7 @@ import { updateDataEntry } from './urlAsState/objectmap/versionUpdate';
 import { globalDataAttributeMapper, parserObjects } from './urlAsState/test/semanticlyNestedDataTest';
 import { SemanticlyNestedDataEntry } from './urlAsState/types/semanticlyNestedDataEntry';
 import { DataEntry } from './urlAsState/types/dataEntry';
-import App, { BABYLON_CANVAS_ID } from './App';
+import App from './App';
 import { GeometryBaseData } from './geometryGeneration/baseGeometry';
 import { RenderMethod } from './geometryGeneration/geometryEntry';
 import { UndoRedo } from './components/semantics/UndoRedo';

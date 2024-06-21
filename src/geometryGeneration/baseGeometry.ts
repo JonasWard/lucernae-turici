@@ -448,7 +448,14 @@ export const renderHalfEdgeMesh = (m: HalfEdgeMesh, scene: Scene, name: string, 
 };
 
 // method for rendering / 'visualizing' a singel half edge
-export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, material?: StandardMaterial, rootNode?: TransformNode) => {
+export const renderHalfEdge = (
+  he: HalfEdge,
+  m: HalfEdgeMesh,
+  scene: Scene,
+  material?: StandardMaterial,
+  rootNode?: TransformNode,
+  backFaceCulling: boolean = true
+) => {
   const halfEdgeScale = 0.7;
   if (!he.face) return;
   // getting the face that belong to the half edge
@@ -471,8 +478,6 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
 
   const faceDataEnd = [makeFaceData([edgeEnd, sideEdgeEnd, topVertex])];
 
-  const backFaceCulling: boolean = true;
-
   const vertexData = getVertexDataForFaceWithData(facedataMain);
   const babylonMesh = new BabylonMesh(he.id, scene);
 
@@ -480,7 +485,7 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
 
   if (!material) {
     const material = new StandardMaterial(`${color.toHexString()}-material`, scene);
-    material.diffuseColor = color;
+    material.emissiveColor = color;
     material.backFaceCulling = backFaceCulling;
     babylonMesh.material = material;
   } else babylonMesh.material = material;
@@ -497,7 +502,7 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
 
   if (!startMaterial) {
     const materialStart = new StandardMaterial(previousMaterialName, scene);
-    materialStart.diffuseColor = startColor;
+    materialStart.emissiveColor = startColor;
     materialStart.backFaceCulling = backFaceCulling;
     babylonMeshStart.material = materialStart;
   } else babylonMeshStart.material = startMaterial;
@@ -515,7 +520,7 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
 
   if (!endMaterial) {
     const materialEnd = new StandardMaterial(previousMaterialName, scene);
-    materialEnd.diffuseColor = endColor;
+    materialEnd.emissiveColor = endColor;
     materialEnd.backFaceCulling = backFaceCulling;
     babylonMeshEnd.material = materialEnd;
   } else babylonMeshEnd.material = endMaterial;
@@ -536,7 +541,7 @@ export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, mate
 
     if (!neighbourMaterial) {
       const neighbourMaterial = new StandardMaterial(neighbourMaterialName, scene);
-      neighbourMaterial.diffuseColor = color;
+      neighbourMaterial.emissiveColor = color;
       neighbourMaterial.backFaceCulling = backFaceCulling;
       babylonMeshNeighbour.material = neighbourMaterial;
     } else babylonMeshNeighbour.material = neighbourMaterial;

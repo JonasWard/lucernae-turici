@@ -47,7 +47,7 @@ export const AddLampGeometryToScene = (
       return rootNode;
     case RenderMethod.BASEMESH:
       const footprintHeMesh = HalfEdgeMeshFactory.getFootprintFromGeometryBaseData(lampGeometry);
-      Object.values(footprintHeMesh.halfEdges).map((he) => renderHalfEdge(he, footprintHeMesh, scene, undefined, rootNode));
+      Object.values(footprintHeMesh.halfEdges).map((he) => renderHalfEdge(he, footprintHeMesh, scene, undefined, rootNode, false));
       return rootNode;
   }
 };

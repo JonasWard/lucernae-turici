@@ -12,11 +12,11 @@ export const SliderWrapper: React.FC<{
 }> = ({ value, onChange, min, max, step, icon, precision }) =>
   value || value === 0 ? (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%', height: 10 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
         <div>{icon}</div>
         <div>{value.toFixed(precision)}</div>
       </div>
-      <Slider style={{ width: '100%', height: 0, marginBottom: -4 }} value={value} onChange={onChange} min={min} max={max} step={step} />
+      <Slider style={{ width: '100%', margin: '5px 0' }} value={value} onChange={onChange} min={min} max={max} step={step} />
     </div>
   ) : (
     <span>Value is not valid</span>

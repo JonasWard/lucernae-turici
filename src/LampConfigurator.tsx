@@ -13,12 +13,15 @@ import { UndoRedo } from './components/semantics/UndoRedo';
 import { ViewSettings } from './components/ViewSettings';
 import { CameraParameters, ViewCube } from './components/ViewCube';
 
-const displayTypeMap = {
-  ['extrusion']: DisplayType.POPOVER,
-  ['footprint']: DisplayType.POPOVER,
-  ['heights']: DisplayType.POPOVER,
-  ['heightProcessingMethod']: DisplayType.NESTED,
-};
+const displayTypeMap =
+  window.innerWidth < 800
+    ? { ['extrusion']: DisplayType.DRAWER, ['footprint']: DisplayType.DRAWER, ['heights']: DisplayType.DRAWER, ['version']: DisplayType.DRAWER }
+    : {
+        ['extrusion']: DisplayType.POPOVER,
+        ['footprint']: DisplayType.POPOVER,
+        ['heights']: DisplayType.POPOVER,
+        ['version']: DisplayType.POPOVER,
+      };
 
 const tryParse = (s: string): SemanticlyNestedDataEntry => {
   try {

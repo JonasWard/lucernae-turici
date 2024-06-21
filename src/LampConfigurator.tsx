@@ -11,6 +11,7 @@ import { GeometryBaseData } from './geometryGeneration/baseGeometry';
 import { RenderMethod } from './geometryGeneration/geometryEntry';
 import { UndoRedo } from './components/semantics/UndoRedo';
 import { ViewSettings } from './components/ViewSettings';
+import { CameraParameters, ViewCube } from './components/ViewCube';
 
 const displayTypeMap = {
   ['extrusion']: DisplayType.POPOVER,
@@ -36,6 +37,7 @@ export const LampConfigurator: React.FC = () => {
   const [lastURLFromData, setLastURLFromData] = useState<string>('');
   const [renderMethod, setRenderMethod] = useState<RenderMethod>(RenderMethod.NORMAL);
   const [activeName, setActiveName] = useState<string>('');
+  const [lastCameraParameters, setLastCameraParameters] = useState<CameraParameters | undefined>();
 
   const updateURLFromData = (data: SemanticlyNestedDataEntry) => {
     const newUrl = dataObjectAsUrl(data, parserObjects);
@@ -70,6 +72,7 @@ export const LampConfigurator: React.FC = () => {
         rerender={rerender}
         completedRerender={() => setRerender(false)}
         renderMethod={renderMethod}
+        lastCameraParameters={lastCameraParameters}
       />
       <div style={{ position: 'absolute', top: 0, right: 0, padding: 8 }}>
         <SemanticsRenderObject
@@ -94,6 +97,7 @@ export const LampConfigurator: React.FC = () => {
         />
       </div>
       <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />
+      <ViewCube onSideChange={setLastCameraParameters} />
     </>
   );
 };

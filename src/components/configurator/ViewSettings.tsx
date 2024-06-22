@@ -1,9 +1,9 @@
 import React from 'react';
-import { RenderMethod } from '../geometryGeneration/geometryEntry';
+import { RenderMethod } from '../../geometryGeneration/geometryEntry';
 import { Select, Switch } from 'antd';
 import { DisplayType, getDisplayType } from './semantics/SemanticsRenderObject';
-import { ViewWrapper } from './ViewWrapper';
-import { MaterialFactory, MaterialUUIDColorStates } from '../geometryGeneration/materialFactory';
+import { ViewWrapper } from './semantics/ViewWrapper';
+import { MaterialFactory, MaterialUUIDColorStates } from '../../geometryGeneration/materialFactory';
 
 type IViewPortSettingsProps = {
   activeName: string;

@@ -1,10 +1,10 @@
 import React from 'react';
-import { DataType } from '../../../urlAsState/enums/dataTypes';
-import { DataEntry } from '../../../urlAsState/types/dataEntry';
+import { DataType } from '../../../../urlAsState/enums/dataTypes';
+import { DataEntry } from '../../../../urlAsState/types/dataEntry';
 import { FloatDataEntryRenderer } from './FloatDataEntryRenderer';
 import { IntDataEntryRenderer } from './IntDataEntryRenderer';
 import { VersionDataEntryRenderer } from './VersionDataEntryRenderer';
-import { VersionEnumSemantics } from '../../../urlAsState/types/versionParser';
+import { VersionEnumSemantics } from '../../../../urlAsState/types/versionParser';
 import { BooleanDataEntryRenderer } from './BooleanDataEntryRenderer';
 
 export interface IDatyEntryRendererProps {

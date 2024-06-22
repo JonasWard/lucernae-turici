@@ -1,7 +1,7 @@
 import { Select } from 'antd';
-import { VersionDescriptionWithValueType } from '../../../urlAsState/types/dataEntry';
+import { VersionDescriptionWithValueType } from '../../../../urlAsState/types/dataEntry';
 import React from 'react';
-import { VersionEnumSemantics } from '../../../urlAsState/types/versionParser';
+import { VersionEnumSemantics } from '../../../../urlAsState/types/versionParser';
 import { IconRenderer } from '../IconRenderer';
 
 export interface IVersionDataEntryRendererProps {

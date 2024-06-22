@@ -1,13 +1,13 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { Mesh, PointLight, Scene, TransformNode } from '@babylonjs/core';
-import './App.css';
+import './SceneRendering.css';
 import { ArcRotateCamera, Vector3, HemisphericLight, Color3 } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
-import SceneComponent from './components/SceneComponent';
-import { GeometryBaseData } from './geometryGeneration/baseGeometry';
-import { AddLampGeometryToScene, RenderMethod } from './geometryGeneration/geometryEntry';
-import { CameraParameters } from './components/ViewCube';
+import SceneComponent from './configurator/SceneComponent';
+import { GeometryBaseData } from '../geometryGeneration/baseGeometry';
+import { AddLampGeometryToScene, RenderMethod } from '../geometryGeneration/geometryEntry';
+import { CameraParameters } from './configurator/ViewCube';
 /* eslint-disable */
 
 // import model from "./assets/model2/scene.gltf";

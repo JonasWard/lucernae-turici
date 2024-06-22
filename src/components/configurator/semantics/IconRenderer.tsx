@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { DataType } from '../../urlAsState/enums/dataTypes';
+import { DataType } from '../../../urlAsState/enums/dataTypes';
 import { CiLineHeight } from 'react-icons/ci';
 import { FaArchway, FaCog, FaVectorSquare } from 'react-icons/fa';
 import { FaRegSquareFull, FaRegCircle } from 'react-icons/fa6';

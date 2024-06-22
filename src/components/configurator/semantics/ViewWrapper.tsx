@@ -1,8 +1,8 @@
 import { Button, Drawer } from 'antd';
 import React, { ReactNode } from 'react';
 import { PopoverWrapper } from './PopoverWrapper';
-import { getIconForKey, IconRenderer } from './semantics/IconRenderer';
-import { DisplayType } from './semantics/SemanticsRenderObject';
+import { getIconForKey, IconRenderer } from './IconRenderer';
+import { DisplayType } from './SemanticsRenderObject';
 import { DrawerWrapper } from './DrawerWrapper';
 
 interface IViewWrapperProps {

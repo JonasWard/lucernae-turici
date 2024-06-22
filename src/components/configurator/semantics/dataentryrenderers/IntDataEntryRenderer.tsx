@@ -1,5 +1,5 @@
 import { InputNumber } from 'antd';
-import { IntDescriptionWithValueType } from '../../../urlAsState/types/dataEntry';
+import { IntDescriptionWithValueType } from '../../../../urlAsState/types/dataEntry';
 import { IconRenderer } from '../IconRenderer';
 import React from 'react';
 import { SliderWrapper } from '../../helpers/SliderWrapperComponent';

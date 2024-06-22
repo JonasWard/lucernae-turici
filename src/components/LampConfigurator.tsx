@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { DisplayType, SemanticsRenderObject } from './components/semantics/SemanticsRenderObject';
-import { dataObjectAsUrl, getDefaultObject, getValueObjectFrom, readingUrlAsDataObject } from './urlAsState/objectmap/versionReading';
-import { updateDataEntry } from './urlAsState/objectmap/versionUpdate';
-import { parserObjects } from './geometryGeneration/versions/parserObjects';
-import { globalDataAttributeMapper } from './geometryGeneration/versions/globalDataAttributeMapper';
-import { SemanticlyNestedDataEntry } from './urlAsState/types/semanticlyNestedDataEntry';
-import { DataEntry } from './urlAsState/types/dataEntry';
-import App from './App';
-import { GeometryBaseData } from './geometryGeneration/baseGeometry';
-import { RenderMethod } from './geometryGeneration/geometryEntry';
-import { UndoRedo } from './components/semantics/UndoRedo';
-import { ViewSettings } from './components/ViewSettings';
-import { CameraParameters, ViewCube, ViewCubePosition } from './components/ViewCube';
+import { DisplayType, SemanticsRenderObject } from './configurator/semantics/SemanticsRenderObject';
+import { dataObjectAsUrl, getDefaultObject, getValueObjectFrom, readingUrlAsDataObject } from '../urlAsState/objectmap/versionReading';
+import { updateDataEntry } from '../urlAsState/objectmap/versionUpdate';
+import { parserObjects } from '../geometryGeneration/versions/parserObjects';
+import { globalDataAttributeMapper } from '../geometryGeneration/versions/globalDataAttributeMapper';
+import { SemanticlyNestedDataEntry } from '../urlAsState/types/semanticlyNestedDataEntry';
+import { DataEntry } from '../urlAsState/types/dataEntry';
+import App from './SceneRendering';
+import { GeometryBaseData } from '../geometryGeneration/baseGeometry';
+import { RenderMethod } from '../geometryGeneration/geometryEntry';
+import { UndoRedo } from './configurator/semantics/UndoRedo';
+import { ViewSettings } from './configurator/ViewSettings';
+import { CameraParameters, ViewCube, ViewCubePosition } from './configurator/ViewCube';
 
 const displayTypeMap =
   window.innerHeight < 800
@@ -110,7 +110,7 @@ export const LampConfigurator: React.FC = () => {
         />
       </div>
       <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />
-      <ViewCube size={15} viewCubePosition={viewCubePosition} onSideChange={setLastCameraParameters} />
+      <ViewCube size={20} viewCubePosition={viewCubePosition} onSideChange={setLastCameraParameters} />
     </>
   );
 };

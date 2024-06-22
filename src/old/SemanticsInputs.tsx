@@ -2,8 +2,8 @@ import React from 'react';
 import { getBoundsObjectFromDataObject, getVersionObjectFromDataObject } from './dataObject';
 import { SemanticValueString } from './dataSemanticsEnums';
 import { NestedBoundsObject, NestedValueObject, SemanticValues } from './dataStringParsing';
-import { SemanticsRenderObject } from '../components/semantics/SemanticsRenderObject';
-import { SemanticsPopover } from '../components/semantics/SemanticsPopover';
+import { SemanticsRenderObject } from '../components/configurator/semantics/SemanticsRenderObject';
+import { SemanticsPopover } from '../components/configurator/semantics/SemanticsPopover';
 
 export interface IISemanticsInputsProps {
   semantics: SemanticValues;

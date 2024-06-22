@@ -1,4 +1,4 @@
-import { BooleanDescriptionWithValueType } from '../../../urlAsState/types/dataEntry';
+import { BooleanDescriptionWithValueType } from '../../../../urlAsState/types/dataEntry';
 import { IconRenderer } from '../IconRenderer';
 import React from 'react';
 import Checkbox from 'antd/es/checkbox/Checkbox';

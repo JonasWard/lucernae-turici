@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Route, Routes, HashRouter as Router } from 'react-router-dom';
 import './index.css';
-import { LampConfigurator } from './LampConfigurator';
-import { TestingDataParser } from './components/dataParsingVisualization/TestingDataParser';
+import { LampConfigurator } from './components/LampConfigurator';
+import { TestingDataParser } from './components/configurator/dataParsingVisualization/TestingDataParser';
 
 const SimpleApp = () => <div>Very simple app?</div>;
 

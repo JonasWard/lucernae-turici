@@ -2,6 +2,7 @@ import { Color3, Material, Scene, StandardMaterial } from '@babylonjs/core';
 import { MaterialOptions } from './material';
 import { VIRIDIS } from './materialColors/viridis';
 import { TWILIGHT } from './materialColors/twilight';
+import { PLASMA } from './materialColors/plasma';
 
 export enum MaterialUUIDColorStates {
   RED = 'Red',
@@ -11,6 +12,7 @@ export enum MaterialUUIDColorStates {
   BLACK_AND_WHITE = 'Black and White',
   VIRIDIS = 'Viridis',
   TWILIGHT = 'Twilight',
+  PLASMA = 'Plasma',
 }
 
 export class MaterialFactory {
@@ -56,7 +58,9 @@ export class MaterialFactory {
 
   private static getColorFromUUIDViridis = (s: string) => MaterialFactory.getColorInArray(s, VIRIDIS);
   private static getColorFromUUIDTwilight = (s: string) => MaterialFactory.getColorInArray(s, TWILIGHT);
+  private static getColorFromUUIDPlasma = (s: string) => MaterialFactory.getColorInArray(s, PLASMA);
 
+  // get color from uuid based on materialfactory.uuidcoloroptions
   private static getColorFromUUID = (s: string) => {
     switch (MaterialFactory.UUIDColorOptions) {
       case MaterialUUIDColorStates.RGB:
@@ -73,6 +77,8 @@ export class MaterialFactory {
         return MaterialFactory.getColorFromUUIDViridis(s);
       case MaterialUUIDColorStates.TWILIGHT:
         return MaterialFactory.getColorFromUUIDTwilight(s);
+      case MaterialUUIDColorStates.PLASMA:
+        return MaterialFactory.getColorFromUUIDPlasma(s);
     }
   };
 

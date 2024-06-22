@@ -59,7 +59,7 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
     const lampLight = new PointLight('lampLight', new Vector3(0, 0.75, 0), scene);
     lampLight.intensity = 0.2;
 
-    scene.clearColor = Color4.FromHexString('#ffffff00');
+    scene.clearColor = new Color4(0, 0, 0, 0);
 
     setScene(scene);
 

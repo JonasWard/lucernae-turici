@@ -13,6 +13,7 @@ import { RenderMethod } from '../geometryGeneration/geometryEntry';
 import { UndoRedo } from './configurator/semantics/UndoRedo';
 import { ViewSettings } from './configurator/ViewSettings';
 import { CameraParameters, ViewCube, ViewCubePosition } from './configurator/ViewCube';
+import { TopNavigation } from './configurator/TopNavigation';
 
 const displayTypeMap =
   window.innerHeight < 800
@@ -78,6 +79,7 @@ export const LampConfigurator: React.FC = () => {
 
   return (
     <>
+      <TopNavigation activeName={activeName} setActiveName={setActiveName} />
       <App
         setActiveName={setActiveName}
         gBD={getValueObjectFrom(data, globalDataAttributeMapper) as unknown as GeometryBaseData}

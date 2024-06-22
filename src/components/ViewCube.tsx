@@ -35,17 +35,13 @@ export const ViewCube: React.FC<IViewCubeProps> = ({ onSideChange, viewCubePosit
 
     switch (side) {
       case ViewCubeSide.NORTHEAST:
-        onSideChange({ alfa: 0.25 * Math.PI, beta, radius, target });
-        break;
+        return onSideChange({ alfa: 0.25 * Math.PI, beta, radius, target });
       case ViewCubeSide.NORTHWEST:
-        onSideChange({ alfa: 0.75 * Math.PI, beta, radius, target });
-        break;
+        return onSideChange({ alfa: 0.75 * Math.PI, beta, radius, target });
       case ViewCubeSide.SOUTHEAST:
-        onSideChange({ alfa: 1.75 * Math.PI, beta, radius, target });
-        break;
+        return onSideChange({ alfa: 1.75 * Math.PI, beta, radius, target });
       case ViewCubeSide.SOUTHWEST:
-        onSideChange({ alfa: 1.25 * Math.PI, beta, radius, target });
-        break;
+        return onSideChange({ alfa: 1.25 * Math.PI, beta, radius, target });
     }
   };
 

@@ -4,6 +4,7 @@ import { Route, Routes, HashRouter as Router } from 'react-router-dom';
 import './index.css';
 import { LampConfigurator } from './components/LampConfigurator';
 import { TestingDataParser } from './components/configurator/dataParsingVisualization/TestingDataParser';
+import { Email } from './components/Email';
 
 const SimpleApp = () => <div>Very simple app?</div>;
 
@@ -12,7 +13,7 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route element={<div>hello world</div>} path='/' />
+        <Route element={<Email />} path='/' />
         <Route element={<SimpleApp />} path='/simple' />
         <Route element={<LampConfigurator />} path='/configurator' />
         <Route element={<LampConfigurator />} path='/configurator/:stateString' />

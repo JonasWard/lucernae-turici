@@ -7,13 +7,14 @@ import { parserObjects } from '../geometryGeneration/versions/parserObjects';
 import { globalDataAttributeMapper } from '../geometryGeneration/versions/globalDataAttributeMapper';
 import { SemanticlyNestedDataEntry } from '../urlAsState/types/semanticlyNestedDataEntry';
 import { DataEntry } from '../urlAsState/types/dataEntry';
-import App from './SceneRendering';
+import BabylonScene from './SceneRendering';
 import { GeometryBaseData } from '../geometryGeneration/baseGeometry';
 import { RenderMethod } from '../geometryGeneration/geometryEntry';
 import { UndoRedo } from './configurator/semantics/UndoRedo';
 import { ViewSettings } from './configurator/ViewSettings';
 import { CameraParameters, ViewCube, ViewCubePosition } from './configurator/ViewCube';
 import { TopNavigation } from './configurator/TopNavigation';
+import '../LandingPage.css';
 
 const displayTypeMap =
   window.innerHeight < 800
@@ -80,7 +81,7 @@ export const LampConfigurator: React.FC = () => {
   return (
     <>
       <TopNavigation activeName={activeName} setActiveName={setActiveName} />
-      <App
+      <BabylonScene
         setActiveName={setActiveName}
         gBD={getValueObjectFrom(data, globalDataAttributeMapper) as unknown as GeometryBaseData}
         rerender={rerender}

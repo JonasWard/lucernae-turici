@@ -2,6 +2,7 @@ import { Button, Input, Popover } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FaArrowLeft, FaShare, FaShoppingCart } from 'react-icons/fa';
 import { Email } from '../Email';
+import { useNavigate } from 'react-router-dom';
 
 interface ITopNavigationProps {
   activeName: string;
@@ -16,6 +17,8 @@ const getStoredInfo = () => [localStorage.getItem(NAMED_KEY_NAME), localStorage.
 export const TopNavigation: React.FC<ITopNavigationProps> = ({ activeName, setActiveName }) => {
   const [userName, setUserName] = useState(getStoredInfo()[0]);
   const [userNumber, setUserNumber] = useState(getStoredInfo()[1]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (userName) localStorage.setItem(NAMED_KEY_NAME, userName);
@@ -36,7 +39,7 @@ export const TopNavigation: React.FC<ITopNavigationProps> = ({ activeName, setAc
         right: 'calc(50vw - 95px)',
       }}
     >
-      <Button href='/'>
+      <Button onClick={() => navigate('/')}>
         <FaArrowLeft /> Back
       </Button>
       <Popover

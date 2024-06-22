@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SemanticlyNestedDataEntry } from '../../../urlAsState/types/semanticlyNestedDataEntry';
 import React from 'react';
 import { DataEntry, DataEntryArray } from '../../../urlAsState/types/dataEntry';
@@ -80,6 +81,7 @@ const getSecondaryData = (url: string) => {
 export const TestingDataParser: React.FC = () => {
   const [data, setData] = useState<SemanticlyNestedDataEntry>(getDefaultObject(parserObjects[0], 0));
   const [activeName, setActiveName] = useState<string>('');
+  const navigate = useNavigate();
 
   const { bitsString, base64BitString, base64SplitString, base64String, raw } = getTestStringValues(data);
 
@@ -92,7 +94,7 @@ export const TestingDataParser: React.FC = () => {
   return (
     <>
       <div style={{ overflowY: 'auto', padding: '20px' }}>
-        <Button href='/'>
+        <Button onClick={() => navigate('/')}>
           <FaArrowLeft /> Back
         </Button>
         <span>NestedData: </span>

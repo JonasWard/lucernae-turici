@@ -5,6 +5,7 @@ import './index.css';
 import { LampConfigurator } from './components/LampConfigurator';
 import { TestingDataParser } from './components/configurator/dataParsingVisualization/TestingDataParser';
 import { Email } from './components/Email';
+import { LandingPage } from './LandingPage';
 
 const SimpleApp = () => <div>Very simple app?</div>;
 
@@ -13,7 +14,7 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route element={<Email />} path='/' />
+        <Route element={<LandingPage />} path='/' />
         <Route element={<SimpleApp />} path='/simple' />
         <Route element={<LampConfigurator />} path='/configurator' />
         <Route element={<LampConfigurator />} path='/configurator/:stateString' />

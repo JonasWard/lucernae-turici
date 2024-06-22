@@ -4,11 +4,11 @@ import React from 'react';
 type IEmailProps = {
   title?: string;
   label?: string;
-  phoneNumber?: number;
+  phoneNumber?: string;
   name?: string;
 };
 
-const createMailTo = (mailto: string = 'mailto:jonas.vandenbulcke@gmail.com', title?: string, phoneNumber?: number, name?: string) => {
+const createMailTo = (mailto: string = 'mailto:jonas.vandenbulcke@gmail.com', title?: string, phoneNumber?: string, name?: string) => {
   const localTitle = title ? `${title}` : `Lamp order for ${window.location.href}${name ? ` by ${name}` : ''}`;
   const body = `Hi there Jonas!%0D%0A
 %0D%0A
@@ -27,17 +27,14 @@ ${name ? `${name}` : ''}%0D%0A`;
   return `${mailto}?subject=${localTitle}&body=${body}&Content-Type=text/html`;
 };
 
-export const Email: React.FC<IEmailProps> = ({ title, label = 'Order via e-mail', phoneNumber, name }) => {
-  console.log(window.location.href);
-
-  return (
-    <Button
-      onClick={(e) => {
-        window.location.href = createMailTo(undefined, title, phoneNumber, name);
-        e.preventDefault();
-      }}
-    >
-      {label}
-    </Button>
-  );
-};
+export const Email: React.FC<IEmailProps> = ({ title, label = 'Order via e-mail', phoneNumber, name }) => (
+  <Button
+    disabled={!name}
+    onClick={(e) => {
+      window.location.href = createMailTo(undefined, title, phoneNumber, name);
+      e.preventDefault();
+    }}
+  >
+    {label}
+  </Button>
+);

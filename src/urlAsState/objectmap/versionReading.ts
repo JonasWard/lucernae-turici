@@ -96,7 +96,7 @@ export const getTestStringValues = (data: SemanticlyNestedDataEntry) => {
   const base64bitStringArray = singleString.match(/.{1,6}/g)?.map((c) => c.padEnd(6, '0')) ?? [];
   const base64valueArray = url.split('').map((c) => c.padStart(6, '_'));
 
-  const raw = JSON.stringify(getValueObjectFrom(data));
+  const raw = JSON.stringify(getValueObjectFrom(data), undefined, 1);
 
   return {
     bitsString: dataValueStrings.join('-'),

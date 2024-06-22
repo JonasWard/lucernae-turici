@@ -8,6 +8,8 @@ import { dataBitsStringifier } from '../../../urlAsState/parsers/parsers';
 import { DisplayType, SemanticsRenderObject } from '../semantics/SemanticsRenderObject';
 import { updateDataEntry } from '../../../urlAsState/objectmap/versionUpdate';
 import { allTests } from '../../../urlAsState/test/dataParserTests';
+import { Button } from 'antd';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const renderDataAttributes = ['bits', 'min', 'max', 'precision'];
 
@@ -89,7 +91,10 @@ export const TestingDataParser: React.FC = () => {
 
   return (
     <>
-      <div style={{ overflowY: 'scroll', height: '100svh' }}>
+      <div style={{ overflowY: 'auto', padding: '20px' }}>
+        <Button href='/'>
+          <FaArrowLeft /> Back
+        </Button>
         <span>NestedData: </span>
         <RendererSemanticlyNestedDataEntry data={data} />
         <hr />

@@ -1,8 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { Mesh, PointLight, Scene, TransformNode } from '@babylonjs/core';
+import { ArcRotateCamera, Vector3, HemisphericLight, Color4, Mesh, PointLight, Scene, TransformNode } from '@babylonjs/core';
 import './SceneRendering.css';
-import { ArcRotateCamera, Vector3, HemisphericLight, Color3 } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
 import SceneComponent from './configurator/SceneComponent';
 import { GeometryBaseData } from '../geometryGeneration/baseGeometry';
@@ -60,7 +59,7 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
     const lampLight = new PointLight('lampLight', new Vector3(0, 0.75, 0), scene);
     lampLight.intensity = 0.2;
 
-    scene.clearColor = Color3.Red();
+    scene.clearColor = Color4.FromHexString('#ffffff00');
 
     setScene(scene);
 

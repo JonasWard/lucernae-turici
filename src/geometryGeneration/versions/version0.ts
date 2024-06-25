@@ -54,36 +54,36 @@ const extrusionTypeParser = (extrusionDataEntry: DataEntry): DefinitionArrayObje
 const footprintTypeParser = (footprintDataEntry: DataEntry): DefinitionArrayObject => {
   switch (footprintDataEntry.value) {
     case FootprintGeometryTypes.Square:
-      return [footprintDataEntry, DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.size)];
+      return [footprintDataEntry, DataEntryFactory.createFloat(50, 40, 120, 0, VersionParameterNames.size)];
     case FootprintGeometryTypes.SquareGrid:
     case FootprintGeometryTypes.TriangleGrid:
     case FootprintGeometryTypes.HexGrid:
       return [
         footprintDataEntry,
-        DataEntryFactory.createFloat(3, 2, 20, 1, VersionParameterNames.size),
+        DataEntryFactory.createFloat(20, 8, 120, 0, VersionParameterNames.size),
         DataEntryFactory.createInt(3, 1, 20, VersionParameterNames.xCount),
         DataEntryFactory.createInt(3, 1, 20, VersionParameterNames.yCount),
       ];
     case FootprintGeometryTypes.Cylinder:
       return [
         footprintDataEntry,
-        DataEntryFactory.createFloat(0.5, 0, 5, 2, VersionParameterNames.bufferInside),
-        DataEntryFactory.createFloat(2.5, 2, 20, 2, VersionParameterNames.radius0),
-        DataEntryFactory.createFloat(4, 2, 20, 2, VersionParameterNames.radius1),
-        DataEntryFactory.createFloat(2.5, 2, 20, 2, VersionParameterNames.radius2),
-        DataEntryFactory.createFloat(0.5, 0, 5, 2, VersionParameterNames.bufferOutside),
+        DataEntryFactory.createFloat(2, 0, 10, 1, VersionParameterNames.bufferInside),
+        DataEntryFactory.createFloat(12, 8, 40, 1, VersionParameterNames.radius0),
+        DataEntryFactory.createFloat(12, 0, 40, 1, VersionParameterNames.radius1),
+        DataEntryFactory.createFloat(12, 0, 40, 1, VersionParameterNames.radius2),
+        DataEntryFactory.createFloat(2, 0, 10, 1, VersionParameterNames.bufferOutside),
         DataEntryFactory.createInt(5, 3, 50, VersionParameterNames.segments),
       ];
 
     case FootprintGeometryTypes.MalculmiusOne:
       return [
         footprintDataEntry,
-        DataEntryFactory.createFloat(3.5, 2, 20, 2, VersionParameterNames.circleRadius),
+        DataEntryFactory.createFloat(35, 10, 80, 1, VersionParameterNames.circleRadius),
         DataEntryFactory.createInt(5, 3, 30, VersionParameterNames.circleDivisions),
         DataEntryFactory.createFloat(0.5, 0.01, 0.99, 2, VersionParameterNames.angleSplit),
-        DataEntryFactory.createFloat(0, -5, 5, 2, VersionParameterNames.offsetA),
-        DataEntryFactory.createFloat(0, -5, 5, 2, VersionParameterNames.offsetB),
-        DataEntryFactory.createFloat(1, 0.5, 10, 2, VersionParameterNames.innerRadius),
+        DataEntryFactory.createFloat(0, -50, 50, 1, VersionParameterNames.offsetA),
+        DataEntryFactory.createFloat(0, -50, 50, 1, VersionParameterNames.offsetB),
+        DataEntryFactory.createFloat(5, 4, 40, 1, VersionParameterNames.innerRadius),
       ];
     default:
       throw new Error('Footprint type not found');
@@ -91,7 +91,7 @@ const footprintTypeParser = (footprintDataEntry: DataEntry): DefinitionArrayObje
 };
 
 const heightMethodTypeParser = (heightMethodDataEntry: DataEntry): DefinitionArrayObject => [
-  DataEntryFactory.createFloat(3, 0.5, 20, 1, VersionParameterNames.baseHeight),
+  DataEntryFactory.createFloat(15, 12, 200, 0, VersionParameterNames.baseHeight),
   DataEntryFactory.createInt(7, 2, 20, VersionParameterNames.storyCount),
   [
     VersionParameterNames.heightProcessingMethod,
@@ -101,7 +101,7 @@ const heightMethodTypeParser = (heightMethodDataEntry: DataEntry): DefinitionArr
         case ProcessingMethodType.IncrementalMethod:
           return [
             heightMethodDataEntry,
-            DataEntryFactory.createFloat(3, 2, 20, 2, VersionParameterNames.total),
+            DataEntryFactory.createFloat(20, 10, 200, -1, VersionParameterNames.total),
             DataEntryFactory.createFloat(5, 0, 15, 2, VersionParameterNames.linearTwist),
           ];
         case ProcessingMethodType.Sin:
@@ -109,7 +109,7 @@ const heightMethodTypeParser = (heightMethodDataEntry: DataEntry): DefinitionArr
             heightMethodDataEntry,
             DataEntryFactory.createFloat(4, 0, 15, 1, VersionParameterNames.maxAmplitude),
             DataEntryFactory.createFloat(1, 0, 5, 2, VersionParameterNames.minAmplitude),
-            DataEntryFactory.createFloat(1, 0.2, 20, 2, VersionParameterNames.period),
+            DataEntryFactory.createFloat(1, 0.2, 200, 1, VersionParameterNames.period),
             DataEntryFactory.createFloat(4, 0, 90, 1, VersionParameterNames.phaseShift),
           ];
         case ProcessingMethodType.None:

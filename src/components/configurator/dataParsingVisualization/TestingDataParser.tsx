@@ -25,7 +25,7 @@ const RenderDataEntry: React.FC<{ dataEntry: DataEntry }> = ({ dataEntry }) => (
         .join(', ')}
     </span>
     <span key='bits' style={{ marginLeft: 12 }}>
-      bits: {parseBitsToBase64(dataBitsStringifier(dataEntry))}
+      bits: {dataBitsStringifier(dataEntry)}
     </span>
   </span>
 );
@@ -54,8 +54,10 @@ const RendereDataArray: React.FC<{ data: DataEntry[] }> = ({ data }) => (
     <span>DataArray: </span>
     {'['}
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {data.map((dataEntry) => (
-        <RenderDataEntry key={dataEntry.name} dataEntry={dataEntry} />
+      {data.map((dataEntry, i) => (
+        <span>
+          <span>{i}</span> <RenderDataEntry key={dataEntry.name} dataEntry={dataEntry} />
+        </span>
       ))}
     </div>
     {']'}
@@ -66,7 +68,10 @@ const displayTypeMap = {
   ['extrusion']: DisplayType.POPOVER,
   ['footprint']: DisplayType.POPOVER,
   ['heights']: DisplayType.POPOVER,
-  ['heightProcessingMethod']: DisplayType.NESTED,
+  ['version']: DisplayType.POPOVER,
+  ['settings']: DisplayType.POPOVER,
+  ['base']: DisplayType.POPOVER,
+  ['shapePostProcessing']: DisplayType.POPOVER,
 };
 
 const getSecondaryData = (url: string) => {

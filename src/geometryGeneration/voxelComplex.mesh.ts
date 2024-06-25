@@ -245,7 +245,6 @@ export class VoxelMesh {
   public static getMeshForVoxelComplex = (vX: VoxelComplex, gBD: GeometryBaseData): Mesh => {
     const uvss = VoxelMesh.getUVsForGeometryState(gBD);
     const mesh = Mesh.joinMeshes(Object.values(vX.voxels).map((v) => VoxelMesh.getMeshForVoxel(v, vX, uvss.flat(), uvss[0].length - 1)));
-    console.table([{ vertexCount: mesh.vertices.length, faceCount: mesh.faces.length }]);
     return mesh;
   };
 

@@ -2,9 +2,31 @@ import { ExtrusionProfileType } from '../baseGeometry';
 import { FootprintGeometryTypes } from '../footprintgeometrytypes';
 import { ProcessingMethodType } from '../geometry';
 import { DataEntryFactory } from '../../urlAsState/factory/factory';
-import { DefinitionArrayObject, ParserForVersion, VersionDefinitionGeneratorParameters } from '../../urlAsState/types/versionParser';
+import { DefinitionArrayObject, ParserForVersion, VersionDefinitionGeneratorParameters, VersionEnumSemantics } from '../../urlAsState/types/versionParser';
 import { VersionParameterNames } from './parameterNames';
 import { DataEntry } from '../../urlAsState/types/dataEntry';
+
+const version0EnumSemantics = {
+  [VersionParameterNames.extrusionType]: [
+    { value: ExtrusionProfileType.Square, label: 'Square Extrusion' },
+    { value: ExtrusionProfileType.Arc, label: 'Arc Extrusion' },
+    { value: ExtrusionProfileType.Ellipse, label: 'Ellipse Extrusion' },
+  ],
+  [VersionParameterNames.footprintType]: [
+    { value: FootprintGeometryTypes.Square, label: 'Square Footprint' },
+    { value: FootprintGeometryTypes.SquareGrid, label: 'Square Grid Footprint' },
+    { value: FootprintGeometryTypes.TriangleGrid, label: 'Triangle Grid Footprint' },
+    { value: FootprintGeometryTypes.HexGrid, label: 'Hex Grid Footprint' },
+    { value: FootprintGeometryTypes.Cylinder, label: 'Cylinder Footprint' },
+    { value: FootprintGeometryTypes.MalculmiusOne, label: 'Malculmius One Footprint' },
+  ],
+  [VersionParameterNames.processingMethodType]: [
+    { value: ProcessingMethodType.IncrementalMethod, label: 'Incremental Method' },
+    { value: ProcessingMethodType.Sin, label: 'Sin Method' },
+    { value: ProcessingMethodType.None, label: 'None Method' },
+  ],
+  [VersionParameterNames.version]: [{ value: 0, label: 'alpha' }],
+};
 
 const extrusionTypeParser = (extrusionDataEntry: DataEntry): DefinitionArrayObject => {
   switch (extrusionDataEntry.value) {
@@ -99,21 +121,28 @@ const heightMethodTypeParser = (heightMethodDataEntry: DataEntry): DefinitionArr
   ],
 ];
 
+const getMax = (v: VersionParameterNames.extrusionType | VersionParameterNames.footprintType | VersionParameterNames.processingMethodType) =>
+  version0EnumSemantics.hasOwnProperty(v) ? Math.max(...version0EnumSemantics[v].map(({ value }) => value)) : 3;
+
 const version0objectGenerationDescriptor: VersionDefinitionGeneratorParameters = [
   DataEntryFactory.createVersion(0, 8, VersionParameterNames.version, 0),
   [
     VersionParameterNames.extrusion,
-    DataEntryFactory.createVersion(ExtrusionProfileType.Square, 4, VersionParameterNames.extrusionType, 1),
+    DataEntryFactory.createEnum(ExtrusionProfileType.Square, getMax(VersionParameterNames.extrusionType), VersionParameterNames.extrusionType),
     extrusionTypeParser,
   ],
   [
     VersionParameterNames.footprint,
-    DataEntryFactory.createVersion(FootprintGeometryTypes.MalculmiusOne, 4, VersionParameterNames.footprintType, 2),
+    DataEntryFactory.createEnum(FootprintGeometryTypes.MalculmiusOne, getMax(VersionParameterNames.footprintType), VersionParameterNames.footprintType),
     footprintTypeParser,
   ],
   [
     VersionParameterNames.heights,
-    DataEntryFactory.createVersion(ProcessingMethodType.IncrementalMethod, 4, VersionParameterNames.processingMethodType, 3),
+    DataEntryFactory.createEnum(
+      ProcessingMethodType.IncrementalMethod,
+      getMax(VersionParameterNames.processingMethodType),
+      VersionParameterNames.processingMethodType
+    ),
     heightMethodTypeParser,
   ],
 ];
@@ -121,27 +150,6 @@ const version0objectGenerationDescriptor: VersionDefinitionGeneratorParameters =
 export const parserVersion0: ParserForVersion = {
   version: 0,
   versionName: 'alpha',
-  versionEnumSemantics: {
-    [VersionParameterNames.extrusionType]: [
-      { value: ExtrusionProfileType.Square, label: 'Square Extrusion' },
-      { value: ExtrusionProfileType.Arc, label: 'Arc Extrusion' },
-      { value: ExtrusionProfileType.Ellipse, label: 'Ellipse Extrusion' },
-    ],
-    [VersionParameterNames.footprintType]: [
-      { value: FootprintGeometryTypes.Square, label: 'Square Footprint' },
-      { value: FootprintGeometryTypes.SquareGrid, label: 'Square Grid Footprint' },
-      { value: FootprintGeometryTypes.TriangleGrid, label: 'Triangle Grid Footprint' },
-      { value: FootprintGeometryTypes.HexGrid, label: 'Hex Grid Footprint' },
-      { value: FootprintGeometryTypes.Cylinder, label: 'Cylinder Footprint' },
-      { value: FootprintGeometryTypes.MalculmiusOne, label: 'Malculmius One Footprint' },
-    ],
-    [VersionParameterNames.processingMethodType]: [
-      { value: ProcessingMethodType.IncrementalMethod, label: 'Incremental Method' },
-      { value: ProcessingMethodType.Sin, label: 'Sin Method' },
-      { value: ProcessingMethodType.None, label: 'None Method' },
-    ],
-    [VersionParameterNames.version]: [{ value: 0, label: 'alpha' }],
-  },
-  versionValueAttributeMapper: {},
+  versionEnumSemantics: version0EnumSemantics,
   objectGeneratorParameters: version0objectGenerationDescriptor,
 };

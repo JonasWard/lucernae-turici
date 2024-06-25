@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import { VersionDescriptionWithValueType } from '../../../../urlAsState/types/dataEntry';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { VersionEnumSemantics } from '../../../../urlAsState/types/versionParser';
 import { IconRenderer } from '../IconRenderer';
 

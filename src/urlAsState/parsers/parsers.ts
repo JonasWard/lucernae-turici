@@ -2,6 +2,7 @@ import { DataType } from '../enums/dataTypes';
 import { DataDescription, DataEntry, DataEntryArray, DataRangeDescription } from '../types/dataEntry';
 import * as floatParser from './floatParser';
 import * as intParser from './intParser';
+import * as enumParser from './enumParser';
 import * as versionParser from './versionParser';
 import * as booleanParser from './booleanParser';
 
@@ -11,6 +12,8 @@ export const valueBitsParser = (bitString: string, mapData: DataRangeDescription
       return booleanParser.rawParser(bitString);
     case DataType.INT:
       return intParser.rawParser(bitString, mapData);
+    case DataType.ENUM:
+      return enumParser.rawParser(bitString, mapData);
     case DataType.FLOAT:
       return floatParser.rawParser(bitString, mapData);
     case DataType.VERSION:
@@ -22,6 +25,7 @@ export const dataBitsParser = (rawString: string, mapData: DataDescription): Dat
   switch (mapData.type) {
     case DataType.BOOLEAN:
       return { ...mapData, value: valueBitsParser(rawString, mapData) as boolean };
+    case DataType.ENUM:
     case DataType.INT:
     case DataType.FLOAT:
     case DataType.VERSION:
@@ -39,6 +43,8 @@ export const getBitsCount = (mapData: DataRangeDescription) => {
       return floatParser.getBitsCount(mapData);
     case DataType.VERSION:
       return versionParser.getBitsCount(mapData);
+    case DataType.ENUM:
+      return enumParser.getBitsCount(mapData);
   }
 };
 
@@ -68,6 +74,8 @@ export const dataBitsStringifier = (data: DataEntry): string => {
       return floatParser.rawStringifier(data.value as number, data);
     case DataType.VERSION:
       return versionParser.rawStringifier(data.value as number, data);
+    case DataType.ENUM:
+      return enumParser.rawStringifier(data.value as number, data);
   }
 };
 

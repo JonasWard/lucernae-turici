@@ -23,7 +23,6 @@ export type ParserForVersion = {
   version: number;
   versionName: string;
   versionEnumSemantics?: VersionEnumSemantics;
-  versionValueAttributeMapper?: { [key: string]: string };
   objectGeneratorParameters: VersionDefinitionGeneratorParameters;
 };
 

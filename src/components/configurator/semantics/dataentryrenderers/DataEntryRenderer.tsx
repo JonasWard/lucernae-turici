@@ -6,6 +6,7 @@ import { IntDataEntryRenderer } from './IntDataEntryRenderer';
 import { VersionDataEntryRenderer } from './VersionDataEntryRenderer';
 import { VersionEnumSemantics } from '../../../../urlAsState/types/versionParser';
 import { BooleanDataEntryRenderer } from './BooleanDataEntryRenderer';
+import { EnumDataEntryRenderer } from './EnumDataEntryRenderer';
 
 export interface IDatyEntryRendererProps {
   dataEntry: DataEntry;
@@ -24,6 +25,8 @@ export const DataEntryRenderer: React.FC<IDatyEntryRendererProps> = ({ asSlider,
       return <VersionDataEntryRenderer version={dataEntry} onChange={updateEntry} versionEnumSemantics={versionEnumSemantics} />;
     case DataType.BOOLEAN:
       return <BooleanDataEntryRenderer bool={dataEntry} onChange={updateEntry} />;
+    case DataType.ENUM:
+      return <EnumDataEntryRenderer enumValue={dataEntry} onChange={updateEntry} versionEnumSemantics={versionEnumSemantics} />;
     default:
       return null;
   }

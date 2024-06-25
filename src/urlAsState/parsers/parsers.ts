@@ -79,6 +79,8 @@ export const dataBitsStringifier = (data: DataEntry): string => {
   }
 };
 
+export const dataEntryCorrecting = (dataEntry: DataEntry): DataEntry => dataBitsParser(dataBitsStringifier(dataEntry), dataEntry);
+
 const base64url = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
 export const parseBitsToBase64 = (bits: string): string => {

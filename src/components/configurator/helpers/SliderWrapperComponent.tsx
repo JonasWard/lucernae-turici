@@ -14,7 +14,7 @@ export const SliderWrapper: React.FC<{
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
         <div>{icon}</div>
-        <div>{value.toFixed(precision)}</div>
+        <div>{value.toFixed(precision >= 0 ? precision : 0)}</div>
       </div>
       <Slider style={{ width: '100%', margin: '5px 0' }} value={value} onChange={onChange} min={min} max={max} step={step} />
     </div>

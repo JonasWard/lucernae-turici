@@ -1,3 +1,4 @@
+import { dataEntryCorrecting } from '../parsers/parsers';
 import { DataEntry, DataEntryArray, VersionDescriptionWithValueType } from '../types/dataEntry';
 import { SemanticlyNestedDataEntry } from '../types/semanticlyNestedDataEntry';
 import { DefinitionArrayObject, ParserForVersion } from '../types/versionParser';
@@ -38,16 +39,18 @@ export const updateDataEntry = (data: SemanticlyNestedDataEntry, newDataEntry: D
   const versionParser = versionObjects[version.value];
   if (!versionParser) throw new Error(`No parser for version ${version.value}`);
 
+  const correctedDataEntry = dataEntryCorrecting(newDataEntry);
+
   // if not just replace the value in the object
-  const keyDataDescriptionIndex = versionParser.objectGeneratorParameters.findIndex((p) => Array.isArray(p) && p[1].name === newDataEntry.name);
-  if (keyDataDescriptionIndex === -1) return { ...updateValuesInDataEntryObject(data, newDataEntry) }; // making sure a new object is created
+  const keyDataDescriptionIndex = versionParser.objectGeneratorParameters.findIndex((p) => Array.isArray(p) && p[1].name === correctedDataEntry.name);
+  if (keyDataDescriptionIndex === -1) return { ...updateValuesInDataEntryObject(data, correctedDataEntry) }; // making sure a new object is created
 
   // if yes, create a new virgin object but replace the keyDataDescription with the new value
   const dataEntryArray = parseDownNestedDataDescription(data) as DataEntryArray;
 
   const updatedGeneratorParameters = versionParser.objectGeneratorParameters.map((p) => {
     if (Array.isArray(p)) {
-      if (p[1].name === newDataEntry.name) return [p[0], newDataEntry, p[2]];
+      if (p[1].name === correctedDataEntry.name) return [p[0], correctedDataEntry, p[2]];
       else return [p[0], dataEntryArray.find((d) => d.name === p[1].name) as DataEntry, p[2]];
     }
     return p;
@@ -55,6 +58,6 @@ export const updateDataEntry = (data: SemanticlyNestedDataEntry, newDataEntry: D
 
   const virginObject = nestedDataEntryArrayToObject(updatedGeneratorParameters as DefinitionArrayObject, 0) as SemanticlyNestedDataEntry;
 
-  dataEntryArray.forEach((value) => value.name !== newDataEntry.name && updateValuesInDataEntryObject(virginObject, value));
+  dataEntryArray.forEach((value) => value.name !== correctedDataEntry.name && updateValuesInDataEntryObject(virginObject, value));
   return virginObject;
 };

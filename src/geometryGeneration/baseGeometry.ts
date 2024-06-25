@@ -53,10 +53,16 @@ export type EllipseExtrusionProfile = {
 
 export type ExtrusionProfile = ArcExtrusionProfile | SquareExtrusionProfile | EllipseExtrusionProfile;
 
+export type BaseType = {
+  sideHeight: number;
+  sideInnerRadius: number;
+};
+
 export type GeometryBaseData = {
   extrusion: ExtrusionProfile;
   footprint: FloorplanType;
   heights: HeightGenerator;
+  base: BaseType;
 };
 
 export const getHeightAndRadius = (gBD: GeometryBaseData): [number, number] => {

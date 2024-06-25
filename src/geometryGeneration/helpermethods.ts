@@ -16,4 +16,4 @@ export const getV3 = (v: Vector3): V3 => ({ x: v.x, y: v.y, z: v.z });
 export const getV2 = (v: Vector2): V2 => ({ u: v.x, v: v.y });
 
 export const getVertexHash = (v: Vector3 | V3): string =>
-  `${v.x.toFixed(3).replace('-0.000', '0.000')}_${v.y.toFixed(3).replace('-0.000', '0.000')}_${v.z.toFixed(3).replace('-0.000', '0.000')}`;
+  `${v.x.toFixed(2).replace('-0.00', '0.00')}_${v.y.toFixed(2).replace('-0.00', '0.00')}_${v.z.toFixed(2).replace('-0.00', '0.00')}`;

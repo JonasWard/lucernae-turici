@@ -37,7 +37,7 @@ export class V3 {
   public static getLength = (v: V3): number => (v.x ** 2 + v.y ** 2 + v.z ** 2) ** 0.5;
   public static getUnit = (v: V3): V3 => (V3.getLengthSquared(v) > V3.zeroToleranceSquared ? V3.mul(v, 1 / V3.getLength(v)) : V3.Origin);
   public static getHash = (v: V3) =>
-    `${v.x.toFixed(3).replace('-0.000', '0.000')}_${v.y.toFixed(3).replace('-0.000', '0.000')}_${v.z.toFixed(3).replace('-0.000', '0.000')}`;
+    `${v.x.toFixed(2).replace('-0.00', '0.00')}_${v.y.toFixed(2).replace('-0.00', '0.00')}_${v.z.toFixed(2).replace('-0.00', '0.00')}`;
   public static transform = (v: V3, m: TransformationMatrix): V3 => ({
     x: m[0] * v.x + m[1] * v.y + m[2] * v.z + m[3],
     y: m[4] * v.x + m[5] * v.y + m[6] * v.z + m[7],

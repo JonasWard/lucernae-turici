@@ -115,7 +115,7 @@ const heightMethodTypeParser = (heightMethodDataEntry: DataEntry): DefinitionArr
             DataEntryFactory.createFloat(4, 0, 15, 1, VersionParameterNames.maxAmplitude),
             DataEntryFactory.createFloat(1, 0, 5, 2, VersionParameterNames.minAmplitude),
             DataEntryFactory.createFloat(1, 0.2, 200, 1, VersionParameterNames.period),
-            DataEntryFactory.createFloat(4, 0, 90, 1, VersionParameterNames.phaseShift),
+            DataEntryFactory.createFloat(0, 0, 360, 0, VersionParameterNames.phaseShift),
           ];
         case ProcessingMethodType.None:
           return [heightMethodDataEntry];

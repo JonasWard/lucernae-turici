@@ -37,7 +37,7 @@ const displayTypeMap =
         ['shapePostProcessing']: DisplayType.POPOVER,
       };
 
-const commingSoon = ['base', 'shapePostProcessing'];
+const commingSoon = ['shapePostProcessing'];
 
 const tryParse = (s: string): SemanticlyNestedDataEntry => {
   try {

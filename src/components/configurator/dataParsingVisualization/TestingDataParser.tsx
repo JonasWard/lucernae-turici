@@ -55,7 +55,7 @@ const RendereDataArray: React.FC<{ data: DataEntry[] }> = ({ data }) => (
     {'['}
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       {data.map((dataEntry, i) => (
-        <span>
+        <span key={i}>
           <span>{i}</span> <RenderDataEntry key={dataEntry.name} dataEntry={dataEntry} />
         </span>
       ))}

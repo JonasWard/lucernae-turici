@@ -1,3 +1,5 @@
+import { DataEntry } from '../../urlAsState/types/dataEntry';
+import { SemanticlyNestedDataEntry } from '../../urlAsState/types/semanticlyNestedDataEntry';
 import { VersionParameterNames } from './parameterNames';
 
 export const globalDataAttributeMapper: Record<VersionParameterNames, string> = {
@@ -37,3 +39,14 @@ export const globalDataAttributeMapper: Record<VersionParameterNames, string> = 
   [VersionParameterNames.period]: 'period',
   [VersionParameterNames.phaseShift]: 'phaseShift',
 };
+
+type NestedValue = { [key: string]: number | boolean | NestedValue };
+
+// extract value map
+export const getValueObjectFrom = (nestedDataEntry: SemanticlyNestedDataEntry, attributeMapper?: { [key: string]: string }): NestedValue =>
+  Object.fromEntries(
+    Object.entries(nestedDataEntry).map(([key, value]) => [
+      attributeMapper?.hasOwnProperty(key) ? attributeMapper[key] : key,
+      value.hasOwnProperty('type') ? (value as DataEntry).value : getValueObjectFrom(value as SemanticlyNestedDataEntry, attributeMapper),
+    ])
+  );

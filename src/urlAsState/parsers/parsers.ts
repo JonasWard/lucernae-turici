@@ -42,14 +42,20 @@ export const getBitsCount = (mapData: DataRangeDescription) => {
   }
 };
 
-export const dataBitsArrayParser = (rawString: string, mapDataArray: DataDescription[]): DataEntryArray => {
+/**
+ * Method to convert a bitstring into an array of data entries
+ * @param bitString bitstring to parse into bits and then data entries
+ * @param mapDataArray Data descriptions to map the bits to data entries
+ * @returns array of data entries
+ */
+export const dataBitsArrayParser = (bitString: string, mapDataArray: DataDescription[]): DataEntryArray => {
   const bitCounts = mapDataArray.map((mapData) => getBitsCount(mapData));
   const bitStartEndMap: [number, number][] = [];
   bitCounts.forEach((bitCount, index) => {
     const start = index === 0 ? 0 : bitStartEndMap[index - 1][1];
     bitStartEndMap.push([start, start + bitCount]);
   });
-  return mapDataArray.map((mapData, i) => dataBitsParser(rawString.slice(bitStartEndMap[i][0], bitStartEndMap[i][1]), mapData));
+  return mapDataArray.map((mapData, i) => dataBitsParser(bitString.slice(bitStartEndMap[i][0], bitStartEndMap[i][1]), mapData));
 };
 
 export const dataBitsStringifier = (data: DataEntry): string => {
@@ -67,7 +73,7 @@ export const dataBitsStringifier = (data: DataEntry): string => {
 
 const base64url = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
-const parseBitsToBase64 = (bits: string): string => {
+export const parseBitsToBase64 = (bits: string): string => {
   // split the bits into 6 bit chunks
   const chunks = bits.match(/.{1,6}/g);
   // parse the chunks into numbers
@@ -76,7 +82,7 @@ const parseBitsToBase64 = (bits: string): string => {
   return numbers.map((n) => base64url.charAt(n)).join('');
 };
 
-const parseBase64ToBits = (base64: string): string => {
+export const parseBase64ToBits = (base64: string): string => {
   // map the base64 characters to numbers
   const numbers = base64.split('').map((c) => base64url.indexOf(c));
   // parse the numbers into 6 bit chunks
@@ -90,20 +96,8 @@ const parseBase64ToBits = (base64: string): string => {
 /**
  * Method to convert an array of data entries into a base64 string
  * @param dataArray Data Entries to read to parse into bits and then a base64 string
- * @returns base64 string representation of the data entries
+ * @returns bitstring representation of the data entries
  */
 export const dataArrayStringifier = (dataEntryArray: DataEntryArray): string => {
-  const bitString = dataEntryArray.map(dataBitsStringifier).join('');
-  return parseBitsToBase64(bitString);
-};
-
-/**
- * Method to convert a base64 string into an array of data entries
- * @param base64string base64 string to parse into bits and then data entries
- * @param mapDataArray Data descriptions to map the bits to data entries
- * @returns array of data entries
- */
-export const stringToDataArray = (base64string = '', mapDataArray: DataDescription[]): DataEntryArray => {
-  const bitString = parseBase64ToBits(base64string);
-  return dataBitsArrayParser(bitString, mapDataArray);
+  return dataEntryArray.map(dataBitsStringifier).join('');
 };

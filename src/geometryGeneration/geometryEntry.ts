@@ -6,6 +6,7 @@ import { getHalfEdgeMeshForVoxelEnclosure } from './voxelComplex';
 import { HalfEdgeMeshRenderer } from './halfedge.artists';
 import { HalfEdgeMeshFactory } from './halfedge.factory';
 import { MaterialFactory } from './materialFactory';
+import { constructBase } from './base';
 
 export enum RenderMethod {
   NORMAL = 'Normal',
@@ -32,6 +33,7 @@ export const AddLampGeometryToScene = (
   const voxelComplex = VoxelFactory.getVoxelComplexFromGeometryBaseData(lampGeometry);
   switch (renderMethod) {
     case RenderMethod.NORMAL:
+      constructBase(lampGeometry, scene, rootNode);
       return VoxelComplexMeshArtist.render(voxelComplex, scene, lampGeometry, undefined, LAMP_MESH);
     case RenderMethod.WIREFRAME:
       return VoxelComplexMeshArtist.render(voxelComplex, scene, lampGeometry, MaterialFactory.getWireframeMaterial(scene), LAMP_MESH);

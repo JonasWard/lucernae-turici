@@ -38,7 +38,7 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
     completedRerender();
   };
 
-  const onClickWindowClearActiveName = () => setActiveName('');
+  const onClickWindowClearActiveName = () => (window.innerWidth < 800 || window.innerHeight < 800) && setActiveName('');
 
   const onSceneReady = (scene: any) => {
     const [targetHeight, radius] = getHeightAndRadius(gBD);

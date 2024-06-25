@@ -99,7 +99,9 @@ export const DEFAULT_HEIGHT_GENERATORS = {
 const getSineMethod =
   (sineSettings: SinMethod) =>
   (angle: number): number => {
-    return sineSettings.min + (sineSettings.max - sineSettings.min) * (Math.sin(sineSettings.period * angle + sineSettings.phaseShift) * 0.5 + 0.5);
+    return (
+      sineSettings.min + (sineSettings.max - sineSettings.min) * (Math.sin(sineSettings.period * angle + (sineSettings.phaseShift * Math.PI) / 180) * 0.5 + 0.5)
+    );
   };
 
 const getIncrementalMethod =

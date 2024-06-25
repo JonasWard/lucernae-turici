@@ -37,6 +37,8 @@ const displayTypeMap =
         ['shapePostProcessing']: DisplayType.POPOVER,
       };
 
+const commingSoon = ['base', 'shapePostProcessing'];
+
 const tryParse = (s: string): SemanticlyNestedDataEntry => {
   try {
     return parseUrlMethod(s, parserObjects);
@@ -104,6 +106,7 @@ export const LampConfigurator: React.FC = () => {
           setActiveName={setActiveName}
           displayTypeMap={displayTypeMap}
           updateVersion={(versionNumber) => resetData(versionNumber)}
+          disabled={commingSoon}
         />
         <ViewSettings
           activeName={activeName}
@@ -114,6 +117,7 @@ export const LampConfigurator: React.FC = () => {
           setSliderInput={setSliderInput}
           setRenderMethod={setRenderMethod}
           displayTypeMap={displayTypeMap}
+          disabled={commingSoon}
         />
       </div>
       <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />

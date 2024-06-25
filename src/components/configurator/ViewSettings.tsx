@@ -14,6 +14,7 @@ type IViewPortSettingsProps = {
   sliderInput: boolean;
   setSliderInput: (sliderInput: boolean) => void;
   displayTypeMap?: { [key: string]: DisplayType };
+  disabled?: string[];
 };
 
 export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
@@ -25,12 +26,14 @@ export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
   sliderInput,
   setSliderInput,
   displayTypeMap,
+  disabled = [],
 }) => (
   <ViewWrapper
     displayType={displayTypeMap ? getDisplayType('settings', displayTypeMap) : DisplayType.POPOVER}
     name={'settings'}
     activeName={activeName}
     setActiveName={setActiveName}
+    disabled={disabled}
   >
     <div style={{ padding: '8px' }}>
       <Select

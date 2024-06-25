@@ -8,9 +8,10 @@ interface IPopoverWrapperProps {
   children: ReactNode;
   title: ReactNode;
   buttonIcon: ReactNode;
+  disabled?: boolean;
 }
 
-export const PopoverWrapper: React.FC<IPopoverWrapperProps> = ({ open, toggleOpen, children, title, buttonIcon }) => {
+export const PopoverWrapper: React.FC<IPopoverWrapperProps> = ({ open, toggleOpen, children, title, buttonIcon, disabled }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'end' }}>
       <Popover
@@ -38,7 +39,9 @@ export const PopoverWrapper: React.FC<IPopoverWrapperProps> = ({ open, toggleOpe
           </div>
         }
       >
-        <Button style={{ margin: 8, width: 20 }}>{buttonIcon}</Button>
+        <Button disabled={disabled} style={{ margin: 8, width: 20 }}>
+          {buttonIcon}
+        </Button>
       </Popover>
     </div>
   );

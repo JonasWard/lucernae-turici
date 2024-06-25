@@ -8,9 +8,10 @@ interface IDrawerWrapperProps {
   children: ReactNode;
   title: ReactNode;
   buttonIcon: ReactNode;
+  disabled?: boolean;
 }
 
-export const DrawerWrapper: React.FC<IDrawerWrapperProps> = ({ open, toggleOpen, children, title, buttonIcon }) => {
+export const DrawerWrapper: React.FC<IDrawerWrapperProps> = ({ open, toggleOpen, children, title, buttonIcon, disabled }) => {
   return (
     <>
       <Drawer
@@ -37,7 +38,7 @@ export const DrawerWrapper: React.FC<IDrawerWrapperProps> = ({ open, toggleOpen,
         {children}
       </Drawer>
       <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'end' }}>
-        <Button onClick={() => toggleOpen(!open)} style={{ margin: 8, width: 20 }}>
+        <Button disabled={disabled} onClick={() => toggleOpen(!open)} style={{ margin: 8, width: 20 }}>
           {buttonIcon}
         </Button>
       </div>

@@ -11,9 +11,10 @@ interface IViewWrapperProps {
   name: string;
   activeName: string;
   setActiveName: (name: string) => void;
+  disabled: string[];
 }
 
-export const ViewWrapper: React.FC<IViewWrapperProps> = ({ children, displayType, name, activeName, setActiveName }) => {
+export const ViewWrapper: React.FC<IViewWrapperProps> = ({ children, displayType, name, activeName, setActiveName, disabled }) => {
   switch (displayType) {
     case DisplayType.NESTED:
       return <div style={{ margin: '4px 0' }}>{children}</div>;
@@ -25,6 +26,7 @@ export const ViewWrapper: React.FC<IViewWrapperProps> = ({ children, displayType
           children={children}
           title={getIconForKey(name).mainIcon !== name ? <IconRenderer name={name} /> : name}
           buttonIcon={<IconRenderer name={name} noName />}
+          disabled={disabled.includes(name)}
         />
       );
     case DisplayType.DRAWER:
@@ -35,6 +37,7 @@ export const ViewWrapper: React.FC<IViewWrapperProps> = ({ children, displayType
           children={children}
           title={getIconForKey(name).mainIcon !== name ? <IconRenderer name={name} /> : name}
           buttonIcon={<IconRenderer name={name} noName />}
+          disabled={disabled.includes(name)}
         />
       );
   }

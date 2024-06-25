@@ -30,6 +30,7 @@ export interface ISemtanticsRenderObjectProps {
   setActiveName: (name: string) => void;
   updateVersion?: (version: number) => void;
   asSlider?: boolean;
+  disabled?: string[];
 }
 
 export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
@@ -42,14 +43,29 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
   setActiveName,
   updateVersion,
   asSlider,
+  disabled = [],
 }) => {
   return (
-    <ViewWrapper displayType={getDisplayType(name, displayTypeMap)} name={name} activeName={activeName} setActiveName={setActiveName}>
+    <ViewWrapper
+      key={name}
+      disabled={disabled}
+      displayType={getDisplayType(name, displayTypeMap)}
+      name={name}
+      activeName={activeName}
+      setActiveName={setActiveName}
+    >
       {Object.entries(semantics).map(([semantic, value]) => {
         const localDisplayType = getDisplayType(semantic, displayTypeMap);
 
         return value.hasOwnProperty('type') ? (
-          <ViewWrapper displayType={getDisplayType(semantic, displayTypeMap)} name={semantic} activeName={activeName} setActiveName={setActiveName}>
+          <ViewWrapper
+            key={semantic}
+            displayType={getDisplayType(semantic, displayTypeMap)}
+            name={semantic}
+            activeName={activeName}
+            setActiveName={setActiveName}
+            disabled={disabled}
+          >
             <DataEntryRenderer
               asSlider={asSlider}
               key={semantic}
@@ -70,6 +86,7 @@ export const SemanticsRenderObject: React.FC<ISemtanticsRenderObjectProps> = ({
             displayTypeMap={displayTypeMap}
             activeName={activeName}
             setActiveName={setActiveName}
+            disabled={disabled}
           />
         );
       })}

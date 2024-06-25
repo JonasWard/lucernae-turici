@@ -24,6 +24,7 @@ const displayTypeMap =
         ['heights']: DisplayType.DRAWER,
         ['version']: DisplayType.DRAWER,
         ['settings']: DisplayType.DRAWER,
+        ['base']: DisplayType.DRAWER,
       }
     : {
         ['extrusion']: DisplayType.POPOVER,
@@ -31,6 +32,7 @@ const displayTypeMap =
         ['heights']: DisplayType.POPOVER,
         ['version']: DisplayType.POPOVER,
         ['settings']: DisplayType.POPOVER,
+        ['base']: DisplayType.POPOVER,
       };
 
 const tryParse = (s: string): SemanticlyNestedDataEntry => {

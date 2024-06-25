@@ -38,6 +38,9 @@ export const globalDataAttributeMapper: Record<VersionParameterNames, string> = 
   [VersionParameterNames.minAmplitude]: 'min',
   [VersionParameterNames.period]: 'period',
   [VersionParameterNames.phaseShift]: 'phaseShift',
+  [VersionParameterNames.base]: 'base',
+  [VersionParameterNames.sideHeight]: 'sideHeight',
+  [VersionParameterNames.sideInnerRadius]: 'sideInnerRadius',
 };
 
 type NestedValue = { [key: string]: number | boolean | NestedValue };

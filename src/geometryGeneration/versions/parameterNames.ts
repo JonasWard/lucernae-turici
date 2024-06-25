@@ -1,12 +1,12 @@
 export enum VersionParameterNames {
-  version = 'version',
-  extrusion = 'extrusion',
+  version = 'version', // version
+  extrusion = 'extrusion', // extrusion
   extrusionType = 'extrusionType',
   radiusTop = 'radiusTop',
   insetTop = 'insetTop',
   insetBottom = 'insetBottom',
   insetSides = 'insetSides',
-  footprint = 'footprint',
+  footprint = 'footprint', // footprint
   footprintType = 'footprintType',
   size = 'size',
   xCount = 'xCount',
@@ -23,7 +23,7 @@ export enum VersionParameterNames {
   offsetA = 'offsetA',
   offsetB = 'offsetB',
   innerRadius = 'innerRadius',
-  heights = 'heights',
+  heights = 'heights', // heights
   heightProcessingMethod = 'heightProcessingMethod',
   baseHeight = 'baseHeight',
   storyCount = 'storyCount',
@@ -34,4 +34,7 @@ export enum VersionParameterNames {
   minAmplitude = 'minAmplitude',
   period = 'period',
   phaseShift = 'phaseShift',
+  base = 'base', // base
+  sideHeight = 'sideHeight',
+  sideInnerRadius = 'sideInnerRadius',
 }

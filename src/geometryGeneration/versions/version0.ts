@@ -121,6 +121,11 @@ const heightMethodTypeParser = (heightMethodDataEntry: DataEntry): DefinitionArr
   ],
 ];
 
+const baseMethodParser = (baseDataEntry: DataEntry): DefinitionArrayObject => [
+  DataEntryFactory.createFloat(20, 10, 200, 0, VersionParameterNames.sideHeight),
+  DataEntryFactory.createFloat(5, 0, 40, 1, VersionParameterNames.sideInnerRadius),
+];
+
 const getMax = (v: VersionParameterNames.extrusionType | VersionParameterNames.footprintType | VersionParameterNames.processingMethodType) =>
   version0EnumSemantics.hasOwnProperty(v) ? Math.max(...version0EnumSemantics[v].map(({ value }) => value)) : 3;
 
@@ -145,6 +150,7 @@ const version0objectGenerationDescriptor: VersionDefinitionGeneratorParameters =
     ),
     heightMethodTypeParser,
   ],
+  [VersionParameterNames.base, DataEntryFactory.createEnum(0, 1, 'irrelevant'), baseMethodParser],
 ];
 
 export const parserVersion0: ParserForVersion = {

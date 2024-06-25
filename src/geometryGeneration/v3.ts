@@ -64,6 +64,19 @@ export class V3 {
     const [a, b, c] = vs;
     return V3.getUnit(V3.cross(V3.sub(c, b), V3.sub(a, b)));
   };
+  public static getBoundingBox = (vs: V3[]): { min: V3; max: V3 } => {
+    const min = { x: Number.MAX_VALUE, y: Number.MAX_VALUE, z: Number.MAX_VALUE };
+    const max = { x: -Number.MAX_VALUE, y: -Number.MAX_VALUE, z: -Number.MAX_VALUE };
+    vs.forEach((v) => {
+      min.x = Math.min(min.x, v.x);
+      min.y = Math.min(min.y, v.y);
+      min.z = Math.min(min.z, v.z);
+      max.x = Math.max(max.x, v.x);
+      max.y = Math.max(max.y, v.y);
+      max.z = Math.max(max.z, v.z);
+    });
+    return { min, max };
+  };
 }
 
 export class Mesh {

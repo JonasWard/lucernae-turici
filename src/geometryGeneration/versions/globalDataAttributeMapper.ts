@@ -41,6 +41,14 @@ export const globalDataAttributeMapper: Record<VersionParameterNames, string> = 
   [VersionParameterNames.base]: 'base',
   [VersionParameterNames.sideHeight]: 'sideHeight',
   [VersionParameterNames.sideInnerRadius]: 'sideInnerRadius',
+  [VersionParameterNames.shapePostProcessing]: 'method',
+  [VersionParameterNames.shapePostProcessingprocessingMethodType]: 'type',
+  [VersionParameterNames.shapePostProcessingtotal]: 'total',
+  [VersionParameterNames.shapePostProcessinglinearTwist]: 'angle',
+  [VersionParameterNames.shapePostProcessingmaxAmplitude]: 'max',
+  [VersionParameterNames.shapePostProcessingminAmplitude]: 'min',
+  [VersionParameterNames.shapePostProcessingperiod]: 'period',
+  [VersionParameterNames.shapePostProcessingphaseShift]: 'phaseShift',
 };
 
 type NestedValue = { [key: string]: number | boolean | NestedValue };

@@ -43,7 +43,7 @@ export const AddLampGeometryToScene = (
       Object.values(enclosureMesh.halfEdges).map((he) => renderHalfEdge(he, enclosureMesh, scene, rootNode, false));
       return rootNode;
     case RenderMethod.NEIGHHBOURMAP:
-      getMeshRepresentationOfVoxelComplexGraph(voxelComplex, scene, rootNode, 20);
+      getMeshRepresentationOfVoxelComplexGraph(voxelComplex, scene, rootNode, 200);
       return rootNode;
     case RenderMethod.BASEMESH:
       const footprintHeMesh = HalfEdgeMeshFactory.getFootprintFromGeometryBaseData(lampGeometry);

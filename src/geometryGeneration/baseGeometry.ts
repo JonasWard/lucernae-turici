@@ -4,7 +4,7 @@ import { BaseFrame, HalfEdge, HalfEdgeFace, HalfEdgeMesh, TransformationMatrix, 
 import { getV3, getVector3, getVertexHash } from './helpermethods';
 import { V3 } from './v3';
 import { FloorplanType } from './footprintgeometrytypes';
-import { HeightGenerator } from './geometry';
+import { HeightGenerator, getHeights } from './geometry';
 import { MaterialFactory } from './materialFactory';
 
 // this mesh assumes a positive oriented coordinate system, which means we will have to transform the mesh when importing them into a babylon scene
@@ -57,6 +57,12 @@ export type GeometryBaseData = {
   extrusion: ExtrusionProfile;
   footprint: FloorplanType;
   heights: HeightGenerator;
+};
+
+export const getHeightAndRadius = (gBD: GeometryBaseData): [number, number] => {
+  const heights = getHeights(gBD.heights);
+
+  return [heights[heights.length - 1] * 0.5, heights[heights.length - 1] * 2.5];
 };
 
 const ARC_DIVSION_COUNT = 8;

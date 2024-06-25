@@ -4,7 +4,7 @@ import { ArcRotateCamera, Vector3, HemisphericLight, Color4, Mesh, PointLight, S
 import './SceneRendering.css';
 import '@babylonjs/loaders/glTF';
 import SceneComponent from './configurator/SceneComponent';
-import { GeometryBaseData } from '../geometryGeneration/baseGeometry';
+import { GeometryBaseData, getHeightAndRadius } from '../geometryGeneration/baseGeometry';
 import { AddLampGeometryToScene, RenderMethod } from '../geometryGeneration/geometryEntry';
 import { CameraParameters } from './configurator/ViewCube';
 /* eslint-disable */
@@ -41,7 +41,9 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
   const onClickWindowClearActiveName = () => setActiveName('');
 
   const onSceneReady = (scene: any) => {
-    const camera = new ArcRotateCamera('camera1', 1, 1, 50, new Vector3(0, 10.0, 0), scene);
+    const [targetHeight, radius] = getHeightAndRadius(gBD);
+
+    const camera = new ArcRotateCamera('camera1', 1, 1, radius, new Vector3(0, targetHeight, 0), scene);
     camera.lowerRadiusLimit = 0.6;
     camera.upperRadiusLimit = 500.0;
     camera.panningSensibility = 1000;
@@ -73,10 +75,12 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
 
   useEffect(() => {
     if (camera && lastCameraParameters) {
+      const [targetHeight, radius] = getHeightAndRadius(gBD);
+
       camera.alpha = lastCameraParameters.alfa;
       camera.beta = lastCameraParameters.beta;
-      camera.radius = lastCameraParameters.radius;
-      camera.setTarget(new Vector3(lastCameraParameters.target.x, lastCameraParameters.target.y, lastCameraParameters.target.z));
+      camera.radius = radius;
+      camera.setTarget(new Vector3(lastCameraParameters.target.x, targetHeight, lastCameraParameters.target.z));
     }
   }, [lastCameraParameters]);
 

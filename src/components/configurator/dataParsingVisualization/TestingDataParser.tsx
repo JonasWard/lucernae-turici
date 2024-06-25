@@ -4,10 +4,10 @@ import { SemanticlyNestedDataEntry } from '../../../urlAsState/types/semanticlyN
 import React from 'react';
 import { DataEntry, DataEntryArray } from '../../../urlAsState/types/dataEntry';
 import { parserObjects } from '../../../geometryGeneration/versions/parserObjects';
-import { getDefaultObject, getTestStringValues, parseDownNestedDataDescription, readingUrlAsDataObject } from '../../../urlAsState/objectmap/versionReading';
-import { dataBitsStringifier } from '../../../urlAsState/parsers/parsers';
+import { getTestStringValues, parseDownNestedDataDescription, parseUrlMethod } from '../../../urlAsState/objectmap/versionReading';
+import { dataBitsStringifier, parseBitsToBase64 } from '../../../urlAsState/parsers/parsers';
 import { DisplayType, SemanticsRenderObject } from '../semantics/SemanticsRenderObject';
-import { updateDataEntry } from '../../../urlAsState/objectmap/versionUpdate';
+import { getDefaultObject, updateDataEntry } from '../../../urlAsState/objectmap/versionUpdate';
 import { allTests } from '../../../urlAsState/test/dataParserTests';
 import { Button } from 'antd';
 import { FaArrowLeft } from 'react-icons/fa';
@@ -25,7 +25,7 @@ const RenderDataEntry: React.FC<{ dataEntry: DataEntry }> = ({ dataEntry }) => (
         .join(', ')}
     </span>
     <span key='bits' style={{ marginLeft: 12 }}>
-      bits: {dataBitsStringifier(dataEntry)}
+      bits: {parseBitsToBase64(dataBitsStringifier(dataEntry))}
     </span>
   </span>
 );
@@ -71,7 +71,7 @@ const displayTypeMap = {
 
 const getSecondaryData = (url: string) => {
   try {
-    return readingUrlAsDataObject(url, parserObjects);
+    return parseUrlMethod(url, parserObjects);
   } catch (e) {
     console.error(e);
     return {};
@@ -79,7 +79,7 @@ const getSecondaryData = (url: string) => {
 };
 
 export const TestingDataParser: React.FC = () => {
-  const [data, setData] = useState<SemanticlyNestedDataEntry>(getDefaultObject(parserObjects[0], 0));
+  const [data, setData] = useState<SemanticlyNestedDataEntry>(getDefaultObject(parserObjects, 0));
   const [activeName, setActiveName] = useState<string>('');
   const navigate = useNavigate();
 
@@ -93,7 +93,7 @@ export const TestingDataParser: React.FC = () => {
 
   return (
     <>
-      <div style={{ overflowY: 'auto', padding: '20px' }}>
+      <div style={{ overflowY: 'auto', height: '100vh', padding: '20px' }}>
         <Button onClick={() => navigate('/')}>
           <FaArrowLeft /> Back
         </Button>

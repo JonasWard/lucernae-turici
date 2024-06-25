@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DisplayType, SemanticsRenderObject } from './configurator/semantics/SemanticsRenderObject';
-import { dataObjectAsUrl, getDefaultObject, getValueObjectFrom, readingUrlAsDataObject } from '../urlAsState/objectmap/versionReading';
-import { updateDataEntry } from '../urlAsState/objectmap/versionUpdate';
+import { getDefaultObject, updateDataEntry } from '../urlAsState/objectmap/versionUpdate';
 import { parserObjects } from '../geometryGeneration/versions/parserObjects';
-import { globalDataAttributeMapper } from '../geometryGeneration/versions/globalDataAttributeMapper';
+import { getValueObjectFrom, globalDataAttributeMapper } from '../geometryGeneration/versions/globalDataAttributeMapper';
 import { SemanticlyNestedDataEntry } from '../urlAsState/types/semanticlyNestedDataEntry';
 import { DataEntry } from '../urlAsState/types/dataEntry';
 import BabylonScene from './SceneRendering';
@@ -15,6 +14,7 @@ import { ViewSettings } from './configurator/ViewSettings';
 import { CameraParameters, ViewCube, ViewCubePosition } from './configurator/ViewCube';
 import { TopNavigation } from './configurator/TopNavigation';
 import '../LandingPage.css';
+import { getURLForData, parseUrlMethod } from '../urlAsState/objectmap/versionReading';
 
 const displayTypeMap =
   window.innerHeight < 800
@@ -35,10 +35,10 @@ const displayTypeMap =
 
 const tryParse = (s: string): SemanticlyNestedDataEntry => {
   try {
-    return readingUrlAsDataObject(s, parserObjects);
+    return parseUrlMethod(s, parserObjects);
   } catch (e) {
     console.warn(e);
-    const data = getDefaultObject(parserObjects[0], 0);
+    const data = getDefaultObject(parserObjects, 0);
     return data;
   }
 };
@@ -53,7 +53,7 @@ export const LampConfigurator: React.FC = () => {
   const [lastCameraParameters, setLastCameraParameters] = useState<CameraParameters | undefined>();
 
   const updateURLFromData = (data: SemanticlyNestedDataEntry) => {
-    const newUrl = dataObjectAsUrl(data, parserObjects);
+    const newUrl = getURLForData(data);
     window.history.replaceState(null, 'Same Page Title', `/para-slim-shady/#configurator/${newUrl}`);
     if (lastURLFromData !== newUrl) setRerender(true);
     setLastURLFromData(newUrl);
@@ -63,7 +63,7 @@ export const LampConfigurator: React.FC = () => {
 
   const tryToHandelUndoRedo = (url: string) => {
     try {
-      setData(readingUrlAsDataObject(url, parserObjects));
+      setData(parseUrlMethod(url, parserObjects));
     } catch (e) {
       console.warn(e);
     }
@@ -75,7 +75,7 @@ export const LampConfigurator: React.FC = () => {
     updateURLFromData(data);
   }, [data]);
 
-  const resetData = (versionNumber: number) => setData(getDefaultObject(parserObjects[versionNumber], versionNumber));
+  const resetData = (versionNumber: number) => setData(getDefaultObject(parserObjects, versionNumber));
   const viewCubePosition = window.innerWidth < 600 ? ViewCubePosition.AllCorners : ViewCubePosition.LeftBottomCorner;
 
   return (

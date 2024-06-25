@@ -3,7 +3,7 @@ import * as booleanTest from './booleanTest';
 import * as versionTest from './versionTest';
 import * as floatTest from './floatTest';
 import { DataEntryFactory } from '../factory/factory';
-import { dataArrayStringifier, stringToDataArray } from '../parsers/parsers';
+import { dataArrayStringifier, dataBitsArrayParser } from '../parsers/parsers';
 
 const stringTest = () => {
   intTest.toStringTest();
@@ -27,9 +27,9 @@ const dataMap = [
 ];
 
 const valuedStringTest = () => {
-  const url = dataArrayStringifier(dataMap);
+  const bitstring = dataArrayStringifier(dataMap);
 
-  const unpacked = stringToDataArray(url, dataMap);
+  const unpacked = dataBitsArrayParser(bitstring, dataMap);
 
   unpacked.forEach((data, index) => {
     if (dataMap[index].value !== data.value) console.log(data.name, data.value, data.index);

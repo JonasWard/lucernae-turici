@@ -29,7 +29,12 @@ const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMeth
   const updateGeometry = (gBD: GeometryBaseData, mesh: Mesh | TransformNode | null, renderMethod?: RenderMethod) => {
     if (!scene?.isReady()) return;
 
-    setMesh(AddLampGeometryToScene(gBD, scene, renderMethod));
+    try {
+      setMesh(AddLampGeometryToScene(gBD, scene, renderMethod));
+    } catch (e) {
+      console.error(e);
+    }
+
     completedRerender();
   };
 

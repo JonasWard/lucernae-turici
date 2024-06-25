@@ -37,4 +37,12 @@ export enum VersionParameterNames {
   base = 'base', // base
   sideHeight = 'sideHeight',
   sideInnerRadius = 'sideInnerRadius',
+  shapePostProcessing = 'shapePostProcessing', // shapePostProcessing
+  shapePostProcessingprocessingMethodType = 'shapePostProcessingprocessingMethodType',
+  shapePostProcessingtotal = 'shapePostProcessingtotal',
+  shapePostProcessinglinearTwist = 'shapePostProcessinglinearTwist',
+  shapePostProcessingmaxAmplitude = 'shapePostProcessingmaxAmplitude',
+  shapePostProcessingminAmplitude = 'shapePostProcessingminAmplitude',
+  shapePostProcessingperiod = 'shapePostProcessingperiod',
+  shapePostProcessingphaseShift = 'shapePostProcessingphaseShift',
 }

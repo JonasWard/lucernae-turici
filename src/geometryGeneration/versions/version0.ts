@@ -25,6 +25,11 @@ const version0EnumSemantics = {
     { value: ProcessingMethodType.Sin, label: 'Sin Method' },
     { value: ProcessingMethodType.None, label: 'None Method' },
   ],
+  [VersionParameterNames.shapePostProcessingprocessingMethodType]: [
+    { value: ProcessingMethodType.IncrementalMethod, label: 'Incremental Method' },
+    { value: ProcessingMethodType.Sin, label: 'Sin Method' },
+    { value: ProcessingMethodType.None, label: 'None Method' },
+  ],
   [VersionParameterNames.version]: [{ value: 0, label: 'alpha' }],
 };
 
@@ -126,8 +131,36 @@ const baseMethodParser = (baseDataEntry: DataEntry): DefinitionArrayObject => [
   DataEntryFactory.createFloat(5, 0, 40, 1, VersionParameterNames.sideInnerRadius),
 ];
 
-const getMax = (v: VersionParameterNames.extrusionType | VersionParameterNames.footprintType | VersionParameterNames.processingMethodType) =>
-  version0EnumSemantics.hasOwnProperty(v) ? Math.max(...version0EnumSemantics[v].map(({ value }) => value)) : 3;
+const shapePostProcessingMethodParser = (shapePostProcessingDataEntry: DataEntry): DefinitionArrayObject => {
+  switch (shapePostProcessingDataEntry.value) {
+    case ProcessingMethodType.IncrementalMethod:
+      return [
+        shapePostProcessingDataEntry,
+        DataEntryFactory.createFloat(20, 10, 200, -1, VersionParameterNames.shapePostProcessingtotal),
+        DataEntryFactory.createFloat(5, 0, 15, 2, VersionParameterNames.shapePostProcessinglinearTwist),
+      ];
+    case ProcessingMethodType.Sin:
+      return [
+        shapePostProcessingDataEntry,
+        DataEntryFactory.createFloat(4, 0, 15, 1, VersionParameterNames.shapePostProcessingmaxAmplitude),
+        DataEntryFactory.createFloat(1, 0, 5, 2, VersionParameterNames.shapePostProcessingminAmplitude),
+        DataEntryFactory.createFloat(1, 0.2, 200, 1, VersionParameterNames.shapePostProcessingperiod),
+        DataEntryFactory.createFloat(4, 0, 90, 1, VersionParameterNames.shapePostProcessingphaseShift),
+      ];
+    case ProcessingMethodType.None:
+      return [shapePostProcessingDataEntry];
+    default:
+      throw new Error('Height processing method not found');
+  }
+};
+
+const getMax = (
+  v:
+    | VersionParameterNames.extrusionType
+    | VersionParameterNames.footprintType
+    | VersionParameterNames.processingMethodType
+    | VersionParameterNames.shapePostProcessingprocessingMethodType
+) => (version0EnumSemantics.hasOwnProperty(v) ? Math.max(...version0EnumSemantics[v].map(({ value }) => value)) : 3);
 
 const version0objectGenerationDescriptor: VersionDefinitionGeneratorParameters = [
   DataEntryFactory.createVersion(0, 8, VersionParameterNames.version, 0),
@@ -151,6 +184,15 @@ const version0objectGenerationDescriptor: VersionDefinitionGeneratorParameters =
     heightMethodTypeParser,
   ],
   [VersionParameterNames.base, DataEntryFactory.createEnum(0, 1, 'irrelevant'), baseMethodParser],
+  [
+    VersionParameterNames.shapePostProcessing,
+    DataEntryFactory.createEnum(
+      ProcessingMethodType.IncrementalMethod,
+      getMax(VersionParameterNames.shapePostProcessingprocessingMethodType),
+      VersionParameterNames.shapePostProcessingprocessingMethodType
+    ),
+    shapePostProcessingMethodParser,
+  ],
 ];
 
 export const parserVersion0: ParserForVersion = {

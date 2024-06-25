@@ -3,7 +3,7 @@ import { DataType } from '../../../urlAsState/enums/dataTypes';
 import { CiLineHeight } from 'react-icons/ci';
 import { FaArchway, FaCog, FaVectorSquare } from 'react-icons/fa';
 import { FaRegSquareFull, FaRegCircle } from 'react-icons/fa6';
-import { PiRainbowLight, PiStackPlusFill, PiWaveSine } from 'react-icons/pi';
+import { PiCubeFocusFill, PiRainbowLight, PiStackPlusFill, PiWaveSine } from 'react-icons/pi';
 import { BsFillGrid3X3GapFill } from 'react-icons/bs';
 import { TbCylinder, TbHexagonalPrism, TbHexagons, TbSum } from 'react-icons/tb';
 import { GiColumnVase, GiFootprint, GiPoolTriangle } from 'react-icons/gi';
@@ -80,6 +80,8 @@ export const getIconForKey = (
       return { mainIcon: <MdFormatListNumbered size={size} /> };
     case 'base':
       return { mainIcon: <GiColumnVase size={size} /> };
+    case 'shapePostProcessing':
+      return { mainIcon: <PiCubeFocusFill size={size} /> };
     default:
       return { mainIcon: name };
   }

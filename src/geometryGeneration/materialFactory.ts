@@ -60,6 +60,21 @@ export class MaterialFactory {
   private static getColorFromUUIDTwilight = (s: string) => MaterialFactory.getColorInArray(s, TWILIGHT);
   private static getColorFromUUIDPlasma = (s: string) => MaterialFactory.getColorInArray(s, PLASMA);
 
+  private static getColorFromUnitValue = (v: number, a: [number, number, number][]) => {
+    const localV = Math.min(Math.max(v, 0), 1);
+    const index = localV * (a.length - 1);
+    const i0 = Math.floor(index);
+    const i1 = Math.ceil(index);
+
+    if (i0 === i1) return new Color3(...a[i0]);
+    const f = index - i0;
+    return new Color3(a[i0][0] * (1 - f) + a[i1][0] * f, a[i0][1] * (1 - f) + a[i1][1] * f, a[i0][2] * (1 - f) + a[i1][2] * f);
+  };
+
+  public static getViridisColorFromUnitValue = (v: number) => MaterialFactory.getColorFromUnitValue(v, VIRIDIS).toHexString();
+  public static getTwilightColorFromUnitValue = (v: number) => MaterialFactory.getColorFromUnitValue(v, TWILIGHT).toHexString();
+  public static getPlasmaColorFromUnitValue = (v: number) => MaterialFactory.getColorFromUnitValue(v, PLASMA).toHexString();
+
   // get color from uuid based on materialfactory.uuidcoloroptions
   private static getColorFromUUID = (s: string) => {
     switch (MaterialFactory.UUIDColorOptions) {

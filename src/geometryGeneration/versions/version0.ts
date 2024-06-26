@@ -2,7 +2,7 @@ import { ExtrusionProfileType } from '../baseGeometry';
 import { FootprintGeometryTypes } from '../footprintgeometrytypes';
 import { ProcessingMethodType } from '../geometry';
 import { DataEntryFactory } from '../../urlAsState/factory/factory';
-import { DefinitionArrayObject, ParserForVersion, VersionDefinitionGeneratorParameters, VersionEnumSemantics } from '../../urlAsState/types/versionParser';
+import { DefinitionArrayObject, ParserForVersion, VersionDefinitionGeneratorParameters } from '../../urlAsState/types/versionParser';
 import { VersionParameterNames } from './parameterNames';
 import { DataEntry } from '../../urlAsState/types/dataEntry';
 

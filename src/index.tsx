@@ -5,6 +5,7 @@ import './index.css';
 import { LampConfigurator } from './components/LampConfigurator';
 import { TestingDataParser } from './components/configurator/dataParsingVisualization/TestingDataParser';
 import { LandingPage } from './LandingPage';
+import { DataVisualizer } from './components/configurator/dataParsingVisualization/DataVisualizer';
 
 const SimpleApp = () => <div>Very simple app?</div>;
 
@@ -18,6 +19,7 @@ root.render(
         <Route element={<LampConfigurator />} path='/configurator' />
         <Route element={<LampConfigurator />} path='/configurator/:stateString' />
         <Route element={<TestingDataParser />} path='/dataParserTest' />
+        <Route element={<DataVisualizer />} path='/dataVisualizer' />
       </Routes>
     </Router>
   </React.StrictMode>

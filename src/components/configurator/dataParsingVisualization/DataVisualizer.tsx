@@ -3,6 +3,7 @@ import { VisualizeUrl } from './VisualizeUrl';
 import { parseDownNestedDataDescription, parseUrlMethod } from '../../../urlAsState/objectmap/versionReading';
 import { parserObjects } from '../../../geometryGeneration/versions/parserObjects';
 import { DataEntryArray } from '../../../urlAsState/types/dataEntry';
+import { globalLerp } from '../../../urlAsState/utils/spline';
 
 const urls = [
   'AFlM8-n0I_PimApEUnXqFDJCfQ',
@@ -271,11 +272,27 @@ const urls = [
   'AFlM89NzLRFJ16i4yQn0',
   'AFlM89NzLRFJ16igyQn0',
   'AFlM89NzLRFJ16iQyQn0',
+  'AA88-n0Ji-j6AoDKhPoFDJCfQ',
+  'AFkABGn0KK8sEFUDLFBkTOtQoZIT6A',
 ];
 
 export const DataVisualizer: React.FC = () => {
-  const dataArrays = urls.map((url) => parseDownNestedDataDescription(parseUrlMethod(url, parserObjects)));
+  // const dataArrays = urls.map((url) => parseDownNestedDataDescription(parseUrlMethod(url, parserObjects)));
+  const dataArrays = globalLerp(800).map(parseDownNestedDataDescription) as DataEntryArray[];
   const keysPresent = [...new Set(dataArrays.flatMap((dataArray) => dataArray.map((dataEntry) => dataEntry.name)))];
 
-  return dataArrays.map((dataArray, i) => <VisualizeUrl key={i} dataArray={dataArray as DataEntryArray} keysPresent={keysPresent} />);
+  return (
+    <>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        {keysPresent.map((k, i) => (
+          <div key={i} style={{ width: `${100 / keysPresent.length}%`, height: 100 }}>
+            <div style={{ height: `${100 / keysPresent.length}%`, width: 0, transform: `translate(40px, 0) rotate(.25turn)` }}>{k}</div>
+          </div>
+        ))}
+      </div>
+      {dataArrays.map((dataArray, i) => (
+        <VisualizeUrl key={i} dataArray={dataArray as DataEntryArray} keysPresent={keysPresent} />
+      ))}
+    </>
+  );
 };

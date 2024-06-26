@@ -1,5 +1,3 @@
-import { parseDownNestedDataDescription, parseUrlMethod } from '../../../urlAsState/objectmap/versionReading';
-import { parserObjects } from '../../../geometryGeneration/versions/parserObjects';
 import { DataEntryArray } from '../../../urlAsState/types/dataEntry';
 import React from 'react';
 import { getRelativeValue } from '../../../urlAsState/utils/relativeValue';
@@ -10,8 +8,8 @@ interface IVisualizeUrlProps {
   keysPresent: string[];
 }
 
-const padding = 20;
-const height = 3;
+const padding = 0;
+const height = 1;
 
 export const VisualizeUrl: React.FC<IVisualizeUrlProps> = ({ dataArray, keysPresent }) => {
   return (
@@ -19,25 +17,22 @@ export const VisualizeUrl: React.FC<IVisualizeUrlProps> = ({ dataArray, keysPres
       {keysPresent.map((key, i) => {
         const dataEntry = dataArray.find((de) => de.name === key);
 
-        if (!dataEntry) return <div key={i} style={{ width: `${100 / keysPresent.length}%`, height, backgroundColor: '#fff' }} />;
+        if (!dataEntry) return <div key={i} style={{ width: `${100 / keysPresent.length}%`, height, backgroundColor: '#ff0' }} />;
 
         const t = getRelativeValue(dataEntry);
-        const widthA = `${100 * (1 - t)}%`;
-        const widthB = `${100 * t}%`;
         return (
           <div key={i} style={{ width: `${100 / keysPresent.length}%`, height, display: 'flex', flexDirection: 'row' }}>
             <div
               style={{
-                backgroundColor: MaterialFactory.getTwilightColorFromUnitValue(0.5 + t * 0.5),
+                backgroundColor: MaterialFactory.getTwilightColorFromUnitValue(1.0 - t * 0.5),
                 height,
-                width: widthA,
+                width: `${100 * (1 - t)}%`,
               }}
             />
             <div
               style={{
-                top: 0,
                 height,
-                width: widthB,
+                width: `${100 * t}%`,
                 backgroundColor: MaterialFactory.getTwilightColorFromUnitValue(t * 0.5),
               }}
             />

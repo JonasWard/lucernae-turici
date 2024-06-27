@@ -68,12 +68,12 @@ export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
         }}
       />
     </div>
-    {scene && renderMethod === RenderMethod.NORMAL ? (
+    {import.meta.env.DEV === true && scene && renderMethod === RenderMethod.NORMAL ? (
       <div style={{ padding: '8px' }}>
         <Button onClick={() => exportSTL(scene, getURLForData(data))}>Download STL</Button>
       </div>
     ) : null}
-    {scene && renderMethod === RenderMethod.NORMAL ? (
+    {import.meta.env.DEV === true && scene && renderMethod === RenderMethod.NORMAL ? (
       <div style={{ padding: '8px' }}>
         <Button onClick={() => exportOBJ(scene, getURLForData(data))}>Download OBJ</Button>
       </div>

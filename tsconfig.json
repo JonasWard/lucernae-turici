@@ -18,7 +18,8 @@
     "strict": true,
     "strictNullChecks": true,
     "lib": ["ES2015", "DOM"],
-    "target": "ES6"
+    "target": "ES6",
+    "module": "ES2020"
   },
   "exclude": ["node_modules"]
 }

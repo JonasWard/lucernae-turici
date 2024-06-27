@@ -30,7 +30,7 @@
     "predeploy": "bun run build",
     "deploy": "gh-pages -d build",
     "dev": "bunx --bun vite --host",
-    "build": "vite build",
+    "build": "vite build --mode production",
     "serve": "vite preview"
   },
   "eslintConfig": {

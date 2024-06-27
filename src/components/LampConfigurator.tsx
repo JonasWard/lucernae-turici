@@ -15,6 +15,7 @@ import { CameraParameters, ViewCube, ViewCubePosition } from './configurator/Vie
 import { TopNavigation } from './configurator/TopNavigation';
 import '../LandingPage.css';
 import { getURLForData, parseUrlMethod } from '../urlAsState/objectmap/versionReading';
+import { Scene } from '@babylonjs/core';
 
 const displayTypeMap =
   window.innerHeight < 800
@@ -51,6 +52,8 @@ const tryParse = (s: string): SemanticlyNestedDataEntry => {
 
 export const LampConfigurator: React.FC = () => {
   const { stateString } = useParams();
+  const [scene, setScene] = useState<null | Scene>(null);
+
   const [sliderInput, setSliderInput] = useState<boolean>(true);
   const [rerender, setRerender] = useState<boolean>(false);
   const [lastURLFromData, setLastURLFromData] = useState<string>('');
@@ -94,6 +97,8 @@ export const LampConfigurator: React.FC = () => {
         completedRerender={() => setRerender(false)}
         renderMethod={renderMethod}
         lastCameraParameters={lastCameraParameters}
+        scene={scene}
+        setScene={setScene}
       />
       <div style={{ position: 'absolute', top: viewCubePosition === ViewCubePosition.AllCorners ? 30 : 0, right: 0, padding: 8 }}>
         <SemanticsRenderObject
@@ -118,6 +123,8 @@ export const LampConfigurator: React.FC = () => {
           setRenderMethod={setRenderMethod}
           displayTypeMap={displayTypeMap}
           disabled={commingSoon}
+          scene={scene}
+          data={data}
         />
       </div>
       <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />

@@ -19,10 +19,11 @@ type IAppProps = {
   completedRerender: () => void;
   setActiveName: (s: string) => void;
   lastCameraParameters?: CameraParameters;
+  scene: Scene | null;
+  setScene: (scene: Scene) => void;
 };
 
-const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMethod, setActiveName, lastCameraParameters }) => {
-  const [scene, setScene] = useState<null | Scene>(null);
+const App: React.FC<IAppProps> = ({ gBD, rerender, completedRerender, renderMethod, setActiveName, lastCameraParameters, scene, setScene }) => {
   const [mesh, setMesh] = useState<null | Mesh | TransformNode>(null);
   const [camera, setCamera] = useState<null | ArcRotateCamera>(null);
 

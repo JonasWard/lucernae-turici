@@ -1,9 +1,13 @@
 import React from 'react';
 import { RenderMethod } from '../../geometryGeneration/geometryEntry';
-import { Select, Switch } from 'antd';
+import { Button, Select, Switch } from 'antd';
 import { DisplayType, getDisplayType } from './semantics/SemanticsRenderObject';
 import { ViewWrapper } from './semantics/ViewWrapper';
 import { MaterialFactory, MaterialUUIDColorStates } from '../../geometryGeneration/materialFactory';
+import { SemanticlyNestedDataEntry } from '../../urlAsState/types/semanticlyNestedDataEntry';
+import { exportOBJ, exportSTL } from '../../geometryGeneration/export/fileHandling';
+import { getURLForData } from '../../urlAsState/objectmap/versionReading';
+import { Scene } from '@babylonjs/core';
 
 type IViewPortSettingsProps = {
   activeName: string;
@@ -15,6 +19,8 @@ type IViewPortSettingsProps = {
   setSliderInput: (sliderInput: boolean) => void;
   displayTypeMap?: { [key: string]: DisplayType };
   disabled?: string[];
+  data: SemanticlyNestedDataEntry;
+  scene: Scene | null;
 };
 
 export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
@@ -27,6 +33,8 @@ export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
   setSliderInput,
   displayTypeMap,
   disabled = [],
+  data,
+  scene,
 }) => (
   <ViewWrapper
     displayType={displayTypeMap ? getDisplayType('settings', displayTypeMap) : DisplayType.POPOVER}
@@ -60,5 +68,15 @@ export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
         }}
       />
     </div>
+    {scene && renderMethod === RenderMethod.NORMAL ? (
+      <div style={{ padding: '8px' }}>
+        <Button onClick={() => exportSTL(scene, getURLForData(data))}>Download STL</Button>
+      </div>
+    ) : null}
+    {scene && renderMethod === RenderMethod.NORMAL ? (
+      <div style={{ padding: '8px' }}>
+        <Button onClick={() => exportOBJ(scene, getURLForData(data))}>Download OBJ</Button>
+      </div>
+    ) : null}
   </ViewWrapper>
 );

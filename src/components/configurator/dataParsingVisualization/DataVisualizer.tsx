@@ -4,6 +4,7 @@ import { parseDownNestedDataDescription, parseUrlMethod } from '../../../urlAsSt
 import { parserObjects } from '../../../geometryGeneration/versions/parserObjects';
 import { DataEntryArray } from '../../../urlAsState/types/dataEntry';
 import { globalLerp } from '../../../urlAsState/utils/spline';
+import { DataType } from '../../../urlAsState/enums/dataTypes';
 
 const urls = [
   'AFlM8-n0I_PimApEUnXqFDJCfQ',
@@ -280,13 +281,22 @@ export const DataVisualizer: React.FC = () => {
   // const dataArrays = urls.map((url) => parseDownNestedDataDescription(parseUrlMethod(url, parserObjects)));
   const dataArrays = globalLerp(800).map(parseDownNestedDataDescription) as DataEntryArray[];
   const keysPresent = [...new Set(dataArrays.flatMap((dataArray) => dataArray.map((dataEntry) => dataEntry.name)))];
+  const types = keysPresent.map((key) => dataArrays.flat().find((dataEntry) => dataEntry.name === key)?.type);
 
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         {keysPresent.map((k, i) => (
           <div key={i} style={{ width: `${100 / keysPresent.length}%`, height: 100 }}>
-            <div style={{ height: `${100 / keysPresent.length}%`, width: 0, transform: `translate(40px, 0) rotate(.25turn)` }}>{k}</div>
+            <div
+              style={{
+                height: `${100 / keysPresent.length}%`,
+                width: 0,
+                transform: `translate(calc(1.5 * 100vh / ${keysPresent.length}), 0) rotate(.25turn)`,
+              }}
+            >
+              {`${Object.values(DataType)[types[i] as number]}-${k}`}
+            </div>
           </div>
         ))}
       </div>

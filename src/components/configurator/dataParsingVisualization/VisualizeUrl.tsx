@@ -24,7 +24,7 @@ export const VisualizeUrl: React.FC<IVisualizeUrlProps> = ({ dataArray, keysPres
           <div key={i} style={{ width: `${100 / keysPresent.length}%`, height, display: 'flex', flexDirection: 'row' }}>
             <div
               style={{
-                backgroundColor: MaterialFactory.getTwilightColorFromUnitValue(1.0 - t * 0.5),
+                backgroundColor: MaterialFactory.getTwilightColorFromUnitValue(t * 0.5),
                 height,
                 width: `${100 * (1 - t)}%`,
               }}
@@ -33,7 +33,7 @@ export const VisualizeUrl: React.FC<IVisualizeUrlProps> = ({ dataArray, keysPres
               style={{
                 height,
                 width: `${100 * t}%`,
-                backgroundColor: MaterialFactory.getTwilightColorFromUnitValue(t * 0.5),
+                backgroundColor: MaterialFactory.getTwilightColorFromUnitValue((0.75 + t) * 0.5),
               }}
             />
           </div>

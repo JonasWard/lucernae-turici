@@ -1,5 +1,4 @@
 import React from 'react';
-import { GiBeastEye } from 'react-icons/gi';
 import { PiEyes } from 'react-icons/pi';
 
 export enum ViewCubeSide {

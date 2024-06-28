@@ -16,6 +16,7 @@ import { TopNavigation } from './configurator/TopNavigation';
 import '../LandingPage.css';
 import { getURLForData, parseUrlMethod } from '../urlAsState/objectmap/versionReading';
 import { Scene } from '@babylonjs/core';
+import { getHeights } from '../geometryGeneration/geometry';
 
 const displayTypeMap =
   window.innerHeight < 800
@@ -128,6 +129,15 @@ export const LampConfigurator: React.FC = () => {
         />
       </div>
       <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />
+      {import.meta.env.DEV ? (
+        <div style={{ position: 'absolute', left: 150, bottom: 20 }}>
+          height:
+          {getHeights((getValueObjectFrom(data, globalDataAttributeMapper) as unknown as GeometryBaseData).heights)
+            .sort((a, b) => b - a)[0]
+            .toFixed(3)}
+          mm
+        </div>
+      ) : null}
       <ViewCube size={20} viewCubePosition={viewCubePosition} onSideChange={setLastCameraParameters} />
     </>
   );

@@ -9,7 +9,7 @@ import { Voxel, VoxelComplex, VoxelState } from './voxelComplex.type';
 
 // helper interface that defines the four corner vertices of a frame to be filled in with the frames of the voxel
 export class VoxelMesh {
-  private static arcDivisionCount = 32;
+  private static arcDivisionCount = import.meta.env.DEV ? 32 : 8; // keeping the resolution of archs low (it's still basically 32 for a full circle, because all current arcs are always 90 degrees)
   private static getTopVertexSideEdge = (v: Voxel, vX: VoxelComplex, i: number): V3 => vX.vertices[v.vertices[i + v.n]];
   private static getBottomVertexSideEdge = (v: Voxel, vX: VoxelComplex, i: number): V3 => vX.vertices[v.vertices[i]];
   private static getTopEdgeCenter = (v: Voxel, vX: VoxelComplex, i: number): V3 =>

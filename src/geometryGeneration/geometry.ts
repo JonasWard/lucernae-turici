@@ -1,11 +1,5 @@
 import { Vector3 } from '@babylonjs/core';
-import { BaseFrameFactory, Mesh, WorldXY, joinMeshes, polygonToMesh, voxelToMesh } from './baseGeometry';
-import { ExtrusionProfileType } from './extrusionProfiles/types/extrusionProfileType';
-import { BaseFrame, HalfEdgeMesh } from './geometrytypes';
-import { getHalfEdgeMeshFromMesh } from './halfedge';
-import { VoxelFactory } from './voxelComplex.factory';
 import { V3 } from './v3';
-import { VoxelComplex } from './voxelComplex.type';
 import { MalculmiusOneFootprint } from './footprintgeometrytypes';
 
 export enum Malculmiuses {
@@ -110,17 +104,6 @@ const getIncrementalMethod =
   (angle: number): number => {
     return incrementalSettings.total && total ? 1 + angle * incrementalSettings.angle * total : 1 + angle * incrementalSettings.angle;
   };
-
-const getBaseMethod = (method: ProcessingMethods, total?: number): ((angle: number) => number) => {
-  switch (method.type) {
-    case ProcessingMethodType.None:
-      return () => 1;
-    case ProcessingMethodType.IncrementalMethod:
-      return getIncrementalMethod(method, total);
-    case ProcessingMethodType.Sin:
-      return getSineMethod(method);
-  }
-};
 
 export const getHeights = (heightGenerator: HeightGenerator): number[] => {
   const heights: number[] = [];
@@ -227,46 +210,6 @@ export const createShardOfMalculmiusOne = (geometry: MalculmiusOneFootprint, ori
   return vertexSets;
 };
 
-const createVoxelComplex = (polygons: Vector3[][], heightMap: number[], extrusionProfile: ExtrusionProfileType, mesh: Mesh): Mesh => {
-  const meshes: Mesh[] = [];
-
-  polygons.forEach((polygon) => {
-    for (let i = 0; i < heightMap.length; i++) {
-      const h0 = heightMap[i];
-      const h1 = heightMap[i + 1];
-      const vZ = new Vector3(0, 0, h0);
-      const hDelta = h1 - h0;
-      meshes.push(voxelToMesh({ baseProfile: polygon.map((v) => v.add(vZ)), height: hDelta }, extrusionProfile));
-    }
-  });
-
-  const localMesh = joinMeshes(meshes);
-  mesh.faces = localMesh.faces;
-  mesh.vertices = localMesh.vertices;
-
-  return mesh;
-};
-
-const createBase = (polygons: Vector3[][], heightMap: number[], mesh: Mesh): Mesh => {
-  return {
-    vertices: [],
-    faces: [],
-  };
-};
-
-const createShade = (polygons: Vector3[][], heightMap: number[], heMesh: HalfEdgeMesh): HalfEdgeMesh => {
-  const vZ = new Vector3(0, 0, 550);
-
-  const meshes = polygons.map((p) => polygonToMesh(p.map((v) => v.add(vZ))));
-  const localHeMesh = getHalfEdgeMeshFromMesh(joinMeshes(meshes));
-
-  heMesh.faces = localHeMesh.faces;
-  heMesh.vertices = localHeMesh.vertices;
-  heMesh.halfEdges = localHeMesh.halfEdges;
-
-  return heMesh;
-};
-
 export const twistAndSkewVertex = (v: Vector3, twistMethod: (angle: number) => number, skewMethod: (angle: number) => number, angle: number): Vector3 => {
   const twistAngle = twistMethod(v.z * 0.001);
   const skew = 0.5 + skewMethod(v.z * 0.001) * 0.5;
@@ -285,63 +228,4 @@ export const twistAndSkewVertexV3 = (v: V3, twistMethod: (angle: number) => numb
   const sin = Math.sin(twistAngle) * skew;
 
   return { x: v.x * cos - v.y * sin, y: v.x * sin + v.y * cos, z: v.z };
-};
-
-export const createMalculmiusGeometry = (
-  geometry: MalculmiusGeometry,
-  origin: Vector3 = new Vector3(0, 0, 0),
-  extrusionProfile: ExtrusionProfileType
-): { base: Mesh; building: Mesh; shade: HalfEdgeMesh } => {
-  // creating the base profile
-  const heightMap = getHeights(geometry.heights);
-
-  const base: Mesh = {
-    faces: [],
-    vertices: [],
-  };
-  const building: Mesh = {
-    faces: [],
-    vertices: [],
-  };
-  const shade: HalfEdgeMesh = {
-    faces: {},
-    halfEdges: {},
-    vertices: {},
-  };
-
-  switch (geometry.type) {
-    case Malculmiuses.One:
-      const shardOfMalculmiusOne = createShardOfMalculmiusOne(geometry as unknown as MalculmiusOneFootprint, origin, 0);
-      createBase(shardOfMalculmiusOne, heightMap, base);
-      createVoxelComplex(shardOfMalculmiusOne, heightMap, extrusionProfile, building);
-      createShade(shardOfMalculmiusOne, heightMap, shade);
-  }
-
-  // get post processing methods
-  const twistMethod = getBaseMethod(geometry.postProcessing.twist, heightMap[heightMap.length - 1]);
-  const skewMethod = getBaseMethod(geometry.postProcessing.skew, heightMap[heightMap.length - 1]);
-
-  building.vertices = building.vertices.map((v) => twistAndSkewVertex(v, twistMethod, skewMethod, v.z));
-  return { base, building, shade };
-};
-
-export const createCellComplexFromMalculmiusGeometry = (geometry: MalculmiusGeometry, originFrame: BaseFrame = WorldXY): VoxelComplex => {
-  // constructing the heightmap
-  const heightMap = getHeights(geometry.heights);
-  const baseFrames = BaseFrameFactory.getBaseFramArrayAlongDirectionForSpacings(originFrame.z, heightMap);
-
-  const shard = createShardOfMalculmiusOne(geometry as unknown as MalculmiusOneFootprint, new Vector3(originFrame.o.x, originFrame.o.y, originFrame.o.z), 0);
-  const heMesh = getHalfEdgeMeshFromMesh(joinMeshes(shard.map(polygonToMesh)));
-
-  // constructing the voxel complex
-  const cellComplex = VoxelFactory.sweepHalfEdgeMesh(heMesh, baseFrames);
-
-  // applying the post processing methods
-  const twistMethod = getBaseMethod(geometry.postProcessing.twist, heightMap[heightMap.length - 1]);
-  const skewMethod = getBaseMethod(geometry.postProcessing.skew, heightMap[heightMap.length - 1]);
-  Object.entries(cellComplex.vertices).forEach(([k, v]) => {
-    cellComplex.vertices[k] = twistAndSkewVertexV3(v, twistMethod, skewMethod, v.z);
-  });
-
-  return cellComplex;
 };

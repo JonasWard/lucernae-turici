@@ -1,10 +1,8 @@
-import {
-  ArcExtrusionProfile,
-  EllipseExtrusionProfile,
-  ExtrusionProfile,
-  ExtrusionProfileType,
-  SquareExtrusionProfile,
-} from '../../geometryGeneration/baseGeometry';
+import { ExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/extrusionProfileType';
+import { EllipseExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/ellipse';
+import { SquareExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/square';
+import { ArcExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/arc';
+import { ExtrusionCategory } from '../../geometryGeneration/extrusionProfiles/types/extrusionTypes';
 import { DEFAULT_PROCESSING_METHODS, HeightGenerator, MalculmiusGeometry, Malculmiuses, ProcessingMethodType } from '../../geometryGeneration/geometry';
 import { useState } from 'react';
 import { Button, Switch } from 'antd';
@@ -19,20 +17,20 @@ export const DEFAULT_PROFILE_TYPES = {
     insetTop: 0.1,
     insetBottom: 0.1,
     insetSides: 0.1,
-  } as ArcExtrusionProfile,
+  } as ArcExtrusionProfileType,
   [ExtrusionProfileType.Ellipse]: {
     type: ExtrusionProfileType.Ellipse,
     radiusTop: 0.35,
     insetTop: 0.1,
     insetBottom: 0.1,
     insetSides: 0.1,
-  } as EllipseExtrusionProfile,
+  } as EllipseExtrusionProfileType,
   [ExtrusionProfileType.Square]: {
     type: ExtrusionProfileType.Square,
     insetTop: 0.1,
     insetBottom: 0.1,
     insetSides: 0.1,
-  } as SquareExtrusionProfile,
+  } as SquareExtrusionProfileType,
 };
 
 export const DEFAULT_GEOMETRY_TYPES = {
@@ -58,9 +56,9 @@ export const DEFAULT_GEOMETRY_TYPES = {
   },
 };
 
-const updateType = (extrusionProfile: ExtrusionProfile): ExtrusionProfile => {
-  const newValues = DEFAULT_PROFILE_TYPES[Math.floor(Object.keys(DEFAULT_PROFILE_TYPES).length * Math.random()) as 0 | 1 | 2] as ExtrusionProfile;
-  return { ...newValues, ...extrusionProfile } as ExtrusionProfile;
+const updateType = (extrusionProfile: ExtrusionProfileType): ExtrusionProfileType => {
+  const newValues = DEFAULT_PROFILE_TYPES[Math.floor(Object.keys(DEFAULT_PROFILE_TYPES).length * Math.random()) as 0 | 1 | 2] as ExtrusionProfileType;
+  return { ...newValues, ...extrusionProfile } as ExtrusionProfileType;
 };
 
 const helperMethodUpdateValues = (limits: { min: number; max: number; int: boolean }): number => {
@@ -93,9 +91,9 @@ const RandomNumberGenerator: React.FC<IInputProps> = ({ extrusionProfile, malcol
 };
 
 export interface IInputProps {
-  extrusionProfile: ExtrusionProfile;
+  extrusionProfile: ExtrusionProfileType;
   malcolmiusGeometry: MalculmiusGeometry;
-  setExtrusionProfile: (e: ExtrusionProfile) => void;
+  setExtrusionProfile: (e: ExtrusionProfileType) => void;
   setMalcolmiusGeometry: (m: MalculmiusGeometry) => void;
 }
 

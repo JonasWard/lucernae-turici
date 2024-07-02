@@ -6,6 +6,11 @@ import { V3 } from './v3';
 import { FloorplanType } from './footprintgeometrytypes';
 import { HeightGenerator, getHeights } from './geometry';
 import { MaterialFactory } from './materialFactory';
+import { ArcExtrusionProfileType } from './extrusionProfiles/types/arc';
+import { SquareExtrusionProfileType } from './extrusionProfiles/types/square';
+import { EllipseExtrusionProfileType } from './extrusionProfiles/types/ellipse';
+import { ExtrusionProfileType } from './extrusionProfiles/types/extrusionProfileType';
+import { ExtrusionCategory } from './extrusionProfiles/types/extrusionTypes';
 
 // this mesh assumes a positive oriented coordinate system, which means we will have to transform the mesh when importing them into a babylon scene
 
@@ -22,44 +27,13 @@ export type Frame = {
   xAxisMultiplier: number;
 };
 
-export enum ExtrusionProfileType {
-  Square,
-  Arc,
-  Ellipse,
-}
-
-export type ArcExtrusionProfile = {
-  type: ExtrusionProfileType.Arc;
-  radiusTop: number; // relative value
-  insetTop: number; // relative value
-  insetBottom: number; // relative value
-  insetSides: number; // relative value
-};
-
-export type SquareExtrusionProfile = {
-  type: ExtrusionProfileType.Square;
-  insetTop: number; // relative value
-  insetBottom: number; // relative value
-  insetSides: number; // relative value
-};
-
-export type EllipseExtrusionProfile = {
-  type: ExtrusionProfileType.Ellipse;
-  radiusTop: number; // realtive value
-  insetTop: number; // realtive value
-  insetBottom: number; // realtive value
-  insetSides: number; // realtive value
-};
-
-export type ExtrusionProfile = ArcExtrusionProfile | SquareExtrusionProfile | EllipseExtrusionProfile;
-
 export type BaseType = {
   sideHeight: number;
   sideInnerRadius: number;
 };
 
 export type GeometryBaseData = {
-  extrusion: ExtrusionProfile;
+  extrusion: ExtrusionProfileType;
   footprint: FloorplanType;
   heights: HeightGenerator;
   base: BaseType;
@@ -129,7 +103,7 @@ const closeVoxel = (voxel: Voxel): Mesh => {
   return joinMeshes([topMesh, bottomMesh]);
 };
 
-const closeFrame = (frame: Frame, extrusionProfile: ExtrusionProfile): Mesh => {
+const closeFrame = (frame: Frame, extrusionProfile: ExtrusionProfileType): Mesh => {
   const p00 = frame.origin;
   const p01 = frame.origin.add(frame.xAxis);
   const p10 = frame.origin.add(frame.yAxis);
@@ -138,15 +112,15 @@ const closeFrame = (frame: Frame, extrusionProfile: ExtrusionProfile): Mesh => {
   const profile = getPointsOnFrame(extrusionProfile, frame);
 
   switch (extrusionProfile.type) {
-    case ExtrusionProfileType.Arc:
-    case ExtrusionProfileType.Square:
+    case ExtrusionCategory.Arc:
+    case ExtrusionCategory.Square:
       return closeFrameHelperMethod(p00, p01, p10, p11, profile, 2);
-    case ExtrusionProfileType.Ellipse:
+    case ExtrusionCategory.Ellipse:
       return closeFrameHelperMethod(p00, p01, p10, p11, profile, profile.length * 0.5);
   }
 };
 
-const getPointsOnArcFrame = (profile: ArcExtrusionProfile, frame: Frame): Vector3[] => {
+const getPointsOnArcFrame = (profile: ArcExtrusionProfileType, frame: Frame): Vector3[] => {
   const { origin, xAxis, yAxis, xAxisMultiplier } = frame;
   const { radiusTop, insetTop, insetBottom, insetSides } = profile;
   const lX = 1 / xAxis.length();
@@ -163,7 +137,7 @@ const getPointsOnArcFrame = (profile: ArcExtrusionProfile, frame: Frame): Vector
   ];
 };
 
-const getPointsOnEllipseFrame = (profile: EllipseExtrusionProfile, frame: Frame): Vector3[] => {
+const getPointsOnEllipseFrame = (profile: EllipseExtrusionProfileType, frame: Frame): Vector3[] => {
   const { origin, xAxis, yAxis, xAxisMultiplier } = frame;
   const { radiusTop, insetTop, insetBottom, insetSides } = profile;
   const lX = 1 / xAxis.length();
@@ -185,7 +159,7 @@ const getPointsOnEllipseFrame = (profile: EllipseExtrusionProfile, frame: Frame)
   ];
 };
 
-const getPointsOnSquareFrame = (profile: SquareExtrusionProfile, frame: Frame): Vector3[] => {
+const getPointsOnSquareFrame = (profile: SquareExtrusionProfileType, frame: Frame): Vector3[] => {
   const { origin, xAxis, yAxis, xAxisMultiplier } = frame;
   const { insetTop, insetBottom, insetSides } = profile;
   const lX = 1 / xAxis.length();
@@ -197,13 +171,13 @@ const getPointsOnSquareFrame = (profile: SquareExtrusionProfile, frame: Frame): 
   return [centerBottom, sideBottom, sideTop, centerTop];
 };
 
-export const getPointsOnFrame = (profile: ExtrusionProfile, frame: Frame): Vector3[] => {
+export const getPointsOnFrame = (profile: ExtrusionProfileType, frame: Frame): Vector3[] => {
   switch (profile.type) {
-    case ExtrusionProfileType.Arc:
+    case ExtrusionCategory.Arc:
       return getPointsOnArcFrame(profile, frame);
-    case ExtrusionProfileType.Ellipse:
+    case ExtrusionCategory.Ellipse:
       return getPointsOnEllipseFrame(profile, frame);
-    case ExtrusionProfileType.Square:
+    case ExtrusionCategory.Square:
       return getPointsOnSquareFrame(profile, frame);
   }
 };
@@ -241,7 +215,7 @@ export const polygonToMesh = (polygon: Vector3[]): Mesh => ({
   vertices: polygon,
 });
 
-export const voxelToMesh = (voxel: Voxel, extrusionProfile: ExtrusionProfile): Mesh => {
+export const voxelToMesh = (voxel: Voxel, extrusionProfile: ExtrusionProfileType): Mesh => {
   // get the midpoint of the base profile of the voxel
   const baseProfile = voxel.baseProfile;
   const baseProfileMidpoint = baseProfile.reduce((acc, p) => acc.add(p), Vector3.Zero()).scale(1 / baseProfile.length);

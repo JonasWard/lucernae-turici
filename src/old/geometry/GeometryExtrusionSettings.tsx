@@ -1,12 +1,13 @@
 import { Form, Select } from 'antd';
-import { ExtrusionProfileType, ExtrusionProfile } from '../../geometryGeneration/baseGeometry';
+import { ExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/extrusionProfileType';
+import { ExtrusionCategory } from '../../geometryGeneration/extrusionProfiles/types/extrusionTypes';
 import { SliderWrapper } from '../helpers/SliderWrapperComponent';
 import { DEFAULT_PROFILE_TYPES } from './GeometryParentComponent';
 import React from 'react';
 
 interface IExtrusionProfileInputProps {
-  extrusionProfile: ExtrusionProfile;
-  setExtrusionProfile: (profile: ExtrusionProfile) => void;
+  extrusionProfile: ExtrusionProfileType;
+  setExtrusionProfile: (profile: ExtrusionProfileType) => void;
 }
 
 const UpdateExtrusionTypeComponent: React.FC<{ type: ExtrusionProfileType; updateType: (type: ExtrusionProfileType) => void }> = ({ type, updateType }) => (
@@ -29,7 +30,7 @@ export const ExtrusionRenderer: React.FC<IExtrusionProfileInputProps> = ({ extru
   const setInsetBottom = (value: number) => setExtrusionProfile({ ...extrusionProfile, insetBottom: value });
   const setInsetTop = (value: number) => setExtrusionProfile({ ...extrusionProfile, insetTop: value });
   const setInsetSides = (value: number) => setExtrusionProfile({ ...extrusionProfile, insetSides: value });
-  const updateType = (type: ExtrusionProfileType) => setExtrusionProfile({ ...DEFAULT_PROFILE_TYPES[type], ...extrusionProfile, type } as ExtrusionProfile);
+  const updateType = (type: ExtrusionProfileType) => setExtrusionProfile({ ...DEFAULT_PROFILE_TYPES[type], ...extrusionProfile, type } as ExtrusionProfileType);
 
   switch (extrusionProfile.type) {
     case ExtrusionProfileType.Arc:

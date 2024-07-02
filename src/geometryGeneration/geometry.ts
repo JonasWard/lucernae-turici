@@ -1,5 +1,6 @@
 import { Vector3 } from '@babylonjs/core';
-import { BaseFrameFactory, ExtrusionProfile, Mesh, WorldXY, joinMeshes, polygonToMesh, voxelToMesh } from './baseGeometry';
+import { BaseFrameFactory, Mesh, WorldXY, joinMeshes, polygonToMesh, voxelToMesh } from './baseGeometry';
+import { ExtrusionProfileType } from './extrusionProfiles/types/extrusionProfileType';
 import { BaseFrame, HalfEdgeMesh } from './geometrytypes';
 import { getHalfEdgeMeshFromMesh } from './halfedge';
 import { VoxelFactory } from './voxelComplex.factory';
@@ -226,7 +227,7 @@ export const createShardOfMalculmiusOne = (geometry: MalculmiusOneFootprint, ori
   return vertexSets;
 };
 
-const createVoxelComplex = (polygons: Vector3[][], heightMap: number[], extrusionProfile: ExtrusionProfile, mesh: Mesh): Mesh => {
+const createVoxelComplex = (polygons: Vector3[][], heightMap: number[], extrusionProfile: ExtrusionProfileType, mesh: Mesh): Mesh => {
   const meshes: Mesh[] = [];
 
   polygons.forEach((polygon) => {
@@ -289,7 +290,7 @@ export const twistAndSkewVertexV3 = (v: V3, twistMethod: (angle: number) => numb
 export const createMalculmiusGeometry = (
   geometry: MalculmiusGeometry,
   origin: Vector3 = new Vector3(0, 0, 0),
-  extrusionProfile: ExtrusionProfile
+  extrusionProfile: ExtrusionProfileType
 ): { base: Mesh; building: Mesh; shade: HalfEdgeMesh } => {
   // creating the base profile
   const heightMap = getHeights(geometry.heights);

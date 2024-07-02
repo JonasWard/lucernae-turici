@@ -1,5 +1,6 @@
 import { Scene, MeshBuilder, Vector3, Material, Mesh as BabylonMesh, TransformNode } from '@babylonjs/core';
-import { ExtrusionProfile, GeometryBaseData } from './baseGeometry';
+import { GeometryBaseData } from './baseGeometry';
+import { ExtrusionProfileType } from './extrusionProfiles/types/extrusionProfileType';
 import { V3, Mesh } from './v3';
 import { VoxelComplex, Voxel } from './voxelComplex.type';
 import { getCenterOfVoxelFace, getCenterOfVoxel } from './voxelComplex';
@@ -73,7 +74,7 @@ const getAllRepresentativeMeshForVoxelFace = (voxel: Voxel, vX: VoxelComplex, sc
   }
 };
 
-export const applyMalcolmiusLogic = (vX: VoxelComplex, extrusionProfile: ExtrusionProfile, scene: Scene) => {};
+export const applyMalcolmiusLogic = (vX: VoxelComplex, extrusionProfile: ExtrusionProfileType, scene: Scene) => {};
 
 // to parse a single voxel, go face by face and for every face, come up with the mesh logic that applies based on the neigbouring voxel
 // for now we only consider

@@ -1,4 +1,5 @@
-import { ExtrusionProfile, ExtrusionProfileType } from '../../geometryGeneration/baseGeometry';
+import { ExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/extrusionProfileType';
+import { ExtrusionCategory } from '../../geometryGeneration/extrusionProfiles/types/extrusionTypes';
 import { FloorplanType, FootprintGeometryTypes } from '../../geometryGeneration/footprintgeometrytypes';
 import { HeightGenerator, ProcessingMethodType, ProcessingMethods } from '../../geometryGeneration/geometry';
 import { DataDefinition } from '../dataObject';
@@ -16,7 +17,7 @@ import {
 
 export interface Version0_1Object {
   version: number;
-  extrusionTypeParameters: ExtrusionProfile;
+  extrusionTypeParameters: ExtrusionProfileType;
   floorTypeParameters: FloorplanType;
   heightMethodParameters: HeightGenerator;
 }
@@ -301,7 +302,7 @@ export const version0_1ConstructObject = (values: DataValues, versionObject: Ver
         k,
         values[versionObject.namesMap[k]],
       ])
-    ) as ExtrusionProfile,
+    ) as ExtrusionProfileType,
     floorTypeParameters: Object.fromEntries(
       Object.entries(floorMap(values[versionObject.namesMap.floorType] as FootprintGeometryTypes, 0)[1]).map(([k]) => [k, values[versionObject.namesMap[k]]])
     ) as unknown as FloorplanType,

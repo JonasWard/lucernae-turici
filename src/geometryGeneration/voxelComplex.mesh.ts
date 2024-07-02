@@ -1,6 +1,7 @@
 // these are the helper methods for filling the cells in the voxel complex
 
-import { ExtrusionProfileType, GeometryBaseData } from './baseGeometry';
+import { GeometryBaseData } from './baseGeometry';
+import { ExtrusionCategory } from './extrusionProfiles/types/extrusionTypes';
 import { HalfEdgeMesh, V2 } from './geometrytypes';
 import { getHalfEdgeMeshFromMesh } from './halfedge';
 import { QuadFace, V3, Mesh } from './v3';
@@ -88,7 +89,7 @@ export class VoxelMesh {
 
   public static getUVsForGeometryState = (gBD: GeometryBaseData): [V2[], V2[]] => {
     switch (gBD.extrusion.type) {
-      case ExtrusionProfileType.Arc:
+      case ExtrusionCategory.Arc:
         return [
           VoxelMesh.getBottom({ u: 0, v: gBD.extrusion.insetBottom }, { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }),
           VoxelMesh.getArc(
@@ -96,7 +97,7 @@ export class VoxelMesh {
             { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }
           ),
         ];
-      case ExtrusionProfileType.Ellipse:
+      case ExtrusionCategory.Ellipse:
         return [
           VoxelMesh.getArc(
             { u: 0, v: 1 - gBD.extrusion.insetTop - gBD.extrusion.radiusTop },
@@ -109,7 +110,7 @@ export class VoxelMesh {
           ),
         ];
 
-      case ExtrusionProfileType.Square:
+      case ExtrusionCategory.Square:
         return [
           VoxelMesh.getBottom({ u: 0, v: gBD.extrusion.insetBottom }, { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }),
           VoxelMesh.getTop({ u: 0, v: gBD.extrusion.insetBottom }, { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }),
@@ -204,7 +205,7 @@ export class VoxelMesh {
       v00: V3.Origin,
     };
     const squareGSM: GeometryBaseData = {
-      extrusion: { type: ExtrusionProfileType.Square, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1 },
+      extrusion: { type: ExtrusionCategory.Square, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1 },
     } as GeometryBaseData;
 
     const arcOrigin = { x: 2, y: 0, z: 0 };
@@ -215,7 +216,7 @@ export class VoxelMesh {
       v00: V3.add(baseFrameSquare.v00, arcOrigin),
     };
     const argGSM: GeometryBaseData = {
-      extrusion: { type: ExtrusionProfileType.Arc, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1, radiusTop: 0.4 },
+      extrusion: { type: ExtrusionCategory.Arc, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1, radiusTop: 0.4 },
     } as GeometryBaseData;
 
     const ellipseOrigin = { x: 4, y: 0, z: 0 };
@@ -226,7 +227,7 @@ export class VoxelMesh {
       v00: V3.add(baseFrameSquare.v00, ellipseOrigin),
     };
     const ellipseGSM: GeometryBaseData = {
-      extrusion: { type: ExtrusionProfileType.Ellipse, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1, radiusTop: 0.3 },
+      extrusion: { type: ExtrusionCategory.Ellipse, insetBottom: 0.1, insetSides: 0.1, insetTop: 0.1, radiusTop: 0.3 },
     } as GeometryBaseData;
 
     const squareUVs = VoxelMesh.getUVsForGeometryState(squareGSM);

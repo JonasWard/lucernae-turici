@@ -1,4 +1,4 @@
-import { ExtrusionProfileType } from '../baseGeometry';
+import { ExtrusionCategory } from '../extrusionProfiles/types/extrusionTypes';
 import { FootprintGeometryTypes } from '../footprintgeometrytypes';
 import { ProcessingMethodType } from '../geometry';
 import { DataEntryFactory } from '../../urlAsState/factory/factory';
@@ -8,9 +8,9 @@ import { DataEntry } from '../../urlAsState/types/dataEntry';
 
 const version0EnumSemantics = {
   [VersionParameterNames.extrusionType]: [
-    { value: ExtrusionProfileType.Square, label: 'Square Extrusion' },
-    { value: ExtrusionProfileType.Arc, label: 'Arc Extrusion' },
-    { value: ExtrusionProfileType.Ellipse, label: 'Ellipse Extrusion' },
+    { value: ExtrusionCategory.Square, label: 'Square Extrusion' },
+    { value: ExtrusionCategory.Arc, label: 'Arc Extrusion' },
+    { value: ExtrusionCategory.Ellipse, label: 'Ellipse Extrusion' },
   ],
   [VersionParameterNames.footprintType]: [
     { value: FootprintGeometryTypes.Square, label: 'Square Footprint' },
@@ -35,15 +35,15 @@ const version0EnumSemantics = {
 
 const extrusionTypeParser = (extrusionDataEntry: DataEntry): DefinitionArrayObject => {
   switch (extrusionDataEntry.value) {
-    case ExtrusionProfileType.Square:
+    case ExtrusionCategory.Square:
       return [
         extrusionDataEntry,
         DataEntryFactory.createFloat(0.25, 0.1, 0.5, 2, VersionParameterNames.insetTop),
         DataEntryFactory.createFloat(0.25, 0.1, 0.5, 2, VersionParameterNames.insetBottom),
         DataEntryFactory.createFloat(0.25, 0.1, 0.5, 2, VersionParameterNames.insetSides),
       ];
-    case ExtrusionProfileType.Arc:
-    case ExtrusionProfileType.Ellipse:
+    case ExtrusionCategory.Arc:
+    case ExtrusionCategory.Ellipse:
       return [
         extrusionDataEntry,
         DataEntryFactory.createFloat(0.35, 0.1, 0.5, 2, VersionParameterNames.radiusTop),
@@ -166,7 +166,7 @@ const version0objectGenerationDescriptor: VersionDefinitionGeneratorParameters =
   DataEntryFactory.createVersion(0, 8, VersionParameterNames.version, 0),
   [
     VersionParameterNames.extrusion,
-    DataEntryFactory.createEnum(ExtrusionProfileType.Square, getMax(VersionParameterNames.extrusionType), VersionParameterNames.extrusionType),
+    DataEntryFactory.createEnum(ExtrusionCategory.Square, getMax(VersionParameterNames.extrusionType), VersionParameterNames.extrusionType),
     extrusionTypeParser,
   ],
   [

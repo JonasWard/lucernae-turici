@@ -24,17 +24,9 @@ const polygonsForTriangle = (xCount: number, yCount: number, size: number, shell
   const origin = V3.fromNumbers((xCount + yCount) * xSpacing * -0.5, xCount * ySpacing * -0.5, 0);
 
   // base polygons
-  const polygonA = [
-    V3.Origin,
-    V3.add(V3.Origin, V3.mul(V3.XAxis, xSpacing)),
-    V3.add(V3.Origin, V3.add(V3.mul(V3.YAxis, ySpacing), V3.mul(V3.XAxis, xSpacing * 0.5))),
-  ];
+  const polygonA = [V3.Origin, V3.mul(V3.XAxis, xSpacing), V3.add(V3.mul(V3.YAxis, ySpacing), V3.mul(V3.XAxis, xSpacing * 0.5))];
 
-  const polygonB = [
-    V3.add(V3.Origin, V3.mul(V3.XAxis, xSpacing * 0.5)),
-    V3.add(V3.Origin, V3.add(V3.mul(V3.YAxis, ySpacing), V3.mul(V3.XAxis, xSpacing))),
-    V3.add(V3.Origin, V3.mul(V3.YAxis, ySpacing)),
-  ];
+  const polygonB = [V3.mul(V3.XAxis, xSpacing * 0.5), V3.add(V3.mul(V3.YAxis, ySpacing), V3.mul(V3.XAxis, xSpacing)), V3.mul(V3.YAxis, ySpacing)];
 
   const polygons: V3[][] = [];
 
@@ -70,12 +62,7 @@ const polygonsForSquare = (xCount: number, yCount: number, size: number, shell: 
   const origin = V3.fromNumbers(rowCount * size * -0.5, xCount * size * -0.5, 0);
 
   // base polygons
-  const polygon = [
-    V3.Origin,
-    V3.add(V3.Origin, V3.mul(V3.XAxis, size)),
-    V3.add(V3.Origin, V3.add(V3.mul(V3.YAxis, size), V3.mul(V3.XAxis, size))),
-    V3.add(V3.Origin, V3.mul(V3.YAxis, size)),
-  ];
+  const polygon = [V3.Origin, V3.mul(V3.XAxis, size), V3.add(V3.mul(V3.YAxis, size), V3.mul(V3.XAxis, size)), V3.mul(V3.YAxis, size)];
 
   const polygons: V3[][] = [];
 

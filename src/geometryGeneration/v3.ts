@@ -1,5 +1,6 @@
 import { VertexData } from '@babylonjs/core';
-import { TransformationMatrix, V2 } from './geometrytypes';
+import { TransformationMatrix } from './geometrytypes';
+import { V2 } from './v2';
 
 export interface V3 {
   x: number;

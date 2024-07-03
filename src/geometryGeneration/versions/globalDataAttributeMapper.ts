@@ -30,6 +30,7 @@ export const globalDataAttributeMapper: Record<VersionParameterNames, string> = 
   [VersionParameterNames.heights]: 'heights',
   [VersionParameterNames.heightProcessingMethod]: 'method',
   [VersionParameterNames.baseHeight]: 'baseHeight',
+  [VersionParameterNames.totalHeight]: 'totalHeight',
   [VersionParameterNames.storyCount]: 'storyCount',
   [VersionParameterNames.processingMethodType]: 'type',
   [VersionParameterNames.total]: 'total',

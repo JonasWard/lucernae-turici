@@ -31,6 +31,7 @@ export enum VersionParameterNames {
   heights = 'heights', // heights
   heightProcessingMethod = 'heightProcessingMethod',
   baseHeight = 'baseHeight',
+  totalHeight = 'totalHeight',
   storyCount = 'storyCount',
   processingMethodType = 'processingMethodType',
   total = 'total',

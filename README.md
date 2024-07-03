@@ -10,4 +10,4 @@ Together with Malcolm Unger
 
 ## parametric lamp shade designer in the browser delivering stls
 
-Access the app at [https://jonasward.githbub.com/lucernae-turici](https://jonasward.githbub.com/lucernae-turici)
+Access the app at [https://jonasward.github.io/lucernae-turici](https://jonasward.github.io/lucernae-turici)

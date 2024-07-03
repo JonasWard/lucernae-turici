@@ -177,16 +177,6 @@ export abstract class HalfEdgeMeshFactory {
   public static createPolygon = (vertexCount = 4, outerRadius = 1, origin = V3.Origin, xAxis = V3.XAxis, yAxis = V3.YAxis): HalfEdgeMesh =>
     getHalfEdgeMeshFromMesh(MeshFactory.createPolygon(vertexCount, outerRadius, origin, xAxis, yAxis), true);
 
-  public static createGrid = (
-    gridType: 3 | 4 | 6 = 4,
-    sideSpacing = 1,
-    xCount: number,
-    yCount: number,
-    origin?: V3,
-    xAxis = V3.XAxis,
-    yAxis = V3.YAxis
-  ): HalfEdgeMesh => getHalfEdgeMeshFromMesh(MeshFactory.createGrid(gridType, sideSpacing, xCount, yCount, origin, xAxis, yAxis), true);
-
   public static createCylinder = (radiuses: number[], divisions: number): HalfEdgeMesh => {
     const heMesh = getHalfEdgeMeshFromMesh(MeshFactory.createCylinder(radiuses, divisions), true);
     markFacesWithOneNakedEdge(heMesh);
@@ -209,13 +199,11 @@ export abstract class HalfEdgeMeshFactory {
           footprint.segments
         );
       case FootprintCategory.Square:
-        return HalfEdgeMeshFactory.createGrid(4, footprint.size, 1, 1);
+        return getHalfEdgeMeshFromMesh(MeshFactory.createSimpleGrid(FootprintCategory.SquareGrid, footprint.size, 1, 1));
       case FootprintCategory.SquareGrid:
-        return HalfEdgeMeshFactory.createGrid(4, footprint.size, footprint.xCount, footprint.yCount);
       case FootprintCategory.TriangleGrid:
-        return HalfEdgeMeshFactory.createGrid(3, footprint.size, footprint.xCount, footprint.yCount);
       case FootprintCategory.HexGrid:
-        return HalfEdgeMeshFactory.createGrid(6, footprint.size, footprint.xCount, footprint.yCount);
+        return getHalfEdgeMeshFromMesh(MeshFactory.createSimpleGrid(footprint.type, footprint.size, footprint.xCount, footprint.yCount));
       case FootprintCategory.MalculmiusOne:
         const shard = createShardOfMalculmiusOne(footprint, new Vector3(0, 0, 0), 0);
         return getHalfEdgeMeshFromMesh(joinMeshes(shard.map((s) => polygonToMesh(s))));

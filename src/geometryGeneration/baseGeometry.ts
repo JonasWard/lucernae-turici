@@ -83,10 +83,6 @@ export type FaceWithData = {
   uvs: [V2, V2, V2];
 };
 
-const getFaceBoundary = (face: HalfEdgeFace, m: HalfEdgeMesh): V3[] => {
-  return getFaceVertices(face, m);
-};
-
 // normal fall back just returns the normal defined by the plane which make up the face
 const getNormalFallBack = (vertices: [V3, V3, V3]): [V3, V3, V3] => {
   const n = getV3(getNormal(getVector3(vertices[0]), getVector3(vertices[1]), getVector3(vertices[2])));

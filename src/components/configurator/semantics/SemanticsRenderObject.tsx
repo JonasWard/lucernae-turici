@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { SemanticlyNestedDataEntry } from '../../../urlAsState/types/semanticlyNestedDataEntry';
 import { DataEntry } from '../../../urlAsState/types/dataEntry';
 import { DataEntryRenderer } from './dataentryrenderers/DataEntryRenderer';
 import { VersionEnumSemantics } from '../../../urlAsState/types/versionParser';
-import { Button, Drawer } from 'antd';
-import { IconRenderer, getIconForKey } from './IconRenderer';
-import { PopoverWrapper } from './PopoverWrapper';
 import { ViewWrapper } from './ViewWrapper';
 
 export enum DisplayType {
   NESTED,
   POPOVER,
   DRAWER,
+  HIDDEN,
 }
 
 export const getDisplayType = (key: string, displayTypeMap?: { [key: string]: DisplayType }) => {

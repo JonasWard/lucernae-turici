@@ -40,5 +40,7 @@ export const ViewWrapper: React.FC<IViewWrapperProps> = ({ children, displayType
           disabled={disabled.includes(name)}
         />
       );
+    case DisplayType.HIDDEN:
+      return <></>;
   }
 };

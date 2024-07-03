@@ -1,9 +1,9 @@
 import { Vector3 } from '@babylonjs/core';
 import { GeometryBaseData, joinMeshes, polygonToMesh } from './baseGeometry';
-import { FootprintCategory } from './footprints/types/footprintCategory';
+import { FootprintCategory, GridFootprintCategory } from './footprints/types/footprintCategory';
 import { createShardOfMalculmiusOne } from './geometry';
 import { HalfEdgeMesh } from './geometrytypes';
-import { getHalfEdgeMeshFromMesh, linkingHalfEdges, markFacesWithOneNakedEdge } from './halfedge';
+import { getHalfEdgeMeshFromMesh, markFacesWithOneNakedEdge } from './halfedge';
 import { Mesh, V3 } from './v3';
 
 abstract class MeshFactory {
@@ -22,8 +22,8 @@ abstract class MeshFactory {
   };
 
   // triangular grid actually considers pairs of triangles as one
-  public static createGrid = (
-    gridType: 3 | 4 | 6 = 4,
+  public static createSimpleGrid = (
+    gridType: GridFootprintCategory,
     sideSpacing = 1,
     xCount: number,
     yCount: number,
@@ -46,7 +46,7 @@ abstract class MeshFactory {
 
     // defining the base shapes
     switch (gridType) {
-      case 3:
+      case FootprintCategory.TriangleGrid:
         const halfX = V3.mul(xAxis, sideSpacing * 0.5);
         const oneAndAHalfX = V3.mul(xAxis, sideSpacing * 1.5);
         const triScaledY = V3.mul(yAxis, sideSpacing * 3 ** 0.5 * 0.5);
@@ -73,7 +73,7 @@ abstract class MeshFactory {
 
         break;
 
-      case 4:
+      case FootprintCategory.SquareGrid:
         const quadScaledY = V3.mul(yAxis, sideSpacing);
 
         baseMesh = [
@@ -88,7 +88,7 @@ abstract class MeshFactory {
 
         break;
 
-      case 6:
+      case FootprintCategory.HexGrid:
         const yScaleHalf = V3.mul(yAxis, sideSpacing * 0.5);
         const yScaleOneAndAHalf = V3.mul(yAxis, sideSpacing * 1.5);
         const yScaleDouble = V3.mul(yAxis, sideSpacing * 2.0);

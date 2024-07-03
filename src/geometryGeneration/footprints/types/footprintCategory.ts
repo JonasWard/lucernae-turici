@@ -6,3 +6,5 @@ export enum FootprintCategory {
   Cylinder,
   MalculmiusOne,
 }
+
+export type GridFootprintCategory = FootprintCategory.SquareGrid | FootprintCategory.TriangleGrid | FootprintCategory.HexGrid;

@@ -49,11 +49,19 @@ export type PostProcessingMethods = {
   skew: ProcessingMethods;
 };
 
-export type HeightGenerator = {
+export type RelativeHeightGenerator = {
+  storyCount: number;
+  totalHeight: number;
+  method: ProcessingMethods;
+};
+
+export type AbsoluteHeightGenerator = {
   storyCount: number;
   baseHeight: number;
   method: ProcessingMethods;
 };
+
+export type HeightGenerator = AbsoluteHeightGenerator | RelativeHeightGenerator;
 
 export const DEFAULT_PROCESSING_METHODS = {
   [ProcessingMethodType.None]: {

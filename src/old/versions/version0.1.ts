@@ -1,6 +1,6 @@
 import { ExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/extrusionProfileType';
-import { ExtrusionCategory } from '../../geometryGeneration/extrusionProfiles/types/extrusionTypes';
 import { FloorplanType, FootprintGeometryTypes } from '../../geometryGeneration/footprintgeometrytypes';
+import { ExtrusionCategory } from '../../geometryGeneration/extrusionProfiles/types/extrusionCategory';
 import { HeightGenerator, ProcessingMethodType, ProcessingMethods } from '../../geometryGeneration/geometry';
 import { DataDefinition } from '../dataObject';
 import { SemanticValueString } from '../dataSemanticsEnums';

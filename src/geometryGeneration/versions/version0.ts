@@ -1,5 +1,5 @@
-import { ExtrusionCategory } from '../extrusionProfiles/types/extrusionTypes';
 import { FootprintGeometryTypes } from '../footprintgeometrytypes';
+import { ExtrusionCategory } from '../extrusionProfiles/types/extrusionCategory';
 import { ProcessingMethodType } from '../geometry';
 import { DataEntryFactory } from '../../urlAsState/factory/factory';
 import { DefinitionArrayObject, ParserForVersion, VersionDefinitionGeneratorParameters } from '../../urlAsState/types/versionParser';

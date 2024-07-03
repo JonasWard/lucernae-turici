@@ -3,7 +3,7 @@ import * as arc from './arc';
 import * as ellipse from './ellipse';
 import * as gothic from './gothic';
 import * as nested from './nested';
-import { ExtrusionCategory } from './types/extrusionTypes';
+import { ExtrusionCategory } from './types/extrusionCategory';
 import { ExtrusionProfileType } from './types/extrusionProfileType';
 import { V2 } from '../v2';
 

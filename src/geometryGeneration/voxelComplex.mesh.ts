@@ -1,7 +1,7 @@
 // these are the helper methods for filling the cells in the voxel complex
 
 import { GeometryBaseData } from './baseGeometry';
-import { ExtrusionCategory } from './extrusionProfiles/types/extrusionTypes';
+import { ExtrusionCategory } from './extrusionProfiles/types/extrusionCategory';
 import { HalfEdgeMesh } from './geometrytypes';
 import { V2 } from './v2';
 import { getHalfEdgeMeshFromMesh } from './halfedge';

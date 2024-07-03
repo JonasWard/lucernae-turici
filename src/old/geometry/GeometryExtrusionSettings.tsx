@@ -1,6 +1,6 @@
 import { Form, Select } from 'antd';
 import { ExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/extrusionProfileType';
-import { ExtrusionCategory } from '../../geometryGeneration/extrusionProfiles/types/extrusionTypes';
+import { ExtrusionCategory } from '../../geometryGeneration/extrusionProfiles/types/extrusionCategory';
 import { SliderWrapper } from '../helpers/SliderWrapperComponent';
 import { DEFAULT_PROFILE_TYPES } from './GeometryParentComponent';
 import React from 'react';

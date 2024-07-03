@@ -2,7 +2,7 @@ import { ExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles
 import { EllipseExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/ellipse';
 import { SquareExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/square';
 import { ArcExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/arc';
-import { ExtrusionCategory } from '../../geometryGeneration/extrusionProfiles/types/extrusionTypes';
+import { ExtrusionCategory } from '../../geometryGeneration/extrusionProfiles/types/extrusionCategory';
 import { DEFAULT_PROCESSING_METHODS, HeightGenerator, MalculmiusGeometry, Malculmiuses, ProcessingMethodType } from '../../geometryGeneration/geometry';
 import { useState } from 'react';
 import { Button, Switch } from 'antd';

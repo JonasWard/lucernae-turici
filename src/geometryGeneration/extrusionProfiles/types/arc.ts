@@ -1,4 +1,4 @@
-import { ExtrusionCategory } from './extrusionTypes';
+import { ExtrusionCategory } from './extrusionCategory';
 
 export type ArcExtrusionProfileType = {
   type: ExtrusionCategory.Arc;

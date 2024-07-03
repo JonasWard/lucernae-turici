@@ -5,6 +5,7 @@ import { DataEntryFactory } from '../../urlAsState/factory/factory';
 import { DefinitionArrayObject, ParserForVersion, VersionDefinitionGeneratorParameters } from '../../urlAsState/types/versionParser';
 import { VersionParameterNames } from './parameterNames';
 import { DataEntry } from '../../urlAsState/types/dataEntry';
+import { Versions } from './versions';
 
 const version0EnumSemantics = {
   [VersionParameterNames.extrusionType]: [
@@ -30,7 +31,7 @@ const version0EnumSemantics = {
     { value: ProcessingMethodType.Sin, label: 'Sin Method' },
     { value: ProcessingMethodType.None, label: 'None Method' },
   ],
-  [VersionParameterNames.version]: [{ value: 0, label: 'alpha' }],
+  [VersionParameterNames.version]: Versions,
 };
 
 const extrusionTypeParser = (extrusionDataEntry: DataEntry): DefinitionArrayObject => {

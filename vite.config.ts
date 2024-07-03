@@ -10,5 +10,5 @@ export default defineConfig({
   build: {
     outDir: './build',
   },
-  base: '/para-slim-shady/',
+  base: '/lucernae-turici/',
 });

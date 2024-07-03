@@ -53,7 +53,7 @@ export const LampConfigurator: React.FC = () => {
 
   const updateURLFromData = (data: SemanticlyNestedDataEntry) => {
     const newUrl = getURLForData(data);
-    window.history.replaceState(null, 'Same Page Title', `/para-slim-shady/#configurator/${newUrl}`);
+    window.history.replaceState(null, 'Same Page Title', `/lucernae-turici/#configurator/${newUrl}`);
     if (lastURLFromData !== newUrl) setRerender(true);
     setLastURLFromData(newUrl);
   };

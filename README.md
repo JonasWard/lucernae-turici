@@ -1,8 +1,13 @@
-# para-slim-shady
+# lucernae-turici
 
-Entry for the AEC Hackathon 2024 in Zürich, Switzerland.
+Parametric / implicit experimental lamp shade designer using implicit and various topologic algorithms & data-structures.
+Pushed and maintained by me, Jonas Ward.
+
+## AEC Hackathon 2024
+
+Started as an entry for the AEC Hackathon 2024 in Zürich, Switzerland.
 Together with Malcolm Unger
 
 ## parametric lamp shade designer in the browser delivering stls
 
-access the app at [https://jonasward.githbub.com/para-slim-shady](https://jonasward.githbub.com/para-slim-shady)
+Access the app at [https://jonasward.githbub.com/lucernae-turici](https://jonasward.githbub.com/lucernae-turici)

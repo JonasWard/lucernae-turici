@@ -2,11 +2,13 @@
 
 import { GeometryBaseData } from './baseGeometry';
 import { ExtrusionCategory } from './extrusionProfiles/types/extrusionTypes';
-import { HalfEdgeMesh, V2 } from './geometrytypes';
+import { HalfEdgeMesh } from './geometrytypes';
+import { V2 } from './v2';
 import { getHalfEdgeMeshFromMesh } from './halfedge';
 import { QuadFace, V3, Mesh } from './v3';
 import { gefFace, getCenterOfVoxelFace, isFaceInVoxelClosed } from './voxelComplex';
 import { Voxel, VoxelComplex, VoxelState } from './voxelComplex.type';
+import { ExtrusionProfileFactory } from './extrusionProfiles/extrusionProfileFactory';
 
 // helper interface that defines the four corner vertices of a frame to be filled in with the frames of the voxel
 export class VoxelMesh {
@@ -47,76 +49,7 @@ export class VoxelMesh {
     v00,
   });
 
-  private static getDefaultUVsForState = (): V2[] => {
-    return [
-      { u: 1, v: 0.1 },
-      { u: 0.3, v: 0.1 },
-      { u: 0.3, v: 0.9 },
-      { u: 1, v: 0.9 },
-    ];
-  };
-
-  private static getArc = (uv00: V2, uv11: V2, inverse: boolean = false) => {
-    const arc = [];
-    const uDelta = uv11.u - uv00.u;
-    const vDelta = uv11.v - uv00.v;
-    for (let i = 0; i <= VoxelMesh.arcDivisionCount; i++) {
-      const alfa = (i / VoxelMesh.arcDivisionCount) * Math.PI * 0.5;
-      arc.push({
-        u: Math.cos(alfa) * uDelta + uv00.u,
-        v: Math.sin(alfa) * vDelta + uv00.v,
-      });
-    }
-
-    return inverse ? arc.reverse() : arc;
-  };
-
-  private static getBottom = (uv00: V2, uv11: V2) => [
-    { u: uv00.u, v: uv00.v },
-    { u: uv11.u, v: uv00.v },
-  ];
-
-  private static getTop = (uv00: V2, uv11: V2) => [
-    { u: uv11.u, v: uv11.v },
-    { u: uv00.u, v: uv11.v },
-  ];
-
-  private static getSquare = (uv00: V2, uv11: V2, inverse: boolean = false) => {
-    const square = [...VoxelMesh.getBottom(uv00, uv11), ...VoxelMesh.getTop(uv00, uv11)];
-
-    return inverse ? square.reverse() : square;
-  };
-
-  public static getUVsForGeometryState = (gBD: GeometryBaseData): [V2[], V2[]] => {
-    switch (gBD.extrusion.type) {
-      case ExtrusionCategory.Arc:
-        return [
-          VoxelMesh.getBottom({ u: 0, v: gBD.extrusion.insetBottom }, { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }),
-          VoxelMesh.getArc(
-            { u: 0, v: 1 - gBD.extrusion.insetTop - gBD.extrusion.radiusTop },
-            { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }
-          ),
-        ];
-      case ExtrusionCategory.Ellipse:
-        return [
-          VoxelMesh.getArc(
-            { u: 0, v: 1 - gBD.extrusion.insetTop - gBD.extrusion.radiusTop },
-            { u: 1 - gBD.extrusion.insetSides, v: gBD.extrusion.insetBottom },
-            true
-          ),
-          VoxelMesh.getArc(
-            { u: 0, v: 1 - gBD.extrusion.insetTop - gBD.extrusion.radiusTop },
-            { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }
-          ),
-        ];
-
-      case ExtrusionCategory.Square:
-        return [
-          VoxelMesh.getBottom({ u: 0, v: gBD.extrusion.insetBottom }, { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }),
-          VoxelMesh.getTop({ u: 0, v: gBD.extrusion.insetBottom }, { u: 1 - gBD.extrusion.insetSides, v: 1 - gBD.extrusion.insetTop }),
-        ];
-    }
-  };
+  public static getUVsForGeometryState = (gBD: GeometryBaseData): [V2[], V2[]] => ExtrusionProfileFactory.getUVPair(gBD.extrusion, VoxelMesh.arcDivisionCount);
 
   private static getClosingMesh = (f: QuadFace, profile: V3[], splitIndex: number, invert: boolean = false): Mesh => ({
     vertices: [...profile, f.v10, f.v00, f.v01, f.v11],

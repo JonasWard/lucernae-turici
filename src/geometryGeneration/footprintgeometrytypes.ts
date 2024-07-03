@@ -1,40 +1,33 @@
-export enum FootprintGeometryTypes {
-  Square,
-  SquareGrid,
-  TriangleGrid,
-  HexGrid,
-  Cylinder,
-  MalculmiusOne,
-}
+import { FootprintCategory } from './footprints/types/footprintCategory';
 
 export interface SquareFootprint {
-  type: FootprintGeometryTypes.Square;
+  type: FootprintCategory.Square;
   size: number;
 }
 
 export interface SquareGridFootprint {
-  type: FootprintGeometryTypes.SquareGrid;
+  type: FootprintCategory.SquareGrid;
   size: number;
   xCount: number;
   yCount: number;
 }
 
 export interface TriangleGridFootprint {
-  type: FootprintGeometryTypes.TriangleGrid;
+  type: FootprintCategory.TriangleGrid;
   size: number;
   xCount: number;
   yCount: number;
 }
 
 export interface HexGridFootprint {
-  type: FootprintGeometryTypes.HexGrid;
+  type: FootprintCategory.HexGrid;
   size: number;
   xCount: number;
   yCount: number;
 }
 
 export interface CylinderFootprint {
-  type: FootprintGeometryTypes.Cylinder;
+  type: FootprintCategory.Cylinder;
   bufferInside: number;
   radius0: number;
   radius1: number;
@@ -44,7 +37,7 @@ export interface CylinderFootprint {
 }
 
 export interface MalculmiusOneFootprint {
-  type: FootprintGeometryTypes.MalculmiusOne;
+  type: FootprintCategory.MalculmiusOne;
   circleRadius: number;
   circleDivisions: number;
   angleSplit: number;

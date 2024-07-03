@@ -1,6 +1,7 @@
 import { ExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/extrusionProfileType';
-import { FloorplanType, FootprintGeometryTypes } from '../../geometryGeneration/footprintgeometrytypes';
 import { ExtrusionCategory } from '../../geometryGeneration/extrusionProfiles/types/extrusionCategory';
+import { FloorplanType } from '../../geometryGeneration/footprintgeometrytypes';
+import { FootprintCategory } from '../../geometryGeneration/footprints/types/footprintCategory';
 import { HeightGenerator, ProcessingMethodType, ProcessingMethods } from '../../geometryGeneration/geometry';
 import { DataDefinition } from '../dataObject';
 import { SemanticValueString } from '../dataSemanticsEnums';
@@ -64,9 +65,9 @@ const extrusionMap = (extrusionType: ExtrusionProfileType, offset: number): [Dat
   }
 };
 
-const floorMap = (floorType: FootprintGeometryTypes, offset: number): [DataEntry[], { [key: string]: number }, DataValues] => {
+const floorMap = (floorType: FootprintCategory, offset: number): [DataEntry[], { [key: string]: number }, DataValues] => {
   switch (floorType) {
-    case FootprintGeometryTypes.Square:
+    case FootprintCategory.Square:
       return [
         [DataToURLFactory.createInt(200, 600)],
         {
@@ -75,7 +76,7 @@ const floorMap = (floorType: FootprintGeometryTypes, offset: number): [DataEntry
         },
         [400],
       ];
-    case FootprintGeometryTypes.SquareGrid:
+    case FootprintCategory.SquareGrid:
       return [
         [DataToURLFactory.createInt(200, 600), DataToURLFactory.createInt(1, 16), DataToURLFactory.createInt(1, 16)],
         {
@@ -86,7 +87,7 @@ const floorMap = (floorType: FootprintGeometryTypes, offset: number): [DataEntry
         },
         [400, 4, 4],
       ];
-    case FootprintGeometryTypes.TriangleGrid:
+    case FootprintCategory.TriangleGrid:
       return [
         [DataToURLFactory.createInt(200, 600), DataToURLFactory.createInt(1, 16), DataToURLFactory.createInt(1, 16)],
         {
@@ -97,7 +98,7 @@ const floorMap = (floorType: FootprintGeometryTypes, offset: number): [DataEntry
         },
         [400, 4, 4],
       ];
-    case FootprintGeometryTypes.HexGrid:
+    case FootprintCategory.HexGrid:
       return [
         [DataToURLFactory.createInt(200, 600), DataToURLFactory.createInt(1, 16), DataToURLFactory.createInt(1, 16)],
         {
@@ -108,7 +109,7 @@ const floorMap = (floorType: FootprintGeometryTypes, offset: number): [DataEntry
         },
         [400, 4, 4],
       ];
-    case FootprintGeometryTypes.Cylinder:
+    case FootprintCategory.Cylinder:
       return [
         [
           DataToURLFactory.createInt(10, 100),
@@ -129,7 +130,7 @@ const floorMap = (floorType: FootprintGeometryTypes, offset: number): [DataEntry
         },
         [50, 200, 300, 150, 50, 20],
       ];
-    case FootprintGeometryTypes.MalculmiusOne:
+    case FootprintCategory.MalculmiusOne:
       return [
         [
           DataToURLFactory.createInt(400, 800),
@@ -288,7 +289,7 @@ export const version0_1ConstructDomainObject = (dataObject: Version0_1Object, ve
       Object.entries(extrusionMap(dataObject.extrusionTypeParameters.type as ExtrusionProfileType, 0)[1]).map(([k, i]) => [k, versionObject.dataPattern[i]])
     ),
     [SemanticValueString.floorTypeParameters]: Object.fromEntries(
-      Object.entries(floorMap(dataObject.floorTypeParameters.type as FootprintGeometryTypes, 0)[1]).map(([k, i]) => [k, versionObject.dataPattern[i]])
+      Object.entries(floorMap(dataObject.floorTypeParameters.type as FootprintCategory, 0)[1]).map(([k, i]) => [k, versionObject.dataPattern[i]])
     ),
     [SemanticValueString.heightMethodParameters]: parseHeightMethodBounds(dataObject, versionObject.namesMap, versionObject.dataPattern),
   };
@@ -304,7 +305,7 @@ export const version0_1ConstructObject = (values: DataValues, versionObject: Ver
       ])
     ) as ExtrusionProfileType,
     floorTypeParameters: Object.fromEntries(
-      Object.entries(floorMap(values[versionObject.namesMap.floorType] as FootprintGeometryTypes, 0)[1]).map(([k]) => [k, values[versionObject.namesMap[k]]])
+      Object.entries(floorMap(values[versionObject.namesMap.floorType] as FootprintCategory, 0)[1]).map(([k]) => [k, values[versionObject.namesMap[k]]])
     ) as unknown as FloorplanType,
     heightMethodParameters: parseHeightMethod(values, versionObject.namesMap),
   };
@@ -345,7 +346,7 @@ export const version0_1DeconstructObject = (dataObject: Version0_1Object): DataV
 
 export const getVersion0_1VersionObject = (
   extrusionType: ExtrusionProfileType = ExtrusionProfileType.Arc,
-  floorType: FootprintGeometryTypes = FootprintGeometryTypes.Cylinder,
+  floorType: FootprintCategory = FootprintCategory.Cylinder,
   heightMethod: ProcessingMethodType = ProcessingMethodType.IncrementalMethod
 ): VersionObject => {
   const [extrusionData, extrusionNamedValues, extrusionDefaultValues] = extrusionMap(extrusionType, version0_1BaseData.length);

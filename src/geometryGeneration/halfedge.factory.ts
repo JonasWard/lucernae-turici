@@ -1,6 +1,6 @@
 import { Vector3 } from '@babylonjs/core';
 import { GeometryBaseData, joinMeshes, polygonToMesh } from './baseGeometry';
-import { FootprintGeometryTypes } from './footprintgeometrytypes';
+import { FootprintCategory } from './footprints/types/footprintCategory';
 import { createShardOfMalculmiusOne } from './geometry';
 import { HalfEdgeMesh } from './geometrytypes';
 import { getHalfEdgeMeshFromMesh, linkingHalfEdges, markFacesWithOneNakedEdge } from './halfedge';
@@ -197,7 +197,7 @@ export abstract class HalfEdgeMeshFactory {
     const footprint = gBD.footprint;
 
     switch (footprint.type) {
-      case FootprintGeometryTypes.Cylinder:
+      case FootprintCategory.Cylinder:
         return HalfEdgeMeshFactory.createCylinder(
           [
             ...(footprint.bufferInside ? [footprint.radius0 - footprint.bufferInside] : []),
@@ -208,15 +208,15 @@ export abstract class HalfEdgeMeshFactory {
           ],
           footprint.segments
         );
-      case FootprintGeometryTypes.Square:
+      case FootprintCategory.Square:
         return HalfEdgeMeshFactory.createGrid(4, footprint.size, 1, 1);
-      case FootprintGeometryTypes.SquareGrid:
+      case FootprintCategory.SquareGrid:
         return HalfEdgeMeshFactory.createGrid(4, footprint.size, footprint.xCount, footprint.yCount);
-      case FootprintGeometryTypes.TriangleGrid:
+      case FootprintCategory.TriangleGrid:
         return HalfEdgeMeshFactory.createGrid(3, footprint.size, footprint.xCount, footprint.yCount);
-      case FootprintGeometryTypes.HexGrid:
+      case FootprintCategory.HexGrid:
         return HalfEdgeMeshFactory.createGrid(6, footprint.size, footprint.xCount, footprint.yCount);
-      case FootprintGeometryTypes.MalculmiusOne:
+      case FootprintCategory.MalculmiusOne:
         const shard = createShardOfMalculmiusOne(footprint, new Vector3(0, 0, 0), 0);
         return getHalfEdgeMeshFromMesh(joinMeshes(shard.map((s) => polygonToMesh(s))));
     }

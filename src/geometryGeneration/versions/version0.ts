@@ -1,5 +1,5 @@
-import { FootprintGeometryTypes } from '../footprintgeometrytypes';
 import { ExtrusionCategory } from '../extrusionProfiles/types/extrusionCategory';
+import { FootprintCategory } from '../footprints/types/footprintCategory';
 import { ProcessingMethodType } from '../geometry';
 import { DataEntryFactory } from '../../urlAsState/factory/factory';
 import { DefinitionArrayObject, ParserForVersion, VersionDefinitionGeneratorParameters } from '../../urlAsState/types/versionParser';
@@ -14,12 +14,12 @@ const version0EnumSemantics = {
     { value: ExtrusionCategory.Ellipse, label: 'Ellipse Extrusion' },
   ],
   [VersionParameterNames.footprintType]: [
-    { value: FootprintGeometryTypes.Square, label: 'Square Footprint' },
-    { value: FootprintGeometryTypes.SquareGrid, label: 'Square Grid Footprint' },
-    { value: FootprintGeometryTypes.TriangleGrid, label: 'Triangle Grid Footprint' },
-    { value: FootprintGeometryTypes.HexGrid, label: 'Hex Grid Footprint' },
-    { value: FootprintGeometryTypes.Cylinder, label: 'Cylinder Footprint' },
-    { value: FootprintGeometryTypes.MalculmiusOne, label: 'Malculmius One Footprint' },
+    { value: FootprintCategory.Square, label: 'Square Footprint' },
+    { value: FootprintCategory.SquareGrid, label: 'Square Grid Footprint' },
+    { value: FootprintCategory.TriangleGrid, label: 'Triangle Grid Footprint' },
+    { value: FootprintCategory.HexGrid, label: 'Hex Grid Footprint' },
+    { value: FootprintCategory.Cylinder, label: 'Cylinder Footprint' },
+    { value: FootprintCategory.MalculmiusOne, label: 'Malculmius One Footprint' },
   ],
   [VersionParameterNames.processingMethodType]: [
     { value: ProcessingMethodType.IncrementalMethod, label: 'Incremental Method' },
@@ -59,18 +59,18 @@ const extrusionTypeParser = (extrusionDataEntry: DataEntry): DefinitionArrayObje
 
 const footprintTypeParser = (footprintDataEntry: DataEntry): DefinitionArrayObject => {
   switch (footprintDataEntry.value) {
-    case FootprintGeometryTypes.Square:
+    case FootprintCategory.Square:
       return [footprintDataEntry, DataEntryFactory.createFloat(50, 40, 120, 0, VersionParameterNames.size)];
-    case FootprintGeometryTypes.SquareGrid:
-    case FootprintGeometryTypes.TriangleGrid:
-    case FootprintGeometryTypes.HexGrid:
+    case FootprintCategory.SquareGrid:
+    case FootprintCategory.TriangleGrid:
+    case FootprintCategory.HexGrid:
       return [
         footprintDataEntry,
         DataEntryFactory.createFloat(20, 8, 120, 0, VersionParameterNames.size),
         DataEntryFactory.createInt(3, 1, 20, VersionParameterNames.xCount),
         DataEntryFactory.createInt(3, 1, 20, VersionParameterNames.yCount),
       ];
-    case FootprintGeometryTypes.Cylinder:
+    case FootprintCategory.Cylinder:
       return [
         footprintDataEntry,
         DataEntryFactory.createFloat(2, 0, 10, 1, VersionParameterNames.bufferInside),
@@ -81,7 +81,7 @@ const footprintTypeParser = (footprintDataEntry: DataEntry): DefinitionArrayObje
         DataEntryFactory.createInt(5, 3, 50, VersionParameterNames.segments),
       ];
 
-    case FootprintGeometryTypes.MalculmiusOne:
+    case FootprintCategory.MalculmiusOne:
       return [
         footprintDataEntry,
         DataEntryFactory.createFloat(35, 10, 80, 1, VersionParameterNames.circleRadius),
@@ -172,7 +172,7 @@ const version0objectGenerationDescriptor: VersionDefinitionGeneratorParameters =
   ],
   [
     VersionParameterNames.footprint,
-    DataEntryFactory.createEnum(FootprintGeometryTypes.MalculmiusOne, getMax(VersionParameterNames.footprintType), VersionParameterNames.footprintType),
+    DataEntryFactory.createEnum(FootprintCategory.MalculmiusOne, getMax(VersionParameterNames.footprintType), VersionParameterNames.footprintType),
     footprintTypeParser,
   ],
   [

@@ -78,6 +78,11 @@ export class V3 {
     });
     return { min, max };
   };
+  public static fromNumbers = (x: number, y?: number, z?: number): V3 => ({
+    x,
+    y: y === undefined ? x : y,
+    z: z === undefined ? (y === undefined ? x : y) : z,
+  });
 }
 
 export class Mesh {

@@ -44,7 +44,47 @@ const polygonsForTriangle = (xCount: number, yCount: number, size: number, shell
   return polygons;
 };
 
-const polygonsForHexagon = (xCount: number, yCount: number, size: number, shell: number): V3[][] => {};
+const shouldBeRenderedHexagon = (ix: number, iy: number, xCount: number, rowCount: number, shell: number): boolean => {
+  // if there is no shell, always render
+  if (shell === 0) return true;
+
+  // checking if part of horizontal shell
+  if (Math.abs(iy) > xCount - shell - 1) return true;
+
+  // if not part of the horizontal shell, we need to check whether part of the vertical shell
+  return indexIncluded(ix, rowCount, shell);
+};
+
+const polygonsForHexagon = (xCount: number, yCount: number, size: number, shell: number): V3[][] => {
+  const xSpacing = size * Math.sqrt(3) * 0.5;
+  const ySpacing = size;
+
+  const origin = V3.fromNumbers(-(xCount * 2 + yCount - 2) * xSpacing, 0, 0);
+
+  // base polygons
+  const polygon = [
+    V3.add(V3.mul(V3.XAxis, xSpacing), V3.mul(V3.YAxis, ySpacing * -0.5)),
+    V3.add(V3.mul(V3.XAxis, xSpacing), V3.mul(V3.YAxis, ySpacing * 0.5)),
+    V3.mul(V3.YAxis, ySpacing),
+    V3.add(V3.mul(V3.XAxis, -xSpacing), V3.mul(V3.YAxis, ySpacing * 0.5)),
+    V3.add(V3.mul(V3.XAxis, -xSpacing), V3.mul(V3.YAxis, ySpacing * -0.5)),
+    V3.mul(V3.YAxis, -ySpacing),
+  ];
+
+  const polygons: V3[][] = [];
+
+  // constructing all
+  for (let iy = 1 - xCount; iy < xCount; iy++) {
+    const rowCount = xCount * 2 - 1 - Math.abs(iy) + yCount;
+    for (let ix = 0; ix < rowCount; ix++) {
+      if (!shouldBeRenderedHexagon(ix, iy, xCount, rowCount, shell)) continue;
+      const basePoint = V3.add(origin, V3.add(V3.mul(V3.XAxis, xSpacing * (ix * 2 + Math.abs(iy))), V3.mul(V3.YAxis, ySpacing * iy * 1.5)));
+      polygons.push(polygon.map((v) => V3.add(v, basePoint)));
+    }
+  }
+
+  return polygons;
+};
 
 const shouldBeRenderedSquare = (ix: number, iy: number, xCount: number, rowCount: number, shell: number): boolean => {
   // if there is no shell, always render

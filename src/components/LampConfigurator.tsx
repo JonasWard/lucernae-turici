@@ -35,7 +35,7 @@ const tryParse = (s: string): SemanticlyNestedDataEntry => {
     return parseUrlMethod(s, parserObjects);
   } catch (e) {
     console.warn(e);
-    const data = getDefaultObject(parserObjects, 0);
+    const data = getDefaultObject(parserObjects, 1);
     return data;
   }
 };
@@ -96,7 +96,7 @@ export const LampConfigurator: React.FC = () => {
           semantics={data}
           name={''} // name is not used in this context
           updateEntry={updateData}
-          versionEnumSemantics={parserObjects[0].versionEnumSemantics}
+          versionEnumSemantics={parserObjects[(data['version'].value as number) ?? 1].versionEnumSemantics}
           activeName={activeName}
           setActiveName={setActiveName}
           displayTypeMap={displayTypeMap}

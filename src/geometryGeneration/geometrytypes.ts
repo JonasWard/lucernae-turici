@@ -1,11 +1,6 @@
 import { V3 } from './v3';
 import { VoxelState } from './voxelComplex.type';
 
-export interface V2 {
-  u: number;
-  v: number;
-}
-
 export interface BaseFrame {
   o: V3;
   x: V3;

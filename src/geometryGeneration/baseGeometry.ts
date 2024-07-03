@@ -1,6 +1,7 @@
 import { Vector3, Mesh as BabylonMesh, VertexData, Scene, TransformNode, Material } from '@babylonjs/core';
 import { getCenterOfHalfEdge, getEndVertexOfHalfEdge, getFaceVertices, getStartVertexOfHalfEdge } from './halfedge';
-import { BaseFrame, HalfEdge, HalfEdgeFace, HalfEdgeMesh, TransformationMatrix, V2 } from './geometrytypes';
+import { BaseFrame, HalfEdge, HalfEdgeFace, HalfEdgeMesh, TransformationMatrix } from './geometrytypes';
+import { V2 } from './v2';
 import { getV3, getVector3, getVertexHash } from './helpermethods';
 import { V3 } from './v3';
 import { FloorplanType } from './footprintgeometrytypes';

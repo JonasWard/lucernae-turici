@@ -104,7 +104,7 @@ const footprintTypeParser = (footprintDataEntry: DataEntry): DefinitionArrayObje
         footprintDataEntry,
         DataEntryFactory.createFloat(20, 8, 120, 0, VersionParameterNames.size),
         DataEntryFactory.createInt(3, 1, 16, VersionParameterNames.xCount),
-        DataEntryFactory.createInt(3, 1, 16, VersionParameterNames.yCount),
+        DataEntryFactory.createInt(0, 0, 8, VersionParameterNames.yCount),
         DataEntryFactory.createEnum(0, 3, VersionParameterNames.shellThickness),
         DataEntryFactory.createFloat(2, 0, 10, 1, VersionParameterNames.bufferInside),
         DataEntryFactory.createFloat(2, 0, 10, 1, VersionParameterNames.bufferOutside),

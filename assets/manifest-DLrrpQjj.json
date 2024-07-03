@@ -1,0 +1,25 @@
+{
+  "short_name": "Lucernae Turici",
+  "name": "Lucernae Turici, your on-line architectural lamp configurator",
+  "icons": [
+    {
+      "src": "lucernae-turici.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "lucernae-turici_192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "lucernae-turici_512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

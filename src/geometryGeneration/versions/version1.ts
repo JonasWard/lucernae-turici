@@ -84,8 +84,8 @@ const extrusionTypeParser = (extrusionDataEntry: DataEntry): DefinitionArrayObje
         DataEntryFactory.createFloat(0.25, 0.01, 0.45, 2, VersionParameterNames.insetBottom),
         DataEntryFactory.createFloat(0.25, 0.01, 0.45, 2, VersionParameterNames.insetSides),
         DataEntryFactory.createFloat(1, 0, 1, 2, VersionParameterNames.pointedness),
-        DataEntryFactory.createFloat(1, 0, 1, 2, VersionParameterNames.divisionPointedness),
-        DataEntryFactory.createInt(1, 2, 10, VersionParameterNames.divisionCount),
+        DataEntryFactory.createFloat(2, 0, 1, 2, VersionParameterNames.divisionPointedness),
+        DataEntryFactory.createInt(1, 1, 10, VersionParameterNames.divisionCount),
         DataEntryFactory.createInt(1, 1, 32, VersionParameterNames.divisionResolution),
       ];
     default:

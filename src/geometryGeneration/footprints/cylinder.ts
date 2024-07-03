@@ -10,7 +10,7 @@ const hasOuterRadius = (cylinder: CylinderFootprint): boolean => cylinder.radius
 const getRadii = (cylinder: CylinderFootprint): number[] => {
   const filteredRadii = [cylinder.radius0, cylinder.radius1, cylinder.radius2].filter((r) => r >= MINIMUM_INNER_RADIUS);
 
-  const radii = hasInnerRadius(cylinder) ? [filteredRadii[0], filteredRadii[0] - cylinder.bufferInside] : [filteredRadii[0]];
+  const radii = hasInnerRadius(cylinder) ? [filteredRadii[0] - cylinder.bufferInside, filteredRadii[0]] : [filteredRadii[0]];
 
   if (filteredRadii.length > 1) for (const radius of filteredRadii.slice(1)) radii.push(radii[radii.length - 1] + radius);
   if (hasOuterRadius(cylinder)) radii.push(radii[radii.length - 1] + cylinder.bufferOutside);

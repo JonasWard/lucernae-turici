@@ -49,6 +49,11 @@ export const globalDataAttributeMapper: Record<VersionParameterNames, string> = 
   [VersionParameterNames.shapePostProcessingminAmplitude]: 'min',
   [VersionParameterNames.shapePostProcessingperiod]: 'period',
   [VersionParameterNames.shapePostProcessingphaseShift]: 'phaseShift',
+  [VersionParameterNames.pointedness]: 'pointedness',
+  [VersionParameterNames.divisionPointedness]: 'divisionPointedness',
+  [VersionParameterNames.divisionCount]: 'divisionCount',
+  [VersionParameterNames.divisionResolution]: 'divisionResolution',
+  [VersionParameterNames.shellThickness]: 'shellThickness',
 };
 
 type NestedValue = { [key: string]: number | boolean | NestedValue };

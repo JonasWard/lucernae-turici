@@ -1,19 +1,19 @@
 {
-  "short_name": "Para Slim Shady",
-  "name": "Para Slim Shady, your on-line architectural lamp configurator",
+  "short_name": "Lucernae Turici",
+  "name": "Lucernae Turici, your on-line architectural lamp configurator",
   "icons": [
     {
-      "src": "para-slim-shady.ico",
+      "src": "lucernae-turici.ico",
       "sizes": "64x64",
       "type": "image/x-icon"
     },
     {
-      "src": "para-slim-shady_192.png",
+      "src": "lucernae-turici_192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "para-slim-shady_512.png",
+      "src": "lucernae-turici_512.png",
       "type": "image/png",
       "sizes": "512x512"
     }

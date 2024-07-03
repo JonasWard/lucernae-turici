@@ -18,26 +18,15 @@ import { getURLForData, parseUrlMethod } from '../urlAsState/objectmap/versionRe
 import { Scene } from '@babylonjs/core';
 import { getHeights } from '../geometryGeneration/geometry';
 
-const displayTypeMap =
-  window.innerHeight < 800
-    ? {
-        ['extrusion']: DisplayType.DRAWER,
-        ['footprint']: DisplayType.DRAWER,
-        ['heights']: DisplayType.DRAWER,
-        ['version']: DisplayType.DRAWER,
-        ['settings']: DisplayType.DRAWER,
-        ['base']: DisplayType.DRAWER,
-        ['shapePostProcessing']: DisplayType.DRAWER,
-      }
-    : {
-        ['extrusion']: DisplayType.POPOVER,
-        ['footprint']: DisplayType.POPOVER,
-        ['heights']: DisplayType.POPOVER,
-        ['version']: DisplayType.POPOVER,
-        ['settings']: DisplayType.POPOVER,
-        ['base']: DisplayType.POPOVER,
-        ['shapePostProcessing']: DisplayType.POPOVER,
-      };
+const displayTypeMap = {
+  ['extrusion']: window.innerHeight < 800 ? DisplayType.DRAWER : DisplayType.POPOVER,
+  ['footprint']: window.innerHeight < 800 ? DisplayType.DRAWER : DisplayType.POPOVER,
+  ['heights']: window.innerHeight < 800 ? DisplayType.DRAWER : DisplayType.POPOVER,
+  ['version']: import.meta.env.DEV ? (window.innerHeight < 800 ? DisplayType.DRAWER : DisplayType.POPOVER) : DisplayType.HIDDEN,
+  ['settings']: window.innerHeight < 800 ? DisplayType.DRAWER : DisplayType.POPOVER,
+  ['base']: window.innerHeight < 800 ? DisplayType.DRAWER : DisplayType.POPOVER,
+  ['shapePostProcessing']: window.innerHeight < 800 ? DisplayType.DRAWER : DisplayType.POPOVER,
+};
 
 const commingSoon = ['shapePostProcessing'];
 

@@ -6,5 +6,4 @@ export type ArcExtrusionProfileType = {
   insetTop: number; // relative value
   insetBottom: number; // relative value
   insetSides: number; // relative value
-  pointedness?: number; // relative value
 };

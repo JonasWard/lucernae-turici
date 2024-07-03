@@ -6,5 +6,4 @@ export type EllipseExtrusionProfileType = {
   insetTop: number; // realtive value
   insetBottom: number; // realtive value
   insetSides: number; // realtive value
-  pointedness?: number; // relative value
 };

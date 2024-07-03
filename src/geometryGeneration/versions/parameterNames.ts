@@ -6,6 +6,10 @@ export enum VersionParameterNames {
   insetTop = 'insetTop',
   insetBottom = 'insetBottom',
   insetSides = 'insetSides',
+  pointedness = 'pointedness',
+  divisionPointedness = 'divisionPointedness',
+  divisionCount = 'divisionCount',
+  divisionResolution = 'divisionResolution',
   footprint = 'footprint', // footprint
   footprintType = 'footprintType',
   size = 'size',
@@ -23,6 +27,7 @@ export enum VersionParameterNames {
   offsetA = 'offsetA',
   offsetB = 'offsetB',
   innerRadius = 'innerRadius',
+  shellThickness = 'shellThickness',
   heights = 'heights', // heights
   heightProcessingMethod = 'heightProcessingMethod',
   baseHeight = 'baseHeight',

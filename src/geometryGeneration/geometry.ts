@@ -116,17 +116,21 @@ const getIncrementalMethod =
 export const getHeights = (heightGenerator: HeightGenerator): number[] => {
   const heights: number[] = [];
 
+  const hasBaseHeight = heightGenerator.hasOwnProperty('baseHeight');
+
+  const baseHeight = hasBaseHeight ? (heightGenerator as AbsoluteHeightGenerator).baseHeight : 1;
+
   switch (heightGenerator.method.type) {
     case ProcessingMethodType.None:
-      heights.push(...Array.from({ length: heightGenerator.storyCount }, () => heightGenerator.baseHeight));
+      heights.push(...Array.from({ length: heightGenerator.storyCount }, () => baseHeight));
       break;
     case ProcessingMethodType.IncrementalMethod:
       const incrementalMethod = getIncrementalMethod(heightGenerator.method);
-      heights.push(...Array.from({ length: heightGenerator.storyCount }, (_, i) => incrementalMethod(i) + heightGenerator.baseHeight));
+      heights.push(...Array.from({ length: heightGenerator.storyCount }, (_, i) => incrementalMethod(i) + baseHeight));
       break;
     case ProcessingMethodType.Sin:
       const sineMethod = getSineMethod(heightGenerator.method);
-      heights.push(...Array.from({ length: heightGenerator.storyCount }, (_, i) => sineMethod(i) * heightGenerator.baseHeight));
+      heights.push(...Array.from({ length: heightGenerator.storyCount }, (_, i) => sineMethod(i) * baseHeight));
       break;
   }
 
@@ -138,7 +142,9 @@ export const getHeights = (heightGenerator: HeightGenerator): number[] => {
     incrementalHeights.push(height);
   });
 
-  return incrementalHeights;
+  if (hasBaseHeight) return incrementalHeights;
+  const scaleValue = (heightGenerator as RelativeHeightGenerator).totalHeight / incrementalHeights[incrementalHeights.length - 1];
+  return incrementalHeights.map((h) => h * scaleValue);
 };
 
 export type MalculmiusGeometryType = Malculmiuses.One;

@@ -4,7 +4,7 @@ import { BaseFrame, HalfEdge, HalfEdgeFace, HalfEdgeMesh, TransformationMatrix }
 import { V2 } from './v2';
 import { getV3, getVector3, getVertexHash } from './helpermethods';
 import { V3 } from './v3';
-import { FloorplanType } from './footprintgeometrytypes';
+import { FloorplanType } from './footprints/types/footprintgeometrytypes';
 import { HeightGenerator, getHeights } from './geometry';
 import { MaterialFactory } from './materialFactory';
 import { ExtrusionProfileType } from './extrusionProfiles/types/extrusionProfileType';

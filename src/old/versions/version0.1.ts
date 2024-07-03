@@ -1,6 +1,6 @@
 import { ExtrusionProfileType } from '../../geometryGeneration/extrusionProfiles/types/extrusionProfileType';
 import { ExtrusionCategory } from '../../geometryGeneration/extrusionProfiles/types/extrusionCategory';
-import { FloorplanType } from '../../geometryGeneration/footprintgeometrytypes';
+import { FloorplanType } from '../../geometryGeneration/footprints/types/footprintgeometrytypes';
 import { FootprintCategory } from '../../geometryGeneration/footprints/types/footprintCategory';
 import { HeightGenerator, ProcessingMethodType, ProcessingMethods } from '../../geometryGeneration/geometry';
 import { DataDefinition } from '../dataObject';

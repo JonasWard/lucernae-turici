@@ -1,6 +1,6 @@
 import { Vector3 } from '@babylonjs/core';
 import { V3 } from './v3';
-import { MalculmiusOneFootprint } from './footprintgeometrytypes';
+import { MalculmiusOneFootprint } from './footprints/types/malcolmiusOne';
 
 export enum Malculmiuses {
   One = 5,

@@ -6,7 +6,7 @@ import { FaRegSquareFull, FaRegCircle } from 'react-icons/fa6';
 import { PiCubeFocusFill, PiRainbowLight, PiStackPlusFill, PiWaveSine } from 'react-icons/pi';
 import { BsFillGrid3X3GapFill } from 'react-icons/bs';
 import { TbCylinder, TbHexagonalPrism, TbHexagons, TbSum } from 'react-icons/tb';
-import { GiColumnVase, GiFootprint, GiPoolTriangle } from 'react-icons/gi';
+import { GiArabicDoor, GiBridge, GiColumnVase, GiFootprint, GiPoolTriangle } from 'react-icons/gi';
 import { MdFormatListNumbered } from 'react-icons/md';
 
 export interface IconRendererProps {
@@ -52,6 +52,10 @@ export const getIconForKey = (
       return { mainIcon: <PiRainbowLight size={size} /> };
     case 'Ellipse Extrusion':
       return { mainIcon: <FaRegCircle size={size} /> };
+    case 'Gothic Arc Extrusion':
+      return { mainIcon: <GiBridge size={size} /> };
+    case 'Nested Arc Extrusion':
+      return { mainIcon: <GiArabicDoor size={size} /> };
     case 'Square Footprint':
       return { mainIcon: <FaVectorSquare size={size} /> };
     case 'Square Grid Footprint':
@@ -74,6 +78,12 @@ export const getIconForKey = (
       return { mainIcon: <PiStackPlusFill size={size} /> };
     case 'alpha':
       return { mainIcon: 'α' };
+    case 'beta':
+      return { mainIcon: 'β' };
+    case 'gamma':
+      return { mainIcon: 'γ' };
+    case 'delta':
+      return { mainIcon: 'δ' };
     case 'settings':
       return { mainIcon: <FaCog size={size} /> };
     case 'version':

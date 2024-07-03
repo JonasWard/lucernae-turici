@@ -33,6 +33,12 @@ const version1EnumSemantics = {
     { value: ProcessingMethodType.Sin, label: 'Sin Method' },
     { value: ProcessingMethodType.None, label: 'None Method' },
   ],
+  [VersionParameterNames.shellThickness]: [
+    { value: 0, label: 'Massive' },
+    { value: 1, label: '1 Layer' },
+    { value: 2, label: '2 Layers' },
+    { value: 3, label: '3 Layers' },
+  ],
   [VersionParameterNames.version]: Versions,
 };
 

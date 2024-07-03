@@ -1,13 +1,14 @@
 import React, { ReactNode } from 'react';
 import { DataType } from '../../../urlAsState/enums/dataTypes';
 import { CiLineHeight } from 'react-icons/ci';
-import { FaArchway, FaCog, FaVectorSquare } from 'react-icons/fa';
+import { FaArchway, FaCog, FaRegSquare, FaSquareFull, FaVectorSquare } from 'react-icons/fa';
 import { FaRegSquareFull, FaRegCircle } from 'react-icons/fa6';
 import { PiCubeFocusFill, PiRainbowLight, PiStackPlusFill, PiWaveSine } from 'react-icons/pi';
 import { BsFillGrid3X3GapFill } from 'react-icons/bs';
 import { TbCylinder, TbHexagonalPrism, TbHexagons, TbSum } from 'react-icons/tb';
 import { GiArabicDoor, GiBridge, GiColumnVase, GiFootprint, GiPoolTriangle } from 'react-icons/gi';
-import { MdFormatListNumbered } from 'react-icons/md';
+import { MdFormatListNumbered, MdOutlineLayers } from 'react-icons/md';
+import { FiLayers } from 'react-icons/fi';
 
 export interface IconRendererProps {
   name: string;
@@ -92,6 +93,14 @@ export const getIconForKey = (
       return { mainIcon: <GiColumnVase size={size} /> };
     case 'shapePostProcessing':
       return { mainIcon: <PiCubeFocusFill size={size} /> };
+    case 'Massive':
+      return { mainIcon: <FaSquareFull size={size} /> };
+    case '1 Layer':
+      return { mainIcon: <FaRegSquare size={size} /> };
+    case '2 Layers':
+      return { mainIcon: <MdOutlineLayers size={size} /> };
+    case '3 Layers':
+      return { mainIcon: <FiLayers size={size} /> };
     default:
       return { mainIcon: name };
   }

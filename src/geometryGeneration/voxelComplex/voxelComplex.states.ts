@@ -1,6 +1,8 @@
-import { V3 } from './v3';
+import { V3 } from '../v3';
 import { getCenterOfVoxel } from './voxelComplex';
-import { Voxel, VoxelComplex, VoxelInternalFaceState, VoxelState } from './voxelComplex.type';
+import { Voxel, VoxelComplex } from './type/voxelComplex';
+import { VoxelInternalFaceState } from './type/voxelInternalFaceState';
+import { VoxelState } from './type/voxelState';
 
 const numberAsVoxelState = (n: number) => {
   if (n < 1) return VoxelState.NONE;

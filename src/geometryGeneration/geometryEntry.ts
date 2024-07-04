@@ -1,8 +1,8 @@
 import { Mesh, Scene, TransformNode } from '@babylonjs/core';
 import { GeometryBaseData, renderHalfEdge } from './baseGeometry';
-import { VoxelComplexMeshArtist, getMeshRepresentationOfVoxelComplexGraph } from './voxelComplex.artists';
-import { VoxelFactory } from './voxelComplex.factory';
-import { getHalfEdgeMeshForVoxelEnclosure } from './voxelComplex';
+import { VoxelComplexMeshArtist, getMeshRepresentationOfVoxelComplexGraph } from './voxelComplex/voxelComplex.artists';
+import { VoxelFactory } from './voxelComplex/voxelComplex.factory';
+import { getHalfEdgeMeshForVoxelEnclosure } from './voxelComplex/voxelComplex';
 import { HalfEdgeMeshRenderer } from './halfedge.artists';
 import { HalfEdgeMeshFactory } from './halfedge.factory';
 import { MaterialFactory } from './materialFactory';

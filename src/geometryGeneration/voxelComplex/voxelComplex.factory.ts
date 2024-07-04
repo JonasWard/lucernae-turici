@@ -1,11 +1,12 @@
-import { BaseFrameFactory, GeometryBaseData, WorldXY, getFrameToFrameTransformation } from './baseGeometry';
-import { getHeights } from './geometry';
-import { BaseFrame, HalfEdge, HalfEdgeMesh } from './geometrytypes';
-import { getFaceEdges, markFacesWithOneNakedEdge } from './halfedge';
-import { HalfEdgeMeshFactory } from './halfedge.factory';
-import { getRandomUUID } from './helpermethods';
-import { V3 } from './v3';
-import { VoxelComplex, Voxel, VoxelState } from './voxelComplex.type';
+import { BaseFrameFactory, GeometryBaseData, WorldXY, getFrameToFrameTransformation } from '../baseGeometry';
+import { getHeights } from '../geometry';
+import { BaseFrame, HalfEdge, HalfEdgeMesh } from '../geometrytypes';
+import { getFaceEdges, markFacesWithOneNakedEdge } from '../halfedge';
+import { HalfEdgeMeshFactory } from '../halfedge.factory';
+import { getRandomUUID } from '../helpermethods';
+import { V3 } from '../v3';
+import { VoxelComplex, Voxel } from './type/voxelComplex';
+import { VoxelState } from './type/voxelState';
 
 export class VoxelFactory {
   public static simpleExtrusion = (vs: V3[], dir: V3): VoxelComplex => {

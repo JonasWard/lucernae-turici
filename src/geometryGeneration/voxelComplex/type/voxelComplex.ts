@@ -8,20 +8,8 @@
 // the others go clockwise around the axis defined by the center point of the top and bottom face during construction
 // the neighbourmap is the map that gives for every face i the neighbouring cell id and the corresponding face on the other cell or null (no neighbour)
 
-import { V3 } from './v3';
-
-export enum VoxelState {
-  NONE = 'NONE',
-  MASSIVE = 'MASSIVE',
-  OPEN = 'OPEN',
-  ONEDIRECTION = 'ONEDIRECTION',
-}
-
-export enum VoxelInternalFaceState {
-  NONE = 'NONE',
-  OPEN = 'OPEN',
-  CLOSED = 'CLOSED',
-}
+import { V3 } from '../../v3';
+import { VoxelState } from './voxelState';
 
 export interface Voxel {
   id: string;

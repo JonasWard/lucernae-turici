@@ -1,11 +1,11 @@
 import { Scene, MeshBuilder, Vector3, Material, Mesh as BabylonMesh, TransformNode } from '@babylonjs/core';
-import { GeometryBaseData } from './baseGeometry';
-import { ExtrusionProfileType } from './extrusionProfiles/types/extrusionProfileType';
-import { V3, Mesh } from './v3';
-import { VoxelComplex, Voxel } from './voxelComplex.type';
+import { GeometryBaseData } from '../baseGeometry';
+import { ExtrusionProfileType } from '../extrusionProfiles/types/extrusionProfileType';
+import { V3, Mesh } from '../v3';
+import { VoxelComplex, Voxel } from './type/voxelComplex';
 import { getCenterOfVoxelFace, getCenterOfVoxel } from './voxelComplex';
 import { VoxelMesh } from './voxelComplex.mesh';
-import { MaterialFactory } from './materialFactory';
+import { MaterialFactory } from '../materialFactory';
 
 const vSize = 0.02;
 const vHSize = vSize * 0.2;

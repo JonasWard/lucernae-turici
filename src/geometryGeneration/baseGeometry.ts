@@ -1,8 +1,8 @@
-import { Vector3, Mesh as BabylonMesh, VertexData, Scene, TransformNode, Material } from '@babylonjs/core';
+import { Vector3, Mesh as BabylonMesh, VertexData, Scene, TransformNode } from '@babylonjs/core';
 import { getCenterOfHalfEdge, getEndVertexOfHalfEdge, getFaceVertices, getStartVertexOfHalfEdge } from './halfedge';
-import { BaseFrame, HalfEdge, HalfEdgeFace, HalfEdgeMesh, TransformationMatrix } from './geometrytypes';
+import { BaseFrame, HalfEdge, HalfEdgeMesh, TransformationMatrix } from './geometrytypes';
 import { V2 } from './v2';
-import { getV3, getVector3, getVertexHash } from './helpermethods';
+import { getV3, getVector3 } from './helpermethods';
 import { V3 } from './v3';
 import { FootprintType } from './footprints/types/footprintgeometrytypes';
 import { HeightGenerator, getHeights } from './geometry';
@@ -43,34 +43,6 @@ export const getHeightAndRadius = (gBD: GeometryBaseData): [number, number] => {
 };
 
 const UNIT_SCALING = 1;
-
-export const joinMeshes = (meshes: Mesh[]): Mesh => {
-  const vertices: Vector3[] = [];
-  const vertexMap: Map<string, number> = new Map();
-
-  const faces: Face[] = [];
-
-  meshes.forEach((mesh) => {
-    const localHashes: string[] = [];
-    mesh.vertices.forEach((v) => {
-      const hash = getVertexHash(v);
-      if (!vertexMap.has(hash)) {
-        vertices.push(v);
-        vertexMap.set(hash, vertices.length - 1);
-      }
-      localHashes.push(hash);
-    });
-
-    mesh.faces.forEach((face) => faces.push(face.map((i) => vertexMap.get(localHashes[i]) as number) as Face));
-  });
-
-  return { vertices, faces };
-};
-
-export const polygonToMesh = (polygon: Vector3[]): Mesh => ({
-  faces: [[...Array(polygon.length).keys()]],
-  vertices: polygon,
-});
 
 export enum HalfEdgeRenderMethod {
   Flat = 'flat',

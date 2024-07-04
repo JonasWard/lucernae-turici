@@ -1,10 +1,10 @@
-import { Scene, TransformNode, Vector3 } from '@babylonjs/core';
-import { GeometryBaseData, joinMeshes, polygonToMesh } from './baseGeometry';
+import { Scene, TransformNode } from '@babylonjs/core';
+import { GeometryBaseData } from './baseGeometry';
 import { HalfEdgeMeshFactory } from './halfedge.factory';
 import { getBoundariesForHalfEdgeMesh, getHalfEdgeMeshFromMesh } from './halfedge';
-import { V3 } from './v3';
-import { VoxelFactory } from './voxelComplex.factory';
-import { getHalfEdgeMeshForVoxelEnclosure } from './voxelComplex';
+import { Mesh, V3 } from './v3';
+import { VoxelFactory } from './voxelComplex/voxelComplex.factory';
+import { getHalfEdgeMeshForVoxelEnclosure } from './voxelComplex/voxelComplex';
 import { MaterialFactory } from './materialFactory';
 import { HalfEdgeMeshRenderer } from './halfedge.artists';
 
@@ -45,10 +45,9 @@ export const constructBase = (gBD: GeometryBaseData, scene: Scene, rootNode: Tra
     polygons.push(vs);
   });
 
-  const heMeshWithHoles = getHalfEdgeMeshFromMesh(
-    joinMeshes(polygons.map((s) => polygonToMesh(s.map((v) => new Vector3(v.x, v.y, v.z - gBD.base.sideHeight)))))
-  );
-  const dir = V3.mul(V3.ZAxis, gBD.base.sideHeight);
+  const heMeshWithHoles = getHalfEdgeMeshFromMesh(Mesh.joinMeshes(polygons.map((s) => Mesh.makeFromPolygon(s.reverse()))));
+
+  const dir = V3.mul(V3.ZAxis, -gBD.base.sideHeight);
   const voxelComplex = VoxelFactory.extrudeHalfEdgeMesh(heMeshWithHoles, dir);
   const enclosureMesh = getHalfEdgeMeshForVoxelEnclosure(voxelComplex);
 

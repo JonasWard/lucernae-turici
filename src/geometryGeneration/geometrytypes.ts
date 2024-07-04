@@ -1,5 +1,5 @@
 import { V3 } from './v3';
-import { VoxelState } from './voxelComplex.type';
+import { VoxelState } from './voxelComplex/type/voxelState';
 
 export interface BaseFrame {
   o: V3;

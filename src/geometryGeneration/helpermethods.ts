@@ -1,4 +1,4 @@
-import { Color3, Vector2, Vector3 } from '@babylonjs/core';
+import { Vector2, Vector3 } from '@babylonjs/core';
 import { V2 } from './v2';
 import { V3 } from './v3';
 

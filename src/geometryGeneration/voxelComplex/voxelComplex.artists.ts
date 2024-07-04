@@ -3,9 +3,11 @@ import { GeometryBaseData } from '../baseGeometry';
 import { ExtrusionProfileType } from '../extrusionProfiles/types/extrusionProfileType';
 import { V3, Mesh } from '../v3';
 import { VoxelComplex, Voxel } from './type/voxelComplex';
-import { getCenterOfVoxelFace, getCenterOfVoxel } from './voxelComplex';
+import { getCenterOfVoxelFace, getCenterOfVoxel, getHalfEdgeMeshForVoxel } from './voxelComplex';
 import { VoxelMesh } from './voxelComplex.mesh';
 import { MaterialFactory } from '../materialFactory';
+import { VoxelState } from './type/voxelState';
+import { HalfEdgeMeshRenderer } from '../halfedge.artists';
 
 const vSize = 0.02;
 const vHSize = vSize * 0.2;
@@ -74,14 +76,7 @@ const getAllRepresentativeMeshForVoxelFace = (voxel: Voxel, vX: VoxelComplex, sc
   }
 };
 
-export const applyMalcolmiusLogic = (vX: VoxelComplex, extrusionProfile: ExtrusionProfileType, scene: Scene) => {};
-
-// to parse a single voxel, go face by face and for every face, come up with the mesh logic that applies based on the neigbouring voxel
-// for now we only consider
-
-export const voxelToMesh = (voxel: Voxel, vX: VoxelComplex, geometryParsing: any) => {
-  // voxel by voxel parsing
-};
+const voxelToMesh = (voxel: Voxel, vX: VoxelComplex, insetPercentage: number) => getHalfEdgeMeshForVoxel(voxel, vX, 1 - insetPercentage);
 
 export const getMeshRepresentationOfVoxelComplexGraph = (vX: VoxelComplex, scene: Scene, rootNode?: TransformNode, scale: number = 1) => {
   Object.values(vX.vertices).map((v) => getMeshForVertex(v, scene, getColorForVertex(v), rootNode, scale));
@@ -94,6 +89,8 @@ export const getMeshRepresentationOfVoxelComplexGraph = (vX: VoxelComplex, scene
 export class VoxelComplexMeshArtist {
   public static defaultMaterial = (scene: Scene) => MaterialFactory.getLampMaterial(scene);
 
+  public static stateRenderInset = 0.9;
+
   public static render = (vX: VoxelComplex, scene: Scene, gBD: GeometryBaseData, material?: Material, name = 'lampGeometry') => {
     const mesh = VoxelMesh.getMeshForVoxelComplex(vX, gBD);
 
@@ -103,5 +100,13 @@ export class VoxelComplexMeshArtist {
     babylonMesh.material = material ?? VoxelComplexMeshArtist.defaultMaterial(scene);
 
     return babylonMesh;
+  };
+
+  public static stateRender = (vX: VoxelComplex, rootNode: TransformNode, scene: Scene) => {
+    Object.values(vX.voxels).forEach((v, i) => {
+      const heMesh = getHalfEdgeMeshForVoxel(v, vX, VoxelComplexMeshArtist.stateRenderInset);
+      const material = MaterialFactory.getVoxelStateMaterial(scene, v.state);
+      HalfEdgeMeshRenderer.render(heMesh, scene, material, `stateRender-${i}`).parent = rootNode;
+    });
   };
 }

@@ -121,9 +121,10 @@ export class VoxelMesh {
 
   public static getMeshForVoxel = (voxel: Voxel, vX: VoxelComplex, uvs: V2[], splitIndex: number): Mesh => {
     switch (voxel.state) {
-      case VoxelState.MASSIVE:
+      case VoxelState.MASSIVE: // ToDo implement the massive voxel, will not work with open for now
       case VoxelState.OPEN:
         return VoxelMesh.getMeshForVoxelStandard(voxel, vX, uvs, splitIndex);
+      case VoxelState.UNDEFINED:
       case VoxelState.NONE:
         return { vertices: [], faces: [] };
       case VoxelState.ONEDIRECTION:

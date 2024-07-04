@@ -1,8 +1,11 @@
-import { Scene, Material, VertexData, Mesh } from '@babylonjs/core';
+import { Scene, Material, VertexData, Mesh, TransformNode } from '@babylonjs/core';
+import { Mesh as V3Mesh } from './v3';
 import { HalfEdgeFace, HalfEdgeMesh } from './geometrytypes';
 import { V3 } from './v3';
-import { getFaceEdges, getFaceNormal, getVerticesFacesMap } from './halfedge';
+import { getFaceEdges, getFaceNormal, getFaceVertices, getVerticesFacesMap } from './halfedge';
 import { MaterialFactory } from './materialFactory';
+import { VoxelState } from './voxelComplex/type/voxelState';
+import { HalfEdgeMeshFactory } from './halfedge.factory';
 
 export class HalfEdgeMeshRenderer {
   static getNormalsForFacesMap = (heMesh: HalfEdgeMesh): { [k: string]: V3 } =>
@@ -78,5 +81,19 @@ export class HalfEdgeMeshRenderer {
     babylonMesh.material = material ?? MaterialFactory.getDefaultMaterial(scene);
 
     return babylonMesh;
+  };
+
+  public static renderState = (mesh: HalfEdgeMesh, scene: Scene, rootNode: TransformNode, name: string = 'halfEdgeStateMesh') => {
+    Object.values(mesh.faces).forEach((face, i) => {
+      const vs = getFaceVertices(face, mesh);
+      const faceCenter = V3.getCenter(vs);
+      const vertices = vs.map((v) => V3.add(faceCenter, V3.mul(V3.sub(v, faceCenter), 0.9)));
+      HalfEdgeMeshRenderer.render(
+        HalfEdgeMeshFactory.createHalfEdgeMeshFromMesh(V3Mesh.makeFromPolygon(vertices)),
+        scene,
+        MaterialFactory.getVoxelStateMaterial(scene, face.metaData?.voxelState ?? VoxelState.OPEN),
+        `${name}-${i}`
+      ).parent = rootNode;
+    });
   };
 }

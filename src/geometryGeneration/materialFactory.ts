@@ -3,6 +3,8 @@ import { MaterialOptions } from './material';
 import { VIRIDIS } from './materialColors/viridis';
 import { TWILIGHT } from './materialColors/twilight';
 import { PLASMA } from './materialColors/plasma';
+import { VoxelState } from './voxelComplex/type/voxelState';
+import { maxStateSize } from './voxelComplex/voxelComplex.states';
 
 export enum MaterialUUIDColorStates {
   RED = 'Red',
@@ -97,6 +99,11 @@ export class MaterialFactory {
     }
   };
 
+  private static getColorForNumber = (n: number, max?: number): string => {
+    const localValue = Math.min(Math.max(max ? n / max : n, 0), 1);
+    return Math.floor(MaterialFactory.maxValue * localValue).toString(16);
+  };
+
   private static lampMaterialOptions: MaterialOptions = {
     name: 'lampMaterial',
     emissiveColor: new Color3(0.67, 0.64, 0.49),
@@ -132,4 +139,9 @@ export class MaterialFactory {
   };
 
   public static getWireframeMaterial = (scene: Scene): Material => MaterialFactory.create(scene, MaterialFactory.wireframeMaterialOptions);
+
+  public static getVoxelStateMaterial = (scene: Scene, state: VoxelState): Material => {
+    const uuid = MaterialFactory.getColorForNumber(state, maxStateSize);
+    return MaterialFactory.getMaterialForUuid(scene, uuid, 'voxelStateMaterial-', false);
+  };
 }

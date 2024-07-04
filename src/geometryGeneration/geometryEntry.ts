@@ -7,6 +7,7 @@ import { HalfEdgeMeshRenderer } from './halfedge.artists';
 import { HalfEdgeMeshFactory } from './halfedge.factory';
 import { MaterialFactory } from './materialFactory';
 import { constructBase } from './base';
+import { FootprintFactory } from './footprints/footprintFactory';
 
 export enum RenderMethod {
   NORMAL = 'Normal',
@@ -15,6 +16,8 @@ export enum RenderMethod {
   HALFEDGESENCLOSURE = 'HalfEdgesEnclosure',
   NEIGHHBOURMAP = 'Neighbourmap',
   BASEMESH = 'BaseMesh',
+  BASESTATE = 'BaseState',
+  VOXELCOMPLEXSTATE = 'VoxelComplexState',
 }
 
 export const LAMP_MESH = 'lampMesh';
@@ -50,6 +53,13 @@ export const AddLampGeometryToScene = (
     case RenderMethod.BASEMESH:
       const footprintHeMesh = HalfEdgeMeshFactory.getFootprintFromGeometryBaseData(lampGeometry);
       Object.values(footprintHeMesh.halfEdges).map((he) => renderHalfEdge(he, footprintHeMesh, scene, rootNode, false));
+      return rootNode;
+    case RenderMethod.BASESTATE:
+      const footprintMesh = HalfEdgeMeshFactory.getFootprintFromGeometryBaseData(lampGeometry);
+      HalfEdgeMeshRenderer.renderState(footprintMesh, scene, rootNode);
+      return rootNode;
+    case RenderMethod.VOXELCOMPLEXSTATE:
+      VoxelComplexMeshArtist.stateRender(voxelComplex, rootNode, scene);
       return rootNode;
   }
 };

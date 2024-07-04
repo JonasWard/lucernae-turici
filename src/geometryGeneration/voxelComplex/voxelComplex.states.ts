@@ -24,3 +24,6 @@ export const isFaceClosed = (vState: VoxelState, oVState: VoxelState): boolean =
 // simple method that goes through a voxel complex and based on the position of its voxels activates / deactivates the voxel
 export const setVoxelComplexState = (vX: VoxelComplex, sdfMethod: (v: V3) => number) =>
   Object.values(vX.voxels).forEach((v) => (v.state = numberAsVoxelState(sdfMethod(getCenterOfVoxel(v, vX)))));
+
+const getStateIndexes = Object.values(VoxelState).slice(Object.values(VoxelState).length / 2) as number[];
+export const maxStateSize = Math.max(...getStateIndexes);

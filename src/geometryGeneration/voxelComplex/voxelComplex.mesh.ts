@@ -7,8 +7,8 @@ import { V2 } from '../v2';
 import { getHalfEdgeMeshFromMesh } from '../halfedge';
 import { QuadFace, V3, Mesh } from '../v3';
 import { gefFace, getCenterOfVoxelFace, isFaceInVoxelClosed } from './voxelComplex';
-import { Voxel, VoxelComplex } from './type/voxelComplex';
-import { VoxelState } from './type/voxelState';
+import { Voxel, VoxelComplex } from './types/voxelComplex';
+import { VoxelState } from './types/voxelState';
 import { ExtrusionProfileFactory } from '../extrusionProfiles/extrusionProfileFactory';
 
 // helper interface that defines the four corner vertices of a frame to be filled in with the frames of the voxel

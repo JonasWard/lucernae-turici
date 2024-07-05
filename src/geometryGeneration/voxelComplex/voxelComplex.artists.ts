@@ -2,11 +2,11 @@ import { Scene, MeshBuilder, Vector3, Material, Mesh as BabylonMesh, TransformNo
 import { GeometryBaseData } from '../baseGeometry';
 import { ExtrusionProfileType } from '../extrusionProfiles/types/extrusionProfileType';
 import { V3, Mesh } from '../v3';
-import { VoxelComplex, Voxel } from './type/voxelComplex';
+import { VoxelComplex, Voxel } from './types/voxelComplex';
 import { getCenterOfVoxelFace, getCenterOfVoxel, getHalfEdgeMeshForVoxel } from './voxelComplex';
 import { VoxelMesh } from './voxelComplex.mesh';
 import { MaterialFactory } from '../materialFactory';
-import { VoxelState } from './type/voxelState';
+import { VoxelState } from './types/voxelState';
 import { HalfEdgeMeshRenderer } from '../halfedge.artists';
 
 const vSize = 0.02;

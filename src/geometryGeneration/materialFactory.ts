@@ -3,7 +3,7 @@ import { MaterialOptions } from './material';
 import { VIRIDIS } from './materialColors/viridis';
 import { TWILIGHT } from './materialColors/twilight';
 import { PLASMA } from './materialColors/plasma';
-import { VoxelState } from './voxelComplex/type/voxelState';
+import { VoxelState } from './voxelComplex/types/voxelState';
 import { maxStateSize } from './voxelComplex/voxelComplex.states';
 
 export enum MaterialUUIDColorStates {

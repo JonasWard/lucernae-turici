@@ -4,7 +4,7 @@ import { linkingHalfEdges } from '../halfedge';
 import { getRandomUUID } from '../helpermethods';
 import { V3 } from '../v3';
 import { getNeighbourState, isFaceClosed } from './voxelComplex.states';
-import { VoxelComplex, Voxel } from './type/voxelComplex';
+import { VoxelComplex, Voxel } from './types/voxelComplex';
 
 const getTopFaceIndexes = (v: Voxel): number[] => [...Array(v.n).keys()].map((i) => i + v.n);
 const getBottomFaceIndexes = (v: Voxel): number[] => [...Array(v.n).keys()].reverse();

@@ -1,12 +1,14 @@
-import { BaseFrameFactory, GeometryBaseData, WorldXY, getFrameToFrameTransformation } from '../baseGeometry';
+import { BaseFrameFactory, GeometryBaseData, PreprocessingMethods, WorldXY, getFrameToFrameTransformation } from '../baseGeometry';
 import { getHeights } from '../geometry';
+import { ProcessingMethods } from '../processingMethods/types/processingMethods';
+import { ProcessingMethodCategory } from '../processingMethods/types/processingMethodCategory';
 import { BaseFrame, HalfEdge, HalfEdgeMesh } from '../geometrytypes';
-import { getFaceEdges, markFacesWithOneNakedEdge } from '../halfedge';
+import { getFaceEdges } from '../halfedge';
 import { HalfEdgeMeshFactory } from '../halfedge.factory';
 import { getRandomUUID } from '../helpermethods';
 import { V3 } from '../v3';
-import { VoxelComplex, Voxel } from './type/voxelComplex';
-import { VoxelState } from './type/voxelState';
+import { VoxelComplex, Voxel } from './types/voxelComplex';
+import { VoxelState } from './types/voxelState';
 
 export class VoxelFactory {
   public static simpleExtrusion = (vs: V3[], dir: V3): VoxelComplex => {
@@ -111,9 +113,9 @@ export class VoxelFactory {
 
   public static extrudeHalfEdgeMesh = (heMesh: HalfEdgeMesh, dir: V3): VoxelComplex => {
     // to get all the vertices, we need two maps, the list of all the vertices (also the moved ones) and the map for to which new vertex an old edge corresponds
-    const pairedVertexes: { [id: string]: V3 } = Object.fromEntries(Object.entries(heMesh.vertices).map(([k, v]) => [k, V3.add(v, dir)] as [string, V3]));
-    const topPairedVertexMap: { [id: string]: string } = Object.fromEntries(Object.entries(pairedVertexes).map(([k, v]) => [k, V3.getHash(v)]));
-    const bottomPairedVerexMap: { [id: string]: string } = Object.fromEntries(Object.keys(pairedVertexes).map((k) => [k, k]));
+    const pairedVertexes = Object.fromEntries(Object.entries(heMesh.vertices).map(([k, v]) => [k, V3.add(v, dir)] as [string, V3]));
+    const topPairedVertexMap = Object.fromEntries(Object.entries(pairedVertexes).map(([k, v]) => [k, V3.getHash(v)]));
+    const bottomPairedVerexMap = Object.fromEntries(Object.keys(pairedVertexes).map((k) => [k, k]));
     const vertices = { ...heMesh.vertices, ...Object.fromEntries(Object.entries(pairedVertexes).map(([k, v]) => [topPairedVertexMap[k], v])) };
 
     // for each half edge face, initiliase an id for a voxel
@@ -138,5 +140,22 @@ export class VoxelFactory {
     const heMesh = HalfEdgeMeshFactory.getFootprintFromGeometryBaseData(gBD);
 
     return VoxelFactory.sweepHalfEdgeMesh(heMesh, baseFrames);
+  };
+
+  public static applyPostProcessingToVoxelVertexPositions = (voxelComplex: VoxelComplex, preprocessingMethods: PreprocessingMethods): VoxelComplex => {
+    if (preprocessingMethods.skew.type === ProcessingMethodCategory.None && preprocessingMethods.warp.type === ProcessingMethodCategory.None)
+      return voxelComplex;
+
+    const applyWarpMethod = (v: V3): V3 => {};
+
+    const vertices = Object.values(voxelComplex.vertices).map((v) => {
+      const warpedV = applyWarpMethod(v);
+
+      v.x = warpedV.x;
+      v.y = warpedV.y;
+      v.z = warpedV.z;
+    });
+
+    return voxelComplex;
   };
 }

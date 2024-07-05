@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SemanticlyNestedDataEntry } from '../../../urlAsState/types/semanticlyNestedDataEntry';
 import React from 'react';
-import { DataEntry, DataEntryArray } from '../../../urlAsState/types/dataEntry';
+import { DataEntry, DataEntryArray, VersionDescriptionWithValueType } from '../../../urlAsState/types/dataEntry';
 import { parserObjects } from '../../../geometryGeneration/versions/parserObjects';
 import { getTestStringValues, parseDownNestedDataDescription, parseUrlMethod } from '../../../urlAsState/objectmap/versionReading';
-import { dataBitsStringifier, parseBitsToBase64 } from '../../../urlAsState/parsers/parsers';
+import { dataBitsStringifier } from '../../../urlAsState/parsers/parsers';
 import { DisplayType, SemanticsRenderObject } from '../semantics/SemanticsRenderObject';
 import { getDefaultObject, updateDataEntry } from '../../../urlAsState/objectmap/versionUpdate';
 import { allTests } from '../../../urlAsState/test/dataParserTests';
@@ -71,7 +71,7 @@ const displayTypeMap = {
   ['version']: DisplayType.POPOVER,
   ['settings']: DisplayType.POPOVER,
   ['base']: DisplayType.POPOVER,
-  ['shapePostProcessing']: DisplayType.POPOVER,
+  ['shapePreProcessing']: DisplayType.POPOVER,
 };
 
 const getSecondaryData = (url: string) => {
@@ -129,7 +129,7 @@ export const TestingDataParser: React.FC = () => {
           semantics={data}
           name={''}
           updateEntry={updateData}
-          versionEnumSemantics={parserObjects[0].versionEnumSemantics}
+          versionEnumSemantics={parserObjects[(data.version as VersionDescriptionWithValueType).value].versionEnumSemantics}
           displayTypeMap={displayTypeMap}
           activeName={activeName}
           setActiveName={setActiveName}

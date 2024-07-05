@@ -26,9 +26,10 @@ const displayTypeMap = {
   ['settings']: window.innerHeight < 800 ? DisplayType.DRAWER : DisplayType.POPOVER,
   ['base']: window.innerHeight < 800 ? DisplayType.DRAWER : DisplayType.POPOVER,
   ['shapePostProcessing']: window.innerHeight < 800 ? DisplayType.DRAWER : DisplayType.POPOVER,
+  ['shapePreProcessing']: window.innerHeight < 800 ? DisplayType.DRAWER : DisplayType.POPOVER,
 };
 
-const commingSoon = ['shapePostProcessing'];
+const commingSoon: string[] = ['shapePostProcessing'];
 
 const tryParse = (s: string): SemanticlyNestedDataEntry => {
   try {

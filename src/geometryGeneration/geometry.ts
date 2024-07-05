@@ -1,35 +1,14 @@
 import { Vector3 } from '@babylonjs/core';
 import { V3 } from './v3';
+import { ProcessingMethodCategory } from './processingMethods/types/processingMethodCategory';
+import { NoneMethod } from './processingMethods/types/noneMethod';
+import { IncrementalMethod } from './processingMethods/types/incrementalMethod';
+import { SinMethod } from './processingMethods/types/sinMethod';
+import { ProcessingMethods } from './processingMethods/types/processingMethods';
 
 export enum Malculmiuses {
   One = 5,
 }
-
-export enum ProcessingMethodType {
-  None,
-  IncrementalMethod,
-  Sin,
-}
-
-export type NoneMethod = {
-  type: ProcessingMethodType.None;
-};
-
-export type IncrementalMethod = {
-  type: ProcessingMethodType.IncrementalMethod;
-  total: boolean;
-  angle: number;
-};
-
-export type SinMethod = {
-  type: ProcessingMethodType.Sin;
-  max: number;
-  min: number;
-  period: number;
-  phaseShift: number;
-};
-
-export type ProcessingMethods = NoneMethod | IncrementalMethod | SinMethod;
 
 export type PostProcessingMethods = {
   twist: ProcessingMethods;
@@ -51,16 +30,16 @@ export type AbsoluteHeightGenerator = {
 export type HeightGenerator = AbsoluteHeightGenerator | RelativeHeightGenerator;
 
 export const DEFAULT_PROCESSING_METHODS = {
-  [ProcessingMethodType.None]: {
-    type: ProcessingMethodType.None,
+  [ProcessingMethodCategory.None]: {
+    type: ProcessingMethodCategory.None,
   } as NoneMethod,
-  [ProcessingMethodType.IncrementalMethod]: {
-    type: ProcessingMethodType.IncrementalMethod,
+  [ProcessingMethodCategory.IncrementalMethod]: {
+    type: ProcessingMethodCategory.IncrementalMethod,
     total: false,
     angle: 1.3,
   } as IncrementalMethod,
-  [ProcessingMethodType.Sin]: {
-    type: ProcessingMethodType.Sin,
+  [ProcessingMethodCategory.Sin]: {
+    type: ProcessingMethodCategory.Sin,
     max: 0.5,
     min: 1.5,
     period: 2,
@@ -69,20 +48,20 @@ export const DEFAULT_PROCESSING_METHODS = {
 };
 
 export const DEFAULT_HEIGHT_GENERATORS = {
-  [ProcessingMethodType.None]: {
+  [ProcessingMethodCategory.None]: {
     storyCount: 4,
     baseHeight: 100,
-    method: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.None],
+    method: DEFAULT_PROCESSING_METHODS[ProcessingMethodCategory.None],
   },
-  [ProcessingMethodType.IncrementalMethod]: {
+  [ProcessingMethodCategory.IncrementalMethod]: {
     storyCount: 0,
     baseHeight: 0,
-    method: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.None],
+    method: DEFAULT_PROCESSING_METHODS[ProcessingMethodCategory.None],
   },
-  [ProcessingMethodType.Sin]: {
+  [ProcessingMethodCategory.Sin]: {
     storyCount: 0,
     baseHeight: 0,
-    method: DEFAULT_PROCESSING_METHODS[ProcessingMethodType.None],
+    method: DEFAULT_PROCESSING_METHODS[ProcessingMethodCategory.None],
   },
 };
 
@@ -108,14 +87,14 @@ export const getHeights = (heightGenerator: HeightGenerator): number[] => {
   const baseHeight = hasBaseHeight ? (heightGenerator as AbsoluteHeightGenerator).baseHeight : 1;
 
   switch (heightGenerator.method.type) {
-    case ProcessingMethodType.None:
+    case ProcessingMethodCategory.None:
       heights.push(...Array.from({ length: heightGenerator.storyCount }, () => baseHeight));
       break;
-    case ProcessingMethodType.IncrementalMethod:
+    case ProcessingMethodCategory.IncrementalMethod:
       const incrementalMethod = getIncrementalMethod(heightGenerator.method);
       heights.push(...Array.from({ length: heightGenerator.storyCount }, (_, i) => incrementalMethod(i) + baseHeight));
       break;
-    case ProcessingMethodType.Sin:
+    case ProcessingMethodCategory.Sin:
       const sineMethod = getSineMethod(heightGenerator.method);
       heights.push(...Array.from({ length: heightGenerator.storyCount }, (_, i) => sineMethod(i) * baseHeight));
       break;

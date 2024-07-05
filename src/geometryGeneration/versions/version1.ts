@@ -1,6 +1,6 @@
 import { ExtrusionCategory } from '../extrusionProfiles/types/extrusionCategory';
 import { FootprintCategory } from '../footprints/types/footprintCategory';
-import { ProcessingMethodType } from '../geometry';
+import { ProcessingMethodCategory } from '../processingMethods/types/processingMethodCategory';
 import { DataEntryFactory } from '../../urlAsState/factory/factory';
 import { DefinitionArrayObject, ParserForVersion, VersionDefinitionGeneratorParameters } from '../../urlAsState/types/versionParser';
 import { VersionParameterNames } from './parameterNames';
@@ -24,14 +24,14 @@ const version1EnumSemantics = {
     { value: FootprintCategory.MalculmiusOne, label: 'Malculmius One Footprint' },
   ],
   [VersionParameterNames.processingMethodType]: [
-    { value: ProcessingMethodType.IncrementalMethod, label: 'Incremental Method' },
-    { value: ProcessingMethodType.Sin, label: 'Sin Method' },
-    { value: ProcessingMethodType.None, label: 'None Method' },
+    { value: ProcessingMethodCategory.IncrementalMethod, label: 'Incremental Method' },
+    { value: ProcessingMethodCategory.Sin, label: 'Sin Method' },
+    { value: ProcessingMethodCategory.None, label: 'None Method' },
   ],
   [VersionParameterNames.shapePostProcessingprocessingMethodType]: [
-    { value: ProcessingMethodType.IncrementalMethod, label: 'Incremental Method' },
-    { value: ProcessingMethodType.Sin, label: 'Sin Method' },
-    { value: ProcessingMethodType.None, label: 'None Method' },
+    { value: ProcessingMethodCategory.IncrementalMethod, label: 'Incremental Method' },
+    { value: ProcessingMethodCategory.Sin, label: 'Sin Method' },
+    { value: ProcessingMethodCategory.None, label: 'None Method' },
   ],
   [VersionParameterNames.shellThickness]: [
     { value: 0, label: 'Massive' },
@@ -143,13 +143,13 @@ const heightMethodTypeParser = (heightMethodDataEntry: DataEntry): DefinitionArr
     heightMethodDataEntry,
     (heightMethodDataEntry: DataEntry): DefinitionArrayObject => {
       switch (heightMethodDataEntry.value) {
-        case ProcessingMethodType.IncrementalMethod:
+        case ProcessingMethodCategory.IncrementalMethod:
           return [
             heightMethodDataEntry,
             DataEntryFactory.createFloat(20, 10, 200, -1, VersionParameterNames.total),
             DataEntryFactory.createFloat(5, 0, 15, 2, VersionParameterNames.linearTwist),
           ];
-        case ProcessingMethodType.Sin:
+        case ProcessingMethodCategory.Sin:
           return [
             heightMethodDataEntry,
             DataEntryFactory.createFloat(4, 0, 15, 1, VersionParameterNames.maxAmplitude),
@@ -157,7 +157,7 @@ const heightMethodTypeParser = (heightMethodDataEntry: DataEntry): DefinitionArr
             DataEntryFactory.createFloat(1, 0.2, 200, 1, VersionParameterNames.period),
             DataEntryFactory.createFloat(0, 0, 360, 0, VersionParameterNames.phaseShift),
           ];
-        case ProcessingMethodType.None:
+        case ProcessingMethodCategory.None:
           return [heightMethodDataEntry];
         default:
           throw new Error('Height processing method not found');
@@ -173,13 +173,13 @@ const baseMethodParser = (baseDataEntry: DataEntry): DefinitionArrayObject => [
 
 const shapePostProcessingMethodParser = (shapePostProcessingDataEntry: DataEntry): DefinitionArrayObject => {
   switch (shapePostProcessingDataEntry.value) {
-    case ProcessingMethodType.IncrementalMethod:
+    case ProcessingMethodCategory.IncrementalMethod:
       return [
         shapePostProcessingDataEntry,
         DataEntryFactory.createFloat(20, 10, 200, -1, VersionParameterNames.shapePostProcessingtotal),
         DataEntryFactory.createFloat(5, 0, 15, 2, VersionParameterNames.shapePostProcessinglinearTwist),
       ];
-    case ProcessingMethodType.Sin:
+    case ProcessingMethodCategory.Sin:
       return [
         shapePostProcessingDataEntry,
         DataEntryFactory.createFloat(4, 0, 15, 1, VersionParameterNames.shapePostProcessingmaxAmplitude),
@@ -187,7 +187,7 @@ const shapePostProcessingMethodParser = (shapePostProcessingDataEntry: DataEntry
         DataEntryFactory.createFloat(1, 0.2, 200, 1, VersionParameterNames.shapePostProcessingperiod),
         DataEntryFactory.createFloat(4, 0, 90, 1, VersionParameterNames.shapePostProcessingphaseShift),
       ];
-    case ProcessingMethodType.None:
+    case ProcessingMethodCategory.None:
       return [shapePostProcessingDataEntry];
     default:
       throw new Error('Height processing method not found');
@@ -217,7 +217,7 @@ const version1objectGenerationDescriptor: VersionDefinitionGeneratorParameters =
   [
     VersionParameterNames.heights,
     DataEntryFactory.createEnum(
-      ProcessingMethodType.IncrementalMethod,
+      ProcessingMethodCategory.IncrementalMethod,
       getMax(VersionParameterNames.processingMethodType),
       VersionParameterNames.processingMethodType
     ),
@@ -227,7 +227,7 @@ const version1objectGenerationDescriptor: VersionDefinitionGeneratorParameters =
   [
     VersionParameterNames.shapePostProcessing,
     DataEntryFactory.createEnum(
-      ProcessingMethodType.IncrementalMethod,
+      ProcessingMethodCategory.IncrementalMethod,
       getMax(VersionParameterNames.shapePostProcessingprocessingMethodType),
       VersionParameterNames.shapePostProcessingprocessingMethodType
     ),

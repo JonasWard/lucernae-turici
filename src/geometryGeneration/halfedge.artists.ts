@@ -4,7 +4,7 @@ import { HalfEdgeFace, HalfEdgeMesh } from './geometrytypes';
 import { V3 } from './v3';
 import { getFaceEdges, getFaceNormal, getFaceVertices, getVerticesFacesMap } from './halfedge';
 import { MaterialFactory } from './materialFactory';
-import { VoxelState } from './voxelComplex/type/voxelState';
+import { VoxelState } from './voxelComplex/types/voxelState';
 import { HalfEdgeMeshFactory } from './halfedge.factory';
 
 export class HalfEdgeMeshRenderer {

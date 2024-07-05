@@ -1,7 +1,7 @@
 import { HalfEdge, HalfEdgeFace, HalfEdgeMesh } from './geometrytypes';
 import { getRandomUUID } from './helpermethods';
 import { V3, Mesh } from './v3';
-import { VoxelState } from './voxelComplex/type/voxelState';
+import { VoxelState } from './voxelComplex/types/voxelState';
 
 export const getFaceEdges = (face: HalfEdgeFace, mesh: HalfEdgeMesh): HalfEdge[] => {
   const edges: HalfEdge[] = [];

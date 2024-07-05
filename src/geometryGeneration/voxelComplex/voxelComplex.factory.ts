@@ -1,6 +1,5 @@
-import { BaseFrameFactory, GeometryBaseData, PreprocessingMethods, WorldXY, getFrameToFrameTransformation } from '../baseGeometry';
-import { getHeights } from '../geometry';
-import { ProcessingMethods } from '../processingMethods/types/processingMethods';
+import { BaseFrameFactory, GeometryBaseData, WorldXY, getFrameToFrameTransformation } from '../baseGeometry';
+import { PreProcessingMethods, getHeights } from '../geometry';
 import { ProcessingMethodCategory } from '../processingMethods/types/processingMethodCategory';
 import { BaseFrame, HalfEdge, HalfEdgeMesh } from '../geometrytypes';
 import { getFaceEdges } from '../halfedge';
@@ -9,6 +8,7 @@ import { getRandomUUID } from '../helpermethods';
 import { V3 } from '../v3';
 import { VoxelComplex, Voxel } from './types/voxelComplex';
 import { VoxelState } from './types/voxelState';
+import { PreProcessingMethodFactory } from '../processingMethods/preProcessingMethodFactory';
 
 export class VoxelFactory {
   public static simpleExtrusion = (vs: V3[], dir: V3): VoxelComplex => {
@@ -139,21 +139,24 @@ export class VoxelFactory {
     const baseFrames = BaseFrameFactory.getBaseFramArrayAlongDirectionForSpacings(V3.ZAxis, heights);
     const heMesh = HalfEdgeMeshFactory.getFootprintFromGeometryBaseData(gBD);
 
-    return VoxelFactory.sweepHalfEdgeMesh(heMesh, baseFrames);
+    const voxelComplex = VoxelFactory.sweepHalfEdgeMesh(heMesh, baseFrames);
+    if (gBD.preProcessing) VoxelFactory.applyPreProcessingToVoxelVertexPositions(voxelComplex, gBD.preProcessing);
+
+    return voxelComplex;
   };
 
-  public static applyPostProcessingToVoxelVertexPositions = (voxelComplex: VoxelComplex, preprocessingMethods: PreprocessingMethods): VoxelComplex => {
-    if (preprocessingMethods.skew.type === ProcessingMethodCategory.None && preprocessingMethods.warp.type === ProcessingMethodCategory.None)
+  public static applyPreProcessingToVoxelVertexPositions = (voxelComplex: VoxelComplex, preprocessingMethods: PreProcessingMethods): VoxelComplex => {
+    if (preprocessingMethods.warp.type === ProcessingMethodCategory.None && preprocessingMethods.twist.type === ProcessingMethodCategory.None)
       return voxelComplex;
 
-    const applyWarpMethod = (v: V3): V3 => {};
+    const applyWarpMethod = PreProcessingMethodFactory.getPreProcessingMethod(preprocessingMethods);
 
-    const vertices = Object.values(voxelComplex.vertices).map((v) => {
+    Object.values(voxelComplex.vertices).map((v) => {
       const warpedV = applyWarpMethod(v);
 
       v.x = warpedV.x;
       v.y = warpedV.y;
-      v.z = warpedV.z;
+      // v.z = warpedV.z;
     });
 
     return voxelComplex;

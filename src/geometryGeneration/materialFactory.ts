@@ -30,7 +30,7 @@ export class MaterialFactory {
     return newMaterial;
   };
 
-  public static UUIDColorOptions: MaterialUUIDColorStates = MaterialUUIDColorStates.VIRIDIS;
+  public static UUIDColorOptions: MaterialUUIDColorStates = MaterialUUIDColorStates.TWILIGHT;
 
   // red hui
   private static getColorFromUUIDRed = (s: string) => Color3.FromHexString(`#ff${s.slice(0, 2)}${s.slice(0, 2)}`);

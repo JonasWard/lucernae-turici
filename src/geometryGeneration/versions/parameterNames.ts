@@ -43,7 +43,7 @@ export enum VersionParameterNames {
   base = 'base', // base
   sideHeight = 'sideHeight',
   sideInnerRadius = 'sideInnerRadius',
-  shapePostProcessing = 'shapePostProcessing', // shapePostProcessing
+  shapePostProcessing = 'shapePostProcessing', // shapePreProcessing
   shapePostProcessingprocessingMethodType = 'shapePostProcessingprocessingMethodType',
   shapePostProcessingtotal = 'shapePostProcessingtotal',
   shapePostProcessinglinearTwist = 'shapePostProcessinglinearTwist',
@@ -51,4 +51,24 @@ export enum VersionParameterNames {
   shapePostProcessingminAmplitude = 'shapePostProcessingminAmplitude',
   shapePostProcessingperiod = 'shapePostProcessingperiod',
   shapePostProcessingphaseShift = 'shapePostProcessingphaseShift',
+  shapePreProcessing = 'shapePreProcessing', // shapePreProcessing
+  shapePreProcessingprocessingMethodType = 'shapePreProcessingprocessingMethodType',
+  shapePreProcessingWarp = 'shapePreProcessingWarp', // shapeWarpPreProcessing
+  shapePreProcessingWarpabsolute = 'shapePreProcessingWarpabsolute',
+  shapePreProcessingWarpprocessingMethodType = 'shapePreProcessingWarpprocessingMethodType',
+  shapePreProcessingWarptotal = 'shapePreProcessingWarptotal',
+  shapePreProcessingWarplinearTwist = 'shapePreProcessingWarplinearTwist',
+  shapePreProcessingWarpmaxAmplitude = 'shapePreProcessingWarpmaxAmplitude',
+  shapePreProcessingWarpminAmplitude = 'shapePreProcessingWarpminAmplitude',
+  shapePreProcessingWarpperiod = 'shapePreProcessingWarpperiod',
+  shapePreProcessingWarpphaseShift = 'shapePreProcessingWarpphaseShift',
+  shapePreProcessingTwist = 'shapePreProcessingTwist', // shapeTwistPreProcessing
+  shapePreProcessingTwistabsolute = 'shapePreProcessingTwistabsolute',
+  shapePreProcessingTwistprocessingMethodType = 'shapePreProcessingTwistprocessingMethodType',
+  shapePreProcessingTwisttotal = 'shapePreProcessingTwisttotal',
+  shapePreProcessingTwistlinearTwist = 'shapePreProcessingTwistlinearTwist',
+  shapePreProcessingTwistmaxAmplitude = 'shapePreProcessingTwistmaxAmplitude',
+  shapePreProcessingTwistminAmplitude = 'shapePreProcessingTwistminAmplitude',
+  shapePreProcessingTwistperiod = 'shapePreProcessingTwistperiod',
+  shapePreProcessingTwistphaseShift = 'shapePreProcessingTwistphaseShift',
 }

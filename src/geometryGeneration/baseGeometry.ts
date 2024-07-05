@@ -5,8 +5,7 @@ import { V2 } from './v2';
 import { getV3, getVector3 } from './helpermethods';
 import { V3 } from './v3';
 import { FootprintType } from './footprints/types/footprintgeometrytypes';
-import { HeightGenerator, getHeights } from './geometry';
-import { ProcessingMethods } from './processingMethods/types/processingMethods';
+import { HeightGenerator, PreProcessingMethods, getHeights } from './geometry';
 import { MaterialFactory } from './materialFactory';
 import { ExtrusionProfileType } from './extrusionProfiles/types/extrusionProfileType';
 
@@ -30,16 +29,11 @@ export type BaseType = {
   sideInnerRadius: number;
 };
 
-export type PreprocessingMethods = {
-  warp: ProcessingMethods;
-  skew: ProcessingMethods;
-};
-
 export type GeometryBaseData = {
   extrusion: ExtrusionProfileType;
   footprint: FootprintType;
   heights: HeightGenerator;
-  preprocessingMethods?: PreprocessingMethods;
+  preProcessing?: PreProcessingMethods;
   base: BaseType;
 };
 

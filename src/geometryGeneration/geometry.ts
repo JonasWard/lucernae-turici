@@ -15,6 +15,11 @@ export type PostProcessingMethods = {
   skew: ProcessingMethods;
 };
 
+export type PreProcessingMethods = {
+  twist: ProcessingMethods;
+  warp: ProcessingMethods;
+};
+
 export type RelativeHeightGenerator = {
   storyCount: number;
   totalHeight: number;
@@ -28,42 +33,6 @@ export type AbsoluteHeightGenerator = {
 };
 
 export type HeightGenerator = AbsoluteHeightGenerator | RelativeHeightGenerator;
-
-export const DEFAULT_PROCESSING_METHODS = {
-  [ProcessingMethodCategory.None]: {
-    type: ProcessingMethodCategory.None,
-  } as NoneMethod,
-  [ProcessingMethodCategory.IncrementalMethod]: {
-    type: ProcessingMethodCategory.IncrementalMethod,
-    total: false,
-    angle: 1.3,
-  } as IncrementalMethod,
-  [ProcessingMethodCategory.Sin]: {
-    type: ProcessingMethodCategory.Sin,
-    max: 0.5,
-    min: 1.5,
-    period: 2,
-    phaseShift: 3,
-  } as SinMethod,
-};
-
-export const DEFAULT_HEIGHT_GENERATORS = {
-  [ProcessingMethodCategory.None]: {
-    storyCount: 4,
-    baseHeight: 100,
-    method: DEFAULT_PROCESSING_METHODS[ProcessingMethodCategory.None],
-  },
-  [ProcessingMethodCategory.IncrementalMethod]: {
-    storyCount: 0,
-    baseHeight: 0,
-    method: DEFAULT_PROCESSING_METHODS[ProcessingMethodCategory.None],
-  },
-  [ProcessingMethodCategory.Sin]: {
-    storyCount: 0,
-    baseHeight: 0,
-    method: DEFAULT_PROCESSING_METHODS[ProcessingMethodCategory.None],
-  },
-};
 
 const getSineMethod =
   (sineSettings: SinMethod) =>

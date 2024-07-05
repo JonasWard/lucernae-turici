@@ -91,6 +91,7 @@ export const getIconForKey = (
       return { mainIcon: <MdFormatListNumbered size={size} /> };
     case 'base':
       return { mainIcon: <GiColumnVase size={size} /> };
+    case 'shapePreProcessing':
     case 'shapePostProcessing':
       return { mainIcon: <PiCubeFocusFill size={size} /> };
     case 'Massive':

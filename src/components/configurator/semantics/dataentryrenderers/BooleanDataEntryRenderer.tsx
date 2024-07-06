@@ -10,7 +10,7 @@ export interface IBooleanDataEntryRendererProps {
 
 export const BooleanDataEntryRenderer: React.FC<IBooleanDataEntryRendererProps> = ({ bool, onChange }) => (
   <div style={{ display: 'flex', flexDirection: 'row' }}>
-    <Checkbox style={{ marginRight: 8 }} value={bool.value} onChange={() => onChange({ ...bool, value: !bool.value })} />
+    <Checkbox style={{ marginRight: 8 }} checked={bool.value} onChange={() => onChange({ ...bool, value: !bool.value })} />
     <IconRenderer name={bool.name} type={bool.type} size={20} />
   </div>
 );

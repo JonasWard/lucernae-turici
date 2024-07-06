@@ -45,6 +45,7 @@ const generationObjectUpdating = (
  * Method to parse a definitionArrayObject according to a given dataArray
  * @param definitionArrayObject
  * @param dataArray
+ * @returns - new SemanticlyNestedDataEntry
  */
 export const updateDataEntryObject = (definitionArrayObject: DefinitionArrayObject, dataArray: DataEntryArray): SemanticlyNestedDataEntry => {
   const newNestedObject: SemanticlyNestedDataEntry = {};

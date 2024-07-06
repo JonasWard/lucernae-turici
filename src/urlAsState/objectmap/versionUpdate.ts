@@ -1,6 +1,6 @@
 import { dataEntryCorrecting } from '../parsers/parsers';
 import { DataEntry, DataEntryArray, VersionDescriptionWithValueType } from '../types/dataEntry';
-import { SemanticlyNestedDataDescription, SemanticlyNestedDataEntry } from '../types/semanticlyNestedDataEntry';
+import { SemanticlyNestedDataEntry } from '../types/semanticlyNestedDataEntry';
 import { DefinitionArrayObject, DefinitionNestedArray, DefinitionNestedGenerationObject, ParserForVersion } from '../types/versionParser';
 import { updateValue } from '../update/updateValues';
 import { nestedDataEntryArrayToObject, parseDownNestedDataDescription } from './versionReading';
@@ -104,6 +104,7 @@ export const updateDataEntry = (data: SemanticlyNestedDataEntry, newDataEntry: D
 
   // create a new virgin object but replace the keyDataDescription with the new value
   const dataEntryArray = parseDownNestedDataDescription(data) as DataEntryArray;
+  // adding the newly entered dataEntry to the start of the array, will always be found first
   const virginDataEntryArray = [correctedDataEntry, ...dataEntryArray];
 
   return updateDataEntryObject(versionParser.objectGeneratorParameters, virginDataEntryArray);

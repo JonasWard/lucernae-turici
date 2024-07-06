@@ -16,6 +16,23 @@ import { DefinitionArrayObject, ParserForVersion } from '../types/versionParser'
 const parameterOffset = 100;
 
 /**
+ * Method for finding the names of the variable data entries in the DefinitionArrayObject
+ * @param definitionArrayObject - DefinitionArrayObject
+ * @returns string[] - the key strings
+ */
+export const getVariableStrings = (definitionArrayObject: DefinitionArrayObject): string[] => {
+  const keys: string[] = [];
+  definitionArrayObject.forEach((value) => {
+    if (Array.isArray(value)) {
+      if (value.length === 2) keys.push(...getVariableStrings(value[1]));
+      if (value.length === 3) keys.push(value[1].name);
+    }
+  });
+
+  return keys;
+};
+
+/**
  * Method that translates a DefinitionArrayObject into a SemanticlyNestedDataEntry
  * @param definitionArrayObject [DataEntry | [string, DefinitionArrayObject]]
  * @param startIndex

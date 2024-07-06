@@ -2,7 +2,7 @@ import { ExtrusionCategory } from '../extrusionProfiles/types/extrusionCategory'
 import { FootprintCategory } from '../footprints/types/footprintCategory';
 import { ProcessingMethodCategory } from '../processingMethods/types/processingMethodCategory';
 import { DataEntryFactory } from '../../urlAsState/factory/factory';
-import { DefinitionArrayObject, ParserForVersion, VersionDefinitionGeneratorParameters } from '../../urlAsState/types/versionParser';
+import { DefinitionArrayObject, ParserForVersion } from '../../urlAsState/types/versionParser';
 import { VersionParameterNames } from './parameterNames';
 import { DataEntry } from '../../urlAsState/types/dataEntry';
 import { Versions } from './versions';
@@ -166,11 +166,6 @@ const heightMethodTypeParser = (heightMethodDataEntry: DataEntry): DefinitionArr
   ],
 ];
 
-const baseMethodParser = (baseDataEntry: DataEntry): DefinitionArrayObject => [
-  DataEntryFactory.createFloat(20, 10, 200, 0, VersionParameterNames.sideHeight),
-  DataEntryFactory.createFloat(5, 0, 40, 1, VersionParameterNames.sideInnerRadius),
-];
-
 const shapePostProcessingMethodParser = (shapePostProcessingDataEntry: DataEntry): DefinitionArrayObject => {
   switch (shapePostProcessingDataEntry.value) {
     case ProcessingMethodCategory.IncrementalMethod:
@@ -215,7 +210,7 @@ const shapePreProcessingWarpMethod = (shapePreProcessingWarpDataEntry: DataEntry
     case ProcessingMethodCategory.None:
       return [shapePreProcessingWarpDataEntry];
     default:
-      throw new Error('Height processing method not found');
+      throw new Error('Warp processing method not found');
   }
 };
 
@@ -240,23 +235,9 @@ const shapePreProcessingTwistMethod = (shapePreProcessingTwistDataEntry: DataEnt
     case ProcessingMethodCategory.None:
       return [shapePreProcessingTwistDataEntry];
     default:
-      throw new Error('Height processing method not found');
+      throw new Error('Twist processing method not found');
   }
 };
-
-const shapePreProcessingMethodParser = (irrelevant: DataEntry): DefinitionArrayObject => [
-  irrelevant,
-  [
-    VersionParameterNames.shapePreProcessingWarp,
-    DataEntryFactory.createEnum(ProcessingMethodCategory.Sin, 2, VersionParameterNames.shapePreProcessingWarpprocessingMethodType),
-    shapePreProcessingWarpMethod,
-  ],
-  [
-    VersionParameterNames.shapePreProcessingTwist,
-    DataEntryFactory.createEnum(ProcessingMethodCategory.Sin, 2, VersionParameterNames.shapePreProcessingTwistprocessingMethodType),
-    shapePreProcessingTwistMethod,
-  ],
-];
 
 const getMax = (
   v:
@@ -270,7 +251,7 @@ const getMax = (
     | VersionParameterNames.version
 ) => (version1EnumSemantics.hasOwnProperty(v) ? Math.max(...version1EnumSemantics[v].map(({ value }) => value)) : 3);
 
-const version1objectGenerationDescriptor: VersionDefinitionGeneratorParameters = [
+const version1objectGenerationDescriptor: DefinitionArrayObject = [
   DataEntryFactory.createVersion(1, 8, VersionParameterNames.version, 0),
   [
     VersionParameterNames.extrusion,
@@ -291,8 +272,28 @@ const version1objectGenerationDescriptor: VersionDefinitionGeneratorParameters =
     ),
     heightMethodTypeParser,
   ],
-  [VersionParameterNames.base, DataEntryFactory.createEnum(0, 1, 'irrelevant'), baseMethodParser],
-  [VersionParameterNames.shapePreProcessing, DataEntryFactory.createEnum(0, 1, 'irrelevant'), shapePreProcessingMethodParser],
+  [
+    VersionParameterNames.base,
+    [
+      DataEntryFactory.createFloat(20, 10, 200, 0, VersionParameterNames.sideHeight),
+      DataEntryFactory.createFloat(5, 0, 40, 1, VersionParameterNames.sideInnerRadius),
+    ],
+  ],
+  [
+    VersionParameterNames.shapePreProcessing,
+    [
+      [
+        VersionParameterNames.shapePreProcessingWarp,
+        DataEntryFactory.createEnum(ProcessingMethodCategory.None, 2, VersionParameterNames.shapePreProcessingWarpprocessingMethodType),
+        shapePreProcessingWarpMethod,
+      ],
+      [
+        VersionParameterNames.shapePreProcessingTwist,
+        DataEntryFactory.createEnum(ProcessingMethodCategory.None, 2, VersionParameterNames.shapePreProcessingTwistprocessingMethodType),
+        shapePreProcessingTwistMethod,
+      ],
+    ],
+  ],
 ];
 
 export const parserVersion1: ParserForVersion = {

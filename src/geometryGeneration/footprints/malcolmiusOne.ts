@@ -14,34 +14,29 @@ const singleShard = (o: V3, v0: V3, v1: V3, r0: number, r1: number, o0: number):
   if (Math.abs(o0) < MALCULMIUS_TOLERANCE) {
     topVs.push(t0, t1);
   } else {
-    const d = V3.add(t0, V3.mul(t1, 0.5));
-    topVs.push(t0, V3.add(o, V3.mul(d, 1 + o0 / V3.getLength(d)), t1));
+    const d = V3.mul(V3.add(t0, t1), 0.5);
+    topVs.push(t0, V3.add(o, V3.mul(d, 1 + o0 / V3.getLength(d))), t1);
   }
 
   if (r0 < MALCULMIUS_TOLERANCE) {
-    if (topVs.length === 3 && o0 < 0) {
+    if (topVs.length === 3 && o0 < 0)
       return [
         [o, topVs[0], topVs[1]],
         [o, topVs[1], topVs[2]],
       ];
-    } else {
-      return [[o, topVs[0], topVs[1], topVs[2]]];
-    }
+    else return [[o, topVs[0], topVs[1], topVs[2]]];
   } else {
     const p0 = V3.add(o, V3.mul(v0, r0));
     const p1 = V3.add(o, V3.mul(v1, r0));
 
-    if (topVs.length === 3 && o0 < 0) {
+    if (topVs.length === 3 && o0 < 0)
       return [
         [p1, p0, topVs[1]],
         [topVs[1], p0, topVs[0]],
         [topVs[2], p1, topVs[1]],
       ];
-    } else if (topVs.length === 3) {
-      return [[p1, p0, ...topVs]];
-    } else {
-      return [[p1, p0, topVs[0], topVs[1]]];
-    }
+    else if (topVs.length === 3) return [[p1, p0, ...topVs]];
+    else return [[p1, p0, topVs[0], topVs[1]]];
   }
 };
 

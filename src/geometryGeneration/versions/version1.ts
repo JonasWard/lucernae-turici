@@ -117,17 +117,17 @@ const footprintTypeParser = (footprintDataEntry: DataEntry): DefinitionArrayObje
         DataEntryFactory.createFloat(12, 0, 40, 1, VersionParameterNames.radius1),
         DataEntryFactory.createFloat(12, 0, 40, 1, VersionParameterNames.radius2),
         DataEntryFactory.createFloat(2, 0, 10, 1, VersionParameterNames.bufferOutside),
-        DataEntryFactory.createInt(5, 3, 50, VersionParameterNames.segments),
+        DataEntryFactory.createInt(5, 3, 20, VersionParameterNames.segments),
       ];
 
     case FootprintCategory.MalculmiusOne:
       return [
         footprintDataEntry,
-        DataEntryFactory.createFloat(35, 10, 80, 1, VersionParameterNames.circleRadius),
-        DataEntryFactory.createInt(5, 3, 30, VersionParameterNames.circleDivisions),
-        DataEntryFactory.createFloat(0.5, 0.01, 0.99, 2, VersionParameterNames.angleSplit),
-        DataEntryFactory.createFloat(0, -50, 50, 1, VersionParameterNames.offsetA),
-        DataEntryFactory.createFloat(0, -50, 50, 1, VersionParameterNames.offsetB),
+        DataEntryFactory.createFloat(35, 10, 55, 1, VersionParameterNames.circleRadius),
+        DataEntryFactory.createInt(5, 3, 20, VersionParameterNames.circleDivisions),
+        DataEntryFactory.createFloat(0.5, 0.1, 0.9, 2, VersionParameterNames.angleSplit),
+        DataEntryFactory.createFloat(0, -20, 20, 1, VersionParameterNames.offsetA),
+        DataEntryFactory.createFloat(0, -20, 20, 1, VersionParameterNames.offsetB),
         DataEntryFactory.createFloat(5, 4, 40, 1, VersionParameterNames.innerRadius),
       ];
     default:
@@ -152,8 +152,8 @@ const heightMethodTypeParser = (heightMethodDataEntry: DataEntry): DefinitionArr
         case ProcessingMethodCategory.Sin:
           return [
             heightMethodDataEntry,
-            DataEntryFactory.createFloat(4, 0, 15, 1, VersionParameterNames.maxAmplitude),
-            DataEntryFactory.createFloat(1, 0, 5, 2, VersionParameterNames.minAmplitude),
+            DataEntryFactory.createFloat(1, 0, 4, 1, VersionParameterNames.maxAmplitude),
+            DataEntryFactory.createFloat(1, 0, 4, 2, VersionParameterNames.minAmplitude),
             DataEntryFactory.createFloat(1, 0.2, 200, 1, VersionParameterNames.period),
             DataEntryFactory.createFloat(0, 0, 360, 0, VersionParameterNames.phaseShift),
           ];
@@ -177,8 +177,8 @@ const shapePostProcessingMethodParser = (shapePostProcessingDataEntry: DataEntry
     case ProcessingMethodCategory.Sin:
       return [
         shapePostProcessingDataEntry,
-        DataEntryFactory.createFloat(4, 0, 15, 1, VersionParameterNames.shapePostProcessingmaxAmplitude),
-        DataEntryFactory.createFloat(1, 0, 5, 2, VersionParameterNames.shapePostProcessingminAmplitude),
+        DataEntryFactory.createFloat(1, 0, 4, 1, VersionParameterNames.shapePostProcessingmaxAmplitude),
+        DataEntryFactory.createFloat(1, 0, 4, 2, VersionParameterNames.shapePostProcessingminAmplitude),
         DataEntryFactory.createFloat(1, 0.2, 200, 1, VersionParameterNames.shapePostProcessingperiod),
         DataEntryFactory.createFloat(4, 0, 90, 1, VersionParameterNames.shapePostProcessingphaseShift),
       ];
@@ -202,8 +202,8 @@ const shapePreProcessingWarpMethod = (shapePreProcessingWarpDataEntry: DataEntry
       return [
         shapePreProcessingWarpDataEntry,
         DataEntryFactory.createBoolean(false, VersionParameterNames.shapePreProcessingWarpabsolute),
-        DataEntryFactory.createFloat(4, 0, 15, 1, VersionParameterNames.shapePreProcessingWarpmaxAmplitude),
-        DataEntryFactory.createFloat(1, 0, 5, 2, VersionParameterNames.shapePreProcessingWarpminAmplitude),
+        DataEntryFactory.createFloat(1, 0, 4, 1, VersionParameterNames.shapePreProcessingWarpmaxAmplitude),
+        DataEntryFactory.createFloat(1, 0, 4, 2, VersionParameterNames.shapePreProcessingWarpminAmplitude),
         DataEntryFactory.createFloat(500, 2, 2000, 0, VersionParameterNames.shapePreProcessingWarpperiod),
         DataEntryFactory.createFloat(0, 0, 1, 2, VersionParameterNames.shapePreProcessingWarpphaseShift),
       ];
@@ -227,8 +227,8 @@ const shapePreProcessingTwistMethod = (shapePreProcessingTwistDataEntry: DataEnt
       return [
         shapePreProcessingTwistDataEntry,
         DataEntryFactory.createBoolean(false, VersionParameterNames.shapePreProcessingTwistabsolute),
-        DataEntryFactory.createFloat(4, 0, 15, 1, VersionParameterNames.shapePreProcessingTwistmaxAmplitude),
-        DataEntryFactory.createFloat(1, 0, 5, 2, VersionParameterNames.shapePreProcessingTwistminAmplitude),
+        DataEntryFactory.createFloat(1, 0, 4, 1, VersionParameterNames.shapePreProcessingTwistmaxAmplitude),
+        DataEntryFactory.createFloat(1, 0, 4, 2, VersionParameterNames.shapePreProcessingTwistminAmplitude),
         DataEntryFactory.createFloat(500, 2, 2000, 0, VersionParameterNames.shapePreProcessingTwistperiod),
         DataEntryFactory.createFloat(0, 0, 1, 2, VersionParameterNames.shapePreProcessingTwistphaseShift),
       ];
@@ -275,8 +275,8 @@ const version1objectGenerationDescriptor: DefinitionArrayObject = [
   [
     VersionParameterNames.base,
     [
-      DataEntryFactory.createFloat(20, 10, 200, 0, VersionParameterNames.sideHeight),
-      DataEntryFactory.createFloat(5, 0, 40, 1, VersionParameterNames.sideInnerRadius),
+      DataEntryFactory.createFloat(20, 10, 100, 0, VersionParameterNames.sideHeight),
+      DataEntryFactory.createFloat(5, 0, 20, 1, VersionParameterNames.sideInnerRadius),
     ],
   ],
   [

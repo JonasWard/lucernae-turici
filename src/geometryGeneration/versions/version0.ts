@@ -2,7 +2,7 @@ import { ExtrusionCategory } from '../extrusionProfiles/types/extrusionCategory'
 import { FootprintCategory } from '../footprints/types/footprintCategory';
 import { ProcessingMethodCategory } from '../processingMethods/types/processingMethodCategory';
 import { DataEntryFactory } from '../../urlAsState/factory/factory';
-import { DefinitionArrayObject, ParserForVersion, VersionDefinitionGeneratorParameters } from '../../urlAsState/types/versionParser';
+import { DefinitionArrayObject, ParserForVersion } from '../../urlAsState/types/versionParser';
 import { VersionParameterNames } from './parameterNames';
 import { DataEntry } from '../../urlAsState/types/dataEntry';
 import { Versions } from './versions';
@@ -163,7 +163,7 @@ const getMax = (
     | VersionParameterNames.shapePostProcessingprocessingMethodType
 ) => (version0EnumSemantics.hasOwnProperty(v) ? Math.max(...version0EnumSemantics[v].map(({ value }) => value)) : 3);
 
-const version0objectGenerationDescriptor: VersionDefinitionGeneratorParameters = [
+const version0objectGenerationDescriptor: DefinitionArrayObject = [
   DataEntryFactory.createVersion(0, 8, VersionParameterNames.version, 0),
   [
     VersionParameterNames.extrusion,

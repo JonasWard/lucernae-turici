@@ -95,30 +95,16 @@ export const getDefaultObject = (versionObjects: ParserForVersion[], versioninde
  * @param versionObjects version object
  * @returns a newly created object in case of a key data description, otherwise the same object with just the new Data Entry value updated
  */
-export const updateDataEntry = (data: SemanticlyNestedDataEntry, newDataEntry: DataEntry, versionObjects: ParserForVersion[]) => {
+export const updateDataEntry = (data: SemanticlyNestedDataEntry, newDataEntry: DataEntry, versionObjects: ParserForVersion[]): SemanticlyNestedDataEntry => {
   const version = data.version as VersionDescriptionWithValueType;
   const versionParser = versionObjects[version.value];
   if (!versionParser) throw new Error(`No parser for version ${version.value}`);
 
   const correctedDataEntry = dataEntryCorrecting(newDataEntry);
 
-  // if not just replace the value in the object
-  const keyDataDescriptionIndex = versionParser.objectGeneratorParameters.findIndex((p) => Array.isArray(p) && p[1].name === correctedDataEntry.name);
-  if (keyDataDescriptionIndex === -1) return { ...updateValuesInDataEntryObject(data, correctedDataEntry) }; // making sure a new object is created
-
-  // if yes, create a new virgin object but replace the keyDataDescription with the new value
+  // create a new virgin object but replace the keyDataDescription with the new value
   const dataEntryArray = parseDownNestedDataDescription(data) as DataEntryArray;
+  const virginDataEntryArray = [correctedDataEntry, ...dataEntryArray];
 
-  const updatedGeneratorParameters = versionParser.objectGeneratorParameters.map((p) => {
-    if (Array.isArray(p)) {
-      if (p[1].name === correctedDataEntry.name) return [p[0], correctedDataEntry, p[2]];
-      else return [p[0], dataEntryArray.find((d) => d.name === p[1].name) as DataEntry, p[2]];
-    }
-    return p;
-  });
-
-  const virginObject = nestedDataEntryArrayToObject(updatedGeneratorParameters as DefinitionArrayObject, 0) as SemanticlyNestedDataEntry;
-
-  dataEntryArray.forEach((value) => value.name !== correctedDataEntry.name && updateValuesInDataEntryObject(virginObject, value));
-  return virginObject;
+  return updateDataEntryObject(versionParser.objectGeneratorParameters, virginDataEntryArray);
 };

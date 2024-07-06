@@ -17,6 +17,7 @@ import '../LandingPage.css';
 import { getURLForData, parseUrlMethod } from '../urlAsState/objectmap/versionReading';
 import { Scene } from '@babylonjs/core';
 import { getHeights } from '../geometryGeneration/geometry';
+import { DataSlider } from './configurator/DataSlider';
 
 const displayTypeMap = {
   ['extrusion']: window.innerHeight < 800 ? DisplayType.DRAWER : DisplayType.POPOVER,
@@ -118,6 +119,7 @@ export const LampConfigurator: React.FC = () => {
           data={data}
         />
       </div>
+      <DataSlider version={(data['version'].value as number) ?? 1} setData={(value: SemanticlyNestedDataEntry) => setData(value)} />
       <UndoRedo activeUrl={lastURLFromData} setActiveUrl={tryToHandelUndoRedo} />
       {import.meta.env.DEV ? (
         <div style={{ position: 'absolute', left: 150, bottom: 20 }}>

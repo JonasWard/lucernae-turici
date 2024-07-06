@@ -1,13 +1,17 @@
 import { parserObjects } from '../../geometryGeneration/versions/parserObjects';
 import { DataType } from '../enums/dataTypes';
-import { DataEntryFactory } from '../factory/factory';
-import { parseDownNestedDataDescription } from '../objectmap/versionReading';
+import { getVariableStrings, parseDownNestedDataDescription } from '../objectmap/versionReading';
 import { getDefaultObject, updateDataEntry } from '../objectmap/versionUpdate';
 import { dataEntryCorrecting } from '../parsers/parsers';
 import { DataEntry, DataEntryArray } from '../types/dataEntry';
 import { SemanticlyNestedDataEntry } from '../types/semanticlyNestedDataEntry';
-import { getRelativeValue } from './relativeValue';
 
+/**
+ * helper method to interpolate a data entry at a given t parameter
+ * @param dataEntry - DataEntry to interpolate
+ * @param t - number between 0 and 1
+ * @returns updated data entry
+ */
 const interpolateEntryAt = (dataEntry: DataEntry, t: number) => {
   const localT = Math.max(Math.min(1, t), 0);
   const cosT = Math.cos(localT * 2 * Math.PI) * 0.5 + 0.5;
@@ -27,60 +31,66 @@ const interpolateEntryAt = (dataEntry: DataEntry, t: number) => {
   }
 };
 
-export const globalLerp = (count: number) => {
-  const versionNumber: number = 0;
-  const firstObject = getDefaultObject(parserObjects, versionNumber);
+/**
+ * Method to lerp a data entry at a t parameter
+ * @param t - number between 0 and 1
+ * @param baseDataArray - key data entry array
+ * @param keyStrings - key strings that should be considered
+ * @param versionNumber - version number
+ * @returns - SemanticlyNestedDataEntry
+ */
+export const lerpData = (t: number, baseDataArray: DataEntryArray, keyStrings: string[], versionNumber: number): SemanticlyNestedDataEntry => {
+  const lerpedEntries = baseDataArray.map((d) => interpolateEntryAt(d, t));
 
+  let virginObject = getDefaultObject(parserObjects, versionNumber);
+
+  lerpedEntries.forEach((d) => (virginObject = updateDataEntry(virginObject, d, parserObjects)));
+
+  const parsedDownArrayObject: DataEntryArray = [];
+
+  (parseDownNestedDataDescription(virginObject) as DataEntryArray).forEach(
+    (d) => !keyStrings.includes(d.name) && d.type !== DataType.VERSION && parsedDownArrayObject.push(interpolateEntryAt(d, t))
+  );
+
+  parsedDownArrayObject.forEach((d) => (virginObject = updateDataEntry(virginObject, d, parserObjects)));
+
+  return virginObject;
+};
+
+/**
+ * Method to get the data to lerp a given version number
+ * @param versionNumber - number of the version
+ * @returns { baseDataArray: DataEntryArray; keyStrings: string[] } - version data
+ */
+export const getVersionDataForLerping = (versionNumber: number): { baseDataArray: DataEntryArray; keyStrings: string[] } => {
+  const firstObject = getDefaultObject(parserObjects, versionNumber);
   const parserObject = parserObjects[versionNumber];
 
   const dataEntryArray = parseDownNestedDataDescription(firstObject) as DataEntryArray;
-
-  const semanticNested: SemanticlyNestedDataEntry[] = [];
-
-  let tDelta = 1.0 / count;
-
   const dataEntryArrayWithoutVersion = dataEntryArray.filter((d) => d.type !== DataType.VERSION);
-  // sort out key values first
 
-  const keyStrings = parserObject.objectGeneratorParameters.map((d) => (Array.isArray(d) ? d[1].name : 'version'));
-
+  const keyStrings = getVariableStrings(parserObject.objectGeneratorParameters);
   const keyDataEntries: DataEntry[] = [];
 
-  dataEntryArrayWithoutVersion.forEach((d) => {
-    if (keyStrings.includes(d.name)) keyDataEntries.push(d);
-  });
-
+  dataEntryArrayWithoutVersion.forEach((d) => keyStrings.includes(d.name) && keyDataEntries.push(d));
   const baseDataArray = [...keyDataEntries];
 
-  DataEntryFactory.createFloat(0.5, 0, 1, 2);
-  const floatValue = DataEntryFactory.createFloat(0.25, 0.1, 0.5, 2);
-  const vs = [];
+  return { baseDataArray, keyStrings };
+};
 
-  for (let i = 0; i < count + 1; i++) {
-    const t = i * tDelta;
+/**
+ * Method to render a global lerp object
+ * @param count - amount of steps to lerp for visualization
+ * @returns SemanticlyNestedDataEntry[]
+ */
+export const globalLerp = (count: number) => {
+  const versionNumber: number = 1;
+  const { baseDataArray, keyStrings } = getVersionDataForLerping(versionNumber);
 
-    const lerpedEntries = baseDataArray.map((d) => interpolateEntryAt(d, t));
+  const semanticNested: SemanticlyNestedDataEntry[] = [];
+  const tDelta = 1 / count;
 
-    let virginObject = getDefaultObject(parserObjects, 0);
-
-    lerpedEntries.forEach((d) => {
-      virginObject = updateDataEntry(virginObject, d, parserObjects);
-    });
-
-    const parsedDownArrayObject: DataEntryArray = [];
-
-    (parseDownNestedDataDescription(virginObject) as DataEntryArray).forEach((d) => {
-      if (!keyStrings.includes(d.name)) parsedDownArrayObject.push(interpolateEntryAt(d, t));
-    });
-
-    parsedDownArrayObject.forEach((d) => {
-      virginObject = updateDataEntry(virginObject, d, parserObjects);
-    });
-
-    vs.push(interpolateEntryAt(floatValue, t));
-
-    semanticNested.push(virginObject);
-  }
+  for (let i = 0; i < count + 1; i++) semanticNested.push(lerpData(i * tDelta, baseDataArray, keyStrings, versionNumber));
 
   return semanticNested;
 };

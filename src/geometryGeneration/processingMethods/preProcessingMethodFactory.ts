@@ -11,7 +11,10 @@ export class PreProcessingMethodFactory {
 
     if (preProcessing.twist.type === ProcessingMethodCategory.None) return ProcessingMethodFactory.getWarpMethod(preProcessing.warp);
 
-    const twistAngleMethod = ProcessingMethodFactory.getAngleMethod(preProcessing.twist);
+    const twistAngleMethod =
+      preProcessing.twist.type === ProcessingMethodCategory.Sin
+        ? ProcessingMethodFactory.getAngleMethod(preProcessing.twist, preProcessing.twist.min, preProcessing.twist.max - preProcessing.twist.min)
+        : ProcessingMethodFactory.getAngleMethod(preProcessing.twist);
 
     const warpAngleMethod = ProcessingMethodFactory.getAngleMethod(preProcessing.warp);
     const warpAbsolute = preProcessing.warp.absolute ?? false;
@@ -20,10 +23,13 @@ export class PreProcessingMethodFactory {
       const tAngle = twistAngleMethod(v);
       const wAngle = warpAngleMethod(v);
 
-      const warp = Math.sin(wAngle) + (warpAbsolute ? 1 : 0);
+      const warpMax = preProcessing.warp.type === ProcessingMethodCategory.Sin ? preProcessing.warp.max : 0;
+      const warpMin = preProcessing.warp.type === ProcessingMethodCategory.Sin ? preProcessing.warp.min : 0;
 
-      const c = Math.cos(tAngle) * warp;
-      const s = Math.sin(tAngle) * warp;
+      const warp = warpMin + (0.5 + 0.5 * Math.sin(wAngle)) * (warpMax - warpMin) + (warpAbsolute ? 1 : 0);
+
+      const c = (0.5 + 0.5 * Math.cos(tAngle)) * warp;
+      const s = (0.5 + 0.5 * Math.sin(tAngle)) * warp;
 
       return { x: v.x * c - v.y * s, y: v.x * s + v.y * c, z: v.z };
     };

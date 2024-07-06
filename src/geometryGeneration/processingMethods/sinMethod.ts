@@ -4,4 +4,4 @@ import { SinMethod } from './types/sinMethod';
 export const getAngle =
   (sinMethod: SinMethod, min = 0, delta = 1) =>
   (v: V3) =>
-    min + delta * ((v.z * Math.PI * 2) / sinMethod.period + sinMethod.phaseShift);
+    min + delta * Math.PI * 2 * (v.z / sinMethod.period + sinMethod.phaseShift + 0.25);

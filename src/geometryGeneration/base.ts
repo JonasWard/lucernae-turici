@@ -8,8 +8,7 @@ import { getHalfEdgeMeshForVoxelEnclosure } from './voxelComplex/voxelComplex';
 import { MaterialFactory } from './materialFactory';
 import { HalfEdgeMeshRenderer } from './halfedge.artists';
 
-const holeCounts = 12;
-const tDelta = 1 / holeCounts;
+const HOLE_MINIMUM_RESOLUTION = 128;
 
 export const constructBase = (gBD: GeometryBaseData, scene: Scene, rootNode: TransformNode) => {
   // get the voxel footprint base of the geometry
@@ -31,17 +30,21 @@ export const constructBase = (gBD: GeometryBaseData, scene: Scene, rootNode: Tra
 
   const polygons: V3[][] = [];
 
+  const holeCounts = vertices.length > HOLE_MINIMUM_RESOLUTION ? 1 : Math.ceil(HOLE_MINIMUM_RESOLUTION / vertices.length);
+  const tDelta = 1 / holeCounts;
+
   vertices.forEach((v, i, arr) => {
     const next = arr[(i + 1) % arr.length];
     const v0 = V3.sub(v, center);
     const v1 = V3.sub(next, center);
     const vD = V3.sub(v1, v0);
     const vs: V3[] = [next, v];
-    for (let i = 0; i <= holeCounts; i += tDelta) {
+    for (let i = 0; i <= holeCounts; i++) {
       const t = i * tDelta;
       const v = V3.add(v0, V3.mul(vD, t));
       vs.push(V3.mul(V3.getUnit(v), gBD.base.sideInnerRadius));
     }
+
     polygons.push(vs);
   });
 

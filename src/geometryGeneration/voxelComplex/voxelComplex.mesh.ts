@@ -2,14 +2,14 @@
 
 import { GeometryBaseData } from '../baseGeometry';
 import { ExtrusionCategory } from '../extrusionProfiles/types/extrusionCategory';
-import { HalfEdgeMesh } from '../geometrytypes';
-import { getHalfEdgeMeshFromMesh } from '../halfedge';
+import { getHalfEdgeMeshFromMesh } from '../halfEdge/halfedge';
 import { QuadFace, V3, Mesh } from '../v3';
 import { gefFace, getCenterOfVoxelFace, isFaceInVoxelClosed } from './voxelComplex';
 import { Voxel, VoxelComplex } from './types/voxelComplex';
 import { VoxelState } from './types/voxelState';
 import { ExtrusionProfileFactory } from '../extrusionProfiles/extrusionProfileFactory';
 import { VoxelComplexExtrusionParameters } from './types/voxelComplexExtrusionParameters';
+import { HalfEdgeMesh } from '../halfEdge/types/HalfEdgeMesh';
 
 // helper interface that defines the four corner vertices of a frame to be filled in with the frames of the voxel
 export class VoxelMesh {

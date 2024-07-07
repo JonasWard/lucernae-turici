@@ -1,10 +1,13 @@
 import { getWorldXYToFrameTransformation } from '../baseGeometry';
-import { HalfEdgeMesh, HalfEdge, HalfEdgeFace, VCFaceMetaData, BaseFrame } from '../geometrytypes';
-import { linkingHalfEdges } from '../halfedge';
+import { VCFaceMetaData, BaseFrame } from '../geometrytypes';
+import { HalfEdgeFace } from '../halfEdge/types/halfEdgeFace';
+import { linkingHalfEdges } from '../halfEdge/halfedge';
 import { getRandomUUID } from '../helpermethods';
 import { V3 } from '../v3';
 import { getNeighbourState, isFaceClosed } from './voxelComplex.states';
 import { VoxelComplex, Voxel } from './types/voxelComplex';
+import { HalfEdgeMesh } from '../halfEdge/types/HalfEdgeMesh';
+import { HalfEdge } from '../halfEdge/types/halfEdge';
 
 const getTopFaceIndexes = (v: Voxel): number[] => [...Array(v.n).keys()].map((i) => i + v.n);
 const getBottomFaceIndexes = (v: Voxel): number[] => [...Array(v.n).keys()].reverse();

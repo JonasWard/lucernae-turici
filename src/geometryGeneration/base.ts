@@ -1,7 +1,7 @@
 import { Scene, TransformNode } from '@babylonjs/core';
 import { GeometryBaseData } from './baseGeometry';
 import { HalfEdgeMeshFactory } from './halfedge.factory';
-import { getBoundariesForHalfEdgeMesh, getHalfEdgeMeshFromMesh } from './halfedge';
+import { getBoundariesForHalfEdgeMesh, getHalfEdgeMeshFromMesh } from './halfEdge/halfedge';
 import { Mesh, V3 } from './v3';
 import { VoxelFactory } from './voxelComplex/voxelComplex.factory';
 import { getHalfEdgeMeshForVoxelEnclosure } from './voxelComplex/voxelComplex';

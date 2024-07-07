@@ -1,14 +1,16 @@
 import { BaseFrameFactory, GeometryBaseData, WorldXY, getFrameToFrameTransformation } from '../baseGeometry';
 import { PreProcessingMethods, getHeights } from '../geometry';
 import { ProcessingMethodCategory } from '../processingMethods/types/processingMethodCategory';
-import { BaseFrame, HalfEdge, HalfEdgeMesh } from '../geometrytypes';
-import { getFaceEdges } from '../halfedge';
+import { BaseFrame } from '../geometrytypes';
+import { getFaceEdges } from '../halfEdge/halfedge';
 import { HalfEdgeMeshFactory } from '../halfedge.factory';
 import { getRandomUUID } from '../helpermethods';
 import { V3 } from '../v3';
 import { VoxelComplex, Voxel } from './types/voxelComplex';
 import { VoxelState } from './types/voxelState';
 import { PreProcessingMethodFactory } from '../processingMethods/preProcessingMethodFactory';
+import { HalfEdgeMesh } from '../halfEdge/types/HalfEdgeMesh';
+import { HalfEdge } from '../halfEdge/types/halfEdge';
 
 export class VoxelFactory {
   public static simpleExtrusion = (vs: V3[], dir: V3): VoxelComplex => {

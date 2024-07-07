@@ -1,5 +1,5 @@
 import { HalfEdge } from '../geometryGeneration/geometrytypes';
-import { getBoundariesForHalfEdgeMesh } from '../geometryGeneration/halfedge';
+import { getBoundariesForHalfEdgeMesh } from '../geometryGeneration/halfEdge/halfedge';
 
 const ringSearchingTest = {
   faces: {

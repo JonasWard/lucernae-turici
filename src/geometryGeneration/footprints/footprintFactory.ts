@@ -7,7 +7,7 @@ import { FootprintType } from './types/footprintgeometrytypes';
 import { FootprintCategory } from './types/footprintCategory';
 import { PolygonGridShellFootprint } from './types/polygonGridShell';
 import { Mesh } from '../v3';
-import { HalfEdgeMesh } from '../geometrytypes';
+import { HalfEdgeMesh } from '../halfEdge/types/HalfEdgeMesh';
 
 export class FootprintFactory {
   public static createFootprintMesh(footprint: FootprintType): Mesh {

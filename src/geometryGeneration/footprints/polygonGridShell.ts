@@ -1,4 +1,4 @@
-import { HalfEdgeMesh } from '../geometrytypes';
+import { HalfEdgeMesh } from '../halfEdge/types/HalfEdgeMesh';
 import { HalfEdgeMeshFactory } from '../halfedge.factory';
 import { Mesh, V3 } from '../v3';
 import { FootprintCategory } from './types/footprintCategory';

@@ -1,6 +1,6 @@
 import { Vector3, Mesh as BabylonMesh, VertexData, Scene, TransformNode } from '@babylonjs/core';
-import { getCenterOfHalfEdge, getEndVertexOfHalfEdge, getFaceVertices, getStartVertexOfHalfEdge } from './halfedge';
-import { BaseFrame, HalfEdge, HalfEdgeMesh, TransformationMatrix } from './geometrytypes';
+import { getCenterOfHalfEdge, getEndVertexOfHalfEdge, getFaceVertices, getStartVertexOfHalfEdge } from './halfEdge/halfedge';
+import { BaseFrame, TransformationMatrix } from './geometrytypes';
 import { V2 } from './v2';
 import { getV3, getVector3 } from './helpermethods';
 import { V3 } from './v3';
@@ -8,6 +8,8 @@ import { FootprintType } from './footprints/types/footprintgeometrytypes';
 import { HeightGenerator, PreProcessingMethods, getHeights } from './geometry';
 import { MaterialFactory } from './materialFactory';
 import { ExtrusionProfileType } from './extrusionProfiles/types/extrusionProfileType';
+import { HalfEdge } from './halfEdge/types/halfEdge';
+import { HalfEdgeMesh } from './halfEdge/types/HalfEdgeMesh';
 
 // this mesh assumes a positive oriented coordinate system, which means we will have to transform the mesh when importing them into a babylon scene
 

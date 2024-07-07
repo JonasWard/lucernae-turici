@@ -1,7 +1,4 @@
-import { Vector3 } from '@babylonjs/core';
-import { V3 } from './v3';
 import { ProcessingMethodCategory } from './processingMethods/types/processingMethodCategory';
-import { NoneMethod } from './processingMethods/types/noneMethod';
 import { IncrementalMethod } from './processingMethods/types/incrementalMethod';
 import { SinMethod } from './processingMethods/types/sinMethod';
 import { ProcessingMethods } from './processingMethods/types/processingMethods';
@@ -80,26 +77,4 @@ export const getHeights = (heightGenerator: HeightGenerator): number[] => {
   if (hasBaseHeight) return incrementalHeights;
   const scaleValue = (heightGenerator as RelativeHeightGenerator).totalHeight / incrementalHeights[incrementalHeights.length - 1];
   return incrementalHeights.map((h) => h * scaleValue);
-};
-
-export type MalculmiusGeometryType = Malculmiuses.One;
-
-export const twistAndSkewVertex = (v: Vector3, twistMethod: (angle: number) => number, skewMethod: (angle: number) => number, angle: number): Vector3 => {
-  const twistAngle = twistMethod(v.z * 0.001);
-  const skew = 0.5 + skewMethod(v.z * 0.001) * 0.5;
-
-  const cos = Math.cos(twistAngle) * skew;
-  const sin = Math.sin(twistAngle) * skew;
-
-  return new Vector3(v.x * cos - v.y * sin, v.x * sin + v.y * cos, v.z);
-};
-
-export const twistAndSkewVertexV3 = (v: V3, twistMethod: (angle: number) => number, skewMethod: (angle: number) => number, angle: number): V3 => {
-  const twistAngle = twistMethod(v.z * 0.001);
-  const skew = 0.5 + skewMethod(v.z * 0.001) * 0.5;
-
-  const cos = Math.cos(twistAngle) * skew;
-  const sin = Math.sin(twistAngle) * skew;
-
-  return { x: v.x * cos - v.y * sin, y: v.x * sin + v.y * cos, z: v.z };
 };

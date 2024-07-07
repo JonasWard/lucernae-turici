@@ -1,12 +1,12 @@
 import { Scene, Material, VertexData, Mesh, TransformNode } from '@babylonjs/core';
-import { Mesh as V3Mesh } from './v3';
-import { HalfEdgeFace } from './halfEdge/types/halfEdgeFace';
-import { V3 } from './v3';
-import { getFaceEdges, getFaceNormal, getFaceVertices, getVerticesFacesMap } from './halfEdge/halfedge';
-import { MaterialFactory } from './materialFactory';
-import { VoxelState } from './voxelComplex/types/voxelState';
+import { Mesh as V3Mesh } from '../v3';
+import { HalfEdgeFace } from './types/halfEdgeFace';
+import { V3 } from '../v3';
+import { getFaceEdges, getFaceNormal, getFaceVertices, getVerticesFacesMap } from './halfedge';
+import { MaterialFactory } from '../materialFactory';
+import { VoxelState } from '../voxelComplex/types/voxelState';
 import { HalfEdgeMeshFactory } from './halfedge.factory';
-import { HalfEdgeMesh } from './halfEdge/types/HalfEdgeMesh';
+import { HalfEdgeMesh } from './types/HalfEdgeMesh';
 
 export class HalfEdgeMeshRenderer {
   static getNormalsForFacesMap = (heMesh: HalfEdgeMesh): { [k: string]: V3 } =>

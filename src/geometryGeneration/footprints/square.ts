@@ -1,4 +1,4 @@
-import { HalfEdgeMeshFactory } from '../halfedge.factory';
+import { HalfEdgeMeshFactory } from '../halfEdge/halfedge.factory';
 import { createFootprintMesh as createSimpleGridFootprintMesh } from './polygonGridSimple';
 import { FootprintCategory } from './types/footprintCategory';
 import { SquareFootprint } from './types/square';

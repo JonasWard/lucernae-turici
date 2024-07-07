@@ -1,5 +1,6 @@
 import { getWorldXYToFrameTransformation } from '../baseGeometry';
-import { VCFaceMetaData, BaseFrame } from '../geometrytypes';
+import { BaseFrame } from '../geometrytypes';
+import { FaceMetaData } from '../halfEdge/types/faceMetaData';
 import { HalfEdgeFace } from '../halfEdge/types/halfEdgeFace';
 import { linkingHalfEdges } from '../halfEdge/halfedge';
 import { getRandomUUID } from '../helpermethods';
@@ -79,7 +80,7 @@ export const getHalfEdgeMeshForVoxel = (v: Voxel, voxelComplex: VoxelComplex, sc
   const halfEdges: { [k: string]: HalfEdge } = {};
   const faces: { [k: string]: HalfEdgeFace } = {};
 
-  const metaData: VCFaceMetaData = { originVoxelId: v.id };
+  const metaData: FaceMetaData = { originVoxelId: v.id };
 
   const indexesOnFaceArray = getFaceIndexArraysForVoxel(v, voxelComplex, includeFacesWithNeighbour);
   const halfEdgeIndexes = indexesOnFaceArray.map((f) => f.map(() => getRandomUUID()));

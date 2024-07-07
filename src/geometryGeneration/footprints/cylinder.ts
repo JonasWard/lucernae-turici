@@ -1,6 +1,6 @@
 import { CylinderFootprint } from './types/cylinder';
 import { Mesh, V3 } from '../v3';
-import { HalfEdgeMeshFactory } from '../halfedge.factory';
+import { HalfEdgeMeshFactory } from '../halfEdge/halfedge.factory';
 
 const MINIMUM_INNER_RADIUS = 1;
 const MINIMUM_BUFFER = 0.1;

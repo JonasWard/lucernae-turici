@@ -1,8 +1,8 @@
-import { GeometryBaseData } from './baseGeometry';
-import { getHalfEdgeMeshFromMesh, markFacesWithOneNakedEdge } from './halfEdge/halfedge';
-import { Mesh, V3 } from './v3';
-import { FootprintFactory } from './footprints/footprintFactory';
-import { HalfEdgeMesh } from './halfEdge/types/HalfEdgeMesh';
+import { GeometryBaseData } from '../baseGeometry';
+import { getHalfEdgeMeshFromMesh, markFacesWithOneNakedEdge } from './halfedge';
+import { Mesh, V3 } from '../v3';
+import { FootprintFactory } from '../footprints/footprintFactory';
+import { HalfEdgeMesh } from './types/HalfEdgeMesh';
 
 abstract class MeshFactory {
   public static createCylinder = (radiuses: number[], divisions: number): Mesh => {

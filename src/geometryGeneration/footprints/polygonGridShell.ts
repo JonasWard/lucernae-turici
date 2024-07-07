@@ -1,5 +1,5 @@
 import { HalfEdgeMesh } from '../halfEdge/types/HalfEdgeMesh';
-import { HalfEdgeMeshFactory } from '../halfedge.factory';
+import { HalfEdgeMeshFactory } from '../halfEdge/halfedge.factory';
 import { Mesh, V3 } from '../v3';
 import { FootprintCategory } from './types/footprintCategory';
 import { PolygonGridShellFootprint } from './types/polygonGridShell';

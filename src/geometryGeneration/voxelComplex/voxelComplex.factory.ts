@@ -3,7 +3,7 @@ import { PreProcessingMethods, getHeights } from '../geometry';
 import { ProcessingMethodCategory } from '../processingMethods/types/processingMethodCategory';
 import { BaseFrame } from '../geometrytypes';
 import { getFaceEdges } from '../halfEdge/halfedge';
-import { HalfEdgeMeshFactory } from '../halfedge.factory';
+import { HalfEdgeMeshFactory } from '../halfEdge/halfedge.factory';
 import { getRandomUUID } from '../helpermethods';
 import { V3 } from '../v3';
 import { VoxelComplex, Voxel } from './types/voxelComplex';

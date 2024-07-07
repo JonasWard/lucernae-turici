@@ -1,4 +1,4 @@
-import { HalfEdgeMeshFactory } from '../halfedge.factory';
+import { HalfEdgeMeshFactory } from '../halfEdge/halfedge.factory';
 import { Mesh, V3 } from '../v3';
 import { MalculmiusOneFootprint } from './types/malcolmiusOne';
 

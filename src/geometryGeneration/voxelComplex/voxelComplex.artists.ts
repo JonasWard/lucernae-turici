@@ -7,7 +7,7 @@ import { getCenterOfVoxelFace, getCenterOfVoxel, getHalfEdgeMeshForVoxel } from 
 import { VoxelMesh } from './voxelComplex.mesh';
 import { MaterialFactory } from '../materialFactory';
 import { VoxelState } from './types/voxelState';
-import { HalfEdgeMeshRenderer } from '../halfedge.artists';
+import { HalfEdgeMeshRenderer } from '../halfEdge/halfedge.artists';
 
 const vSize = 0.02;
 const vHSize = vSize * 0.2;

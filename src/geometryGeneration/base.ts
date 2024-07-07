@@ -1,12 +1,12 @@
 import { Scene, TransformNode } from '@babylonjs/core';
 import { GeometryBaseData } from './baseGeometry';
-import { HalfEdgeMeshFactory } from './halfedge.factory';
+import { HalfEdgeMeshFactory } from './halfEdge/halfedge.factory';
 import { getBoundariesForHalfEdgeMesh, getHalfEdgeMeshFromMesh } from './halfEdge/halfedge';
 import { Mesh, V3 } from './v3';
 import { VoxelFactory } from './voxelComplex/voxelComplex.factory';
 import { getHalfEdgeMeshForVoxelEnclosure } from './voxelComplex/voxelComplex';
 import { MaterialFactory } from './materialFactory';
-import { HalfEdgeMeshRenderer } from './halfedge.artists';
+import { HalfEdgeMeshRenderer } from './halfEdge/halfedge.artists';
 
 const HOLE_MINIMUM_RESOLUTION = 128;
 

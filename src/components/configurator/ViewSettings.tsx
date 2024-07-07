@@ -47,7 +47,9 @@ export const ViewSettings: React.FC<IViewPortSettingsProps> = ({
       <Select
         style={{ width: '100%' }}
         value={renderMethod}
-        options={Object.entries(RenderMethod).map(([key, s]) => ({ label: key, value: s as RenderMethod }))}
+        options={Object.entries(RenderMethod)
+          .filter(([, s]) => import.meta.env.DEV || !s.endsWith('_Test'))
+          .map(([key, s]) => ({ label: key, value: s as RenderMethod }))}
         onSelect={(s: RenderMethod) => {
           setRerender(true);
           setRenderMethod(s);

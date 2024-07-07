@@ -83,6 +83,21 @@ export class V3 {
     y: y === undefined ? x : y,
     z: z === undefined ? (y === undefined ? x : y) : z,
   });
+  public static getVectorAngle(a: V3, b: V3): number {
+    if (V3.getLengthSquared(a) < V3.zeroToleranceSquared || V3.getLengthSquared(b) < V3.zeroToleranceSquared)
+      throw new Error('Cannot compute angle of zero-length vector.');
+    const dotCos = V3.dot(a, b) / (V3.getLength(a) * V3.getLength(b));
+    const angle = Math.acos(Math.min(Math.max(dotCos, -1), 1));
+
+    // avoiding cross product calculations that don't make sense
+    if (Math.abs(angle) < V3.zeroTolerance) return 0;
+    if (Math.abs(Math.PI - angle) < V3.zeroTolerance) return Math.PI;
+
+    // if the reference is defined and the vectors are anti-parallel, return the complement of the angle
+    if (V3.dot(V3.cross(a, b), V3.ZAxis) < 0) return Math.PI * 2 - angle;
+
+    return angle;
+  }
 }
 
 export class Mesh {

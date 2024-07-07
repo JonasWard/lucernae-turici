@@ -6,6 +6,7 @@ import * as nested from './nested';
 import { ExtrusionCategory } from './types/extrusionCategory';
 import { ExtrusionProfileType } from './types/extrusionProfileType';
 import { V2 } from '../v2';
+import { VoxelComplexExtrusionParameters } from '../voxelComplex/types/voxelComplexExtrusionParameters';
 
 export class ExtrusionProfileFactory {
   public static getUVPair = (profile: ExtrusionProfileType, divisions?: number): [V2[], V2[]] => {
@@ -21,5 +22,17 @@ export class ExtrusionProfileFactory {
       case ExtrusionCategory.Nested:
         return nested.getExtrusionProfile(profile);
     }
+  };
+
+  public static getVoxelComplexExtrusionParameters = (profile: ExtrusionProfileType, divisions?: number): VoxelComplexExtrusionParameters => {
+    const [bottomUVs, topUVs] = ExtrusionProfileFactory.getUVPair(profile, divisions);
+    return {
+      bottomUVs,
+      topUVs,
+      uvs: [...bottomUVs, ...topUVs],
+      insetTop: profile.insetTop,
+      insetBottom: profile.insetBottom,
+      insetSides: profile.insetSides,
+    };
   };
 }

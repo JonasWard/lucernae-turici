@@ -86,9 +86,11 @@ const handleUVs = (vertices: [V3, V3, V3], uvData?: [V2, V2, V2] | V2): [V2, V2,
 // technically it would be possible to get a set of non-coplanar geometries, but since all vertices are hashed this is not a realistic problem
 const getNormal = (v0: Vector3, v1: Vector3, v2: Vector3): Vector3 => v1.subtract(v0).cross(v2.subtract(v0)).normalize();
 
-const makeFaceData = (vertices: [V3, V3, V3], normals?: [V3, V3, V3] | V3, uvs?: [V2, V2, V2] | V2): FaceWithData => {
-  return { vertices, normals: handleNormals(vertices, normals), uvs: handleUVs(vertices, uvs) };
-};
+const makeFaceData = (vertices: [V3, V3, V3], normals?: [V3, V3, V3] | V3, uvs?: [V2, V2, V2] | V2): FaceWithData => ({
+  vertices,
+  normals: handleNormals(vertices, normals),
+  uvs: handleUVs(vertices, uvs),
+});
 
 export const getVertexDataForFaceWithData = (fs: FaceWithData[]): VertexData => {
   const vertexData = new VertexData();

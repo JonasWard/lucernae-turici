@@ -7,17 +7,18 @@ import { HalfEdgeMeshRenderer } from './halfedge.artists';
 import { HalfEdgeMeshFactory } from './halfedge.factory';
 import { MaterialFactory } from './materialFactory';
 import { constructBase } from './base';
-import { FootprintFactory } from './footprints/footprintFactory';
+import { VoxelMesh } from './voxelComplex/voxelComplex.mesh';
 
 export enum RenderMethod {
   NORMAL = 'Normal',
   WIREFRAME = 'Wireframe',
-  ENCLOSURE = 'Enclosure',
+  ENCLOSURE = 'Enclosure_Test',
   HALFEDGESENCLOSURE = 'HalfEdgesEnclosure',
-  NEIGHHBOURMAP = 'Neighbourmap',
+  NEIGHHBOURMAP = 'Neighbourmap_Test',
   BASEMESH = 'BaseMesh',
-  BASESTATE = 'BaseState',
-  VOXELCOMPLEXSTATE = 'VoxelComplexState',
+  BASESTATE = 'BaseState_Test',
+  VOXELCOMPLEXSTATE = 'VoxelComplexState_Test',
+  EXTRUSIONPROFILE = 'ExtrusionProfile_Test',
 }
 
 export const LAMP_MESH = 'lampMesh';
@@ -60,6 +61,10 @@ export const AddLampGeometryToScene = (
       return rootNode;
     case RenderMethod.VOXELCOMPLEXSTATE:
       VoxelComplexMeshArtist.stateRender(voxelComplex, rootNode, scene);
+      return rootNode;
+    case RenderMethod.EXTRUSIONPROFILE:
+      const heMesh = VoxelMesh.getClosingTestMeshes();
+      HalfEdgeMeshRenderer.render(heMesh, scene, MaterialFactory.getDefaultMaterial(scene), LAMP_MESH);
       return rootNode;
   }
 };

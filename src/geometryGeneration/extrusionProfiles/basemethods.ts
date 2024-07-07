@@ -3,22 +3,27 @@
 // the uvs for a given extrusion profile are always coming from the bottom right, going clockwise (bottom left, top left, top right)
 
 import { V2 } from '../v2';
-import { ArcExtrusionProfileType } from './types/arc';
 import { ArcLikeExtrusionProfileType, ExtrusionProfileType } from './types/extrusionProfileType';
 
-// helper methods for the key positions of a quad
-export const getBottomRightUV = (extrusionProfile: ExtrusionProfileType): V2 => ({ u: 0, v: extrusionProfile.insetBottom });
-export const getBottomLeftUV = (extrusionProfile: ExtrusionProfileType): V2 => ({ u: 1 - extrusionProfile.insetSides, v: extrusionProfile.insetBottom });
-export const getTopLeftUV = (extrusionProfile: ExtrusionProfileType): V2 => ({ u: 1 - extrusionProfile.insetSides, v: 1 - extrusionProfile.insetTop });
-export const getTopRightUV = (extrusionProfile: ExtrusionProfileType): V2 => ({ u: 0, v: 1 - extrusionProfile.insetTop });
-const getArcStartV = (arcExtrusionProfile: ArcLikeExtrusionProfileType): number =>
-  arcExtrusionProfile.insetBottom + (1 - arcExtrusionProfile.insetTop - arcExtrusionProfile.insetBottom) * (1 - arcExtrusionProfile.radiusTop);
+// // helper methods for the key positions of a quad
+// export const getBottomRightUV = (extrusionProfile: ExtrusionProfileType): V2 => ({ u: 0, v: extrusionProfile.insetBottom });
+// export const getBottomLeftUV = (extrusionProfile: ExtrusionProfileType): V2 => ({ u: 1 - extrusionProfile.insetSides, v: extrusionProfile.insetBottom });
+// export const getTopLeftUV = (extrusionProfile: ExtrusionProfileType): V2 => ({ u: 1 - extrusionProfile.insetSides, v: 1 - extrusionProfile.insetTop });
+// export const getTopRightUV = (extrusionProfile: ExtrusionProfileType): V2 => ({ u: 0, v: 1 - extrusionProfile.insetTop });
+
+// insets not applied
+export const getBottomRightUV = (extrusionProfile: ExtrusionProfileType): V2 => ({ u: 0, v: 0 });
+export const getBottomLeftUV = (extrusionProfile: ExtrusionProfileType): V2 => ({ u: 1, v: 0 });
+export const getTopLeftUV = (extrusionProfile: ExtrusionProfileType): V2 => ({ u: 1, v: 1 });
+export const getTopRightUV = (extrusionProfile: ExtrusionProfileType): V2 => ({ u: 0, v: 1 });
+
+const getArcStartV = (arcExtrusionProfile: ArcLikeExtrusionProfileType): number => 1 - arcExtrusionProfile.radiusTop;
 export const getCenterArcUV = (arcExtrusionProfile: ArcLikeExtrusionProfileType): V2 => ({
   u: 0,
   v: getArcStartV(arcExtrusionProfile),
 });
 export const getSideArcUV = (arcLike: ArcLikeExtrusionProfileType): V2 => ({
-  u: 1 - arcLike.insetSides,
+  u: 1,
   v: getArcStartV(arcLike),
 });
 

@@ -18,6 +18,7 @@ export enum RenderMethod {
   BASEMESH = 'BaseMesh',
   BASESTATE = 'BaseState',
   VOXELCOMPLEXSTATE = 'VoxelComplexState',
+  EXTRUSIONPROFILE = 'ExtrusionProfile_Test',
 }
 
 export const LAMP_MESH = 'lampMesh';
@@ -60,6 +61,10 @@ export const AddLampGeometryToScene = (
       return rootNode;
     case RenderMethod.VOXELCOMPLEXSTATE:
       VoxelComplexMeshArtist.stateRender(voxelComplex, rootNode, scene);
+      return rootNode;
+    case RenderMethod.EXTRUSIONPROFILE:
+      const heMesh = VoxelMesh.getClosingTestMeshes();
+      HalfEdgeMeshRenderer.render(heMesh, scene, MaterialFactory.getDefaultMaterial(scene), LAMP_MESH);
       return rootNode;
   }
 };

@@ -90,10 +90,8 @@ export class HalfEdgeModifier {
   public static createBufferedHalfEdgeMesh = (heMesh: HalfEdgeMesh, newFacesState: VoxelState, bufferDistance: number): HalfEdgeMesh => {
     const boundaries = getBoundariesForHalfEdgeMesh(heMesh);
 
-    let intermediateHeMesh: HalfEdgeMesh = JSON.parse(JSON.stringify(heMesh));
-    boundaries.forEach((boundary) => {
-      intermediateHeMesh = HalfEdgeModifier.addBufferForNakedBoundary(intermediateHeMesh, boundary, newFacesState, bufferDistance);
-    });
+    const intermediateHeMesh: HalfEdgeMesh = JSON.parse(JSON.stringify(heMesh));
+    boundaries.forEach((boundary) => HalfEdgeModifier.addBufferForNakedBoundary(intermediateHeMesh, boundary, newFacesState, bufferDistance));
 
     return intermediateHeMesh;
   };

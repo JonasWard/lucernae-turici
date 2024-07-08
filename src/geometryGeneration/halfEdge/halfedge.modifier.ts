@@ -81,7 +81,7 @@ export class HalfEdgeModifier {
     // linking the new faces
     leftArray.forEach((left, i) => {
       left.neighbour = rightArray[(i + rightArray.length - 1) % rightArray.length].id;
-      rightArray[(i + 1) % rightArray.length].neighbour = left.id;
+      rightArray[(i + rightArray.length - 1) % rightArray.length].neighbour = left.id;
     });
 
     return heMesh;

@@ -32,7 +32,7 @@ export class HalfEdgeModifier {
       previous: halfEdgeID[(i + vertices.length - 1) % vertices.length],
     }));
 
-    naked.neighbour = halfEdges[0].id;
+    heMesh.halfEdges[naked.id].neighbour = halfEdges[0].id;
     halfEdges[0].neighbour = naked.id;
 
     const face: HalfEdgeFace = {

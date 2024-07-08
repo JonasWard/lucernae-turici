@@ -14,12 +14,11 @@ export class HalfEdgeModifier {
   private static createFaceForUncoveredEdge = (
     naked: HalfEdge,
     heMesh: HalfEdgeMesh,
-    v0: string,
-    v1: string,
-    voxelState: VoxelState = VoxelState.ONEDIRECTION
+    voxelState: VoxelState,
+    ...vs: string[]
   ): { face: HalfEdgeFace; left: HalfEdge; right: HalfEdge } => {
     // vertices
-    const vertices = [heMesh.halfEdges[naked.previous].vertex, v1, v0, naked.vertex];
+    const vertices = vs.length === 2 ? [heMesh.halfEdges[naked.previous].vertex, ...vs, naked.vertex] : [...vs, naked.vertex];
 
     const halfEdgeID = vertices.map(() => getRandomUUID());
     const faceID = getRandomUUID();
@@ -66,8 +65,9 @@ export class HalfEdgeModifier {
       const { face, left, right } = HalfEdgeModifier.createFaceForUncoveredEdge(
         edge,
         heMesh,
-        newVectexWithIds[(i + boundary.length - 1) % boundary.length][0],
-        newVectexWithIds[i][0]
+        newFacesState,
+        newVectexWithIds[i][0],
+        newVectexWithIds[(i + boundary.length - 1) % boundary.length][0]
       );
 
       leftArray.push(left);

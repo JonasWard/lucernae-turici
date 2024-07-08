@@ -125,7 +125,7 @@ const meshFromFaceData = (faceData: FaceWithData[], scene: Scene, uuid: string, 
 };
 
 // method for rendering / 'visualizing' a singel half edge
-export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, rootNode?: TransformNode, backFaceCulling: boolean = true) => {
+export const renderHalfEdge = (he: HalfEdge, m: HalfEdgeMesh, scene: Scene, rootNode?: TransformNode, backFaceCulling?: boolean) => {
   const halfEdgeScale = 0.7;
   if (!he.face) return;
   // getting the face that belong to the half edge

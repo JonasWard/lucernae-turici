@@ -9,6 +9,18 @@ export class HalfEdgeGeometry {
     V3.mul(V3.add(HalfEdgeGeometry.getStart(halfEdge, heMesh), HalfEdgeGeometry.getEnd(halfEdge, heMesh)), 0.5);
   public static getDirection = (halfEdge: HalfEdge, heMesh: HalfEdgeMesh): V3 =>
     V3.sub(HalfEdgeGeometry.getEnd(halfEdge, heMesh), HalfEdgeGeometry.getStart(halfEdge, heMesh));
+
+  /**
+   * Helper method for getting the normal direction of a halfEdge
+   * @param halfEdge - HalfEdge to consider
+   * @param heMesh - the HalfEdgeMesh the HalfEdge belongs to
+   * @returns - normal direction, unitVector or zero length vector
+   */
+  public static getNormal = (halfEdge: HalfEdge, heMesh: HalfEdgeMesh): V3 => {
+    const direction = HalfEdgeGeometry.getDirection(halfEdge, heMesh);
+    return V3.getUnit({ x: direction.y, y: -direction.x, z: 0 });
+  };
+
   /**
    * Helper method for retrieving the angle between the directions at the start of a half edge
    * @param halfEdge - HalfEdge to consider

@@ -33,6 +33,7 @@ export class HalfEdgeGeometry {
 
     return V3.getVectorAngle(V3.mul(previousDirection, -1), V3.getUnit(direction));
   };
+
   /**
    * Method for retrieving the offest direction at the start of a given halfEdge
    * @param halfEdge - HalfEdge to consider
@@ -52,6 +53,7 @@ export class HalfEdgeGeometry {
       z: 0,
     });
   };
+
   /**
    * Method for retreiving the offset direction at the end of a given halfEdge
    * @param halfEdge - HalfEdge to consider

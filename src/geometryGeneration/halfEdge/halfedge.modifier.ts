@@ -45,8 +45,8 @@ export class HalfEdgeModifier {
 
     return {
       face,
-      left: halfEdges[1],
-      right: halfEdges[3],
+      left: halfEdges[3],
+      right: halfEdges[1],
     };
   };
 

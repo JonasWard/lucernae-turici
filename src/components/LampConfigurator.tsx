@@ -49,7 +49,7 @@ export const LampConfigurator: React.FC = () => {
   const [sliderInput, setSliderInput] = useState<boolean>(true);
   const [rerender, setRerender] = useState<boolean>(false);
   const [lastURLFromData, setLastURLFromData] = useState<string>('');
-  const [renderMethod, setRenderMethod] = useState<RenderMethod>(RenderMethod.NORMAL);
+  const [renderMethod, setRenderMethod] = useState<RenderMethod>(RenderMethod.BASEMESH);
   const [activeName, setActiveName] = useState<string>('');
   const [lastCameraParameters, setLastCameraParameters] = useState<CameraParameters | undefined>();
 

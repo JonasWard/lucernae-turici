@@ -31,8 +31,10 @@ export class HalfEdgeModifier {
       previous: halfEdgeID[(i + vertices.length - 1) % vertices.length],
     }));
 
-    heMesh.halfEdges[naked.id].neighbour = halfEdges[0].id;
-    halfEdges[0].neighbour = naked.id;
+    if (vs.length === 2) {
+      heMesh.halfEdges[naked.id].neighbour = halfEdges[0].id;
+      halfEdges[0].neighbour = naked.id;
+    }
 
     const face: HalfEdgeFace = {
       id: faceID,
@@ -50,10 +52,35 @@ export class HalfEdgeModifier {
   };
 
   private static addBufferForNakedBoundary = (heMesh: HalfEdgeMesh, boundary: HalfEdge[], newFacesState: VoxelState, bufferDistance: number): HalfEdgeMesh => {
+    const verticesAdded: [number, number, number][] = []; // edge index, start vertex index, end vertex index
+    const newVertices: V3[] = [];
+
+    boundary.forEach((edge, i) => {
+      console.log(edge.id, edge.previous);
+    });
+
     // getting the vertices
-    const newVertices = boundary.map((edge) =>
-      V3.add(HalfEdgeGeometry.getStart(edge, heMesh), V3.mul(HalfEdgeGeometry.getOffsetDirectionStart(edge, heMesh), bufferDistance))
-    );
+    boundary.forEach((edge, i) => {
+      let count = 1;
+      if (HalfEdgeGeometry.getOffsetAngleAtStart(edge, heMesh) < Math.PI + 0.01)
+        newVertices.push(V3.add(HalfEdgeGeometry.getStart(edge, heMesh), V3.mul(HalfEdgeGeometry.getOffsetDirectionStart(edge, heMesh), bufferDistance)));
+      else {
+        const start = HalfEdgeGeometry.getStart(edge, heMesh);
+        const previousEdge = boundary[(i + 1) % boundary.length];
+        newVertices.push(
+          ...[
+            V3.add(start, V3.mul(HalfEdgeGeometry.getNormal(previousEdge, heMesh), bufferDistance)),
+            V3.add(start, V3.mul(HalfEdgeGeometry.getOffsetDirectionStart(previousEdge, heMesh), bufferDistance)),
+            V3.add(start, V3.mul(HalfEdgeGeometry.getNormal(edge, heMesh), bufferDistance)),
+          ]
+        );
+        count = 3;
+      }
+
+      const startIndex = verticesAdded[verticesAdded.length - 1] ? verticesAdded[verticesAdded.length - 1][1] : 0;
+
+      verticesAdded.push([i, startIndex, startIndex + count]);
+    });
     const newVectexWithIds = newVertices.map((v) => [getVertexHash(v), v] as [string, V3]);
 
     newVectexWithIds.forEach(([id, v]) => (heMesh.vertices[id] = v));
@@ -61,14 +88,13 @@ export class HalfEdgeModifier {
     const leftArray: HalfEdge[] = [];
     const rightArray: HalfEdge[] = [];
 
-    boundary.forEach((edge, i) => {
-      const { face, left, right } = HalfEdgeModifier.createFaceForUncoveredEdge(
-        edge,
-        heMesh,
-        newFacesState,
-        newVectexWithIds[i][0],
-        newVectexWithIds[(i + boundary.length - 1) % boundary.length][0]
-      );
+    verticesAdded.forEach(([edgeIndex, startIdx, endIdx]) => {
+      const edge = boundary[edgeIndex];
+      const localVs: [string, V3][] = [];
+
+      for (let j = startIdx; j < endIdx; j++) localVs.push(newVectexWithIds[j % newVectexWithIds.length]);
+
+      const { face, left, right } = HalfEdgeModifier.createFaceForUncoveredEdge(edge, heMesh, newFacesState, ...localVs.map(([id]) => id).reverse());
 
       leftArray.push(left);
       rightArray.push(right);

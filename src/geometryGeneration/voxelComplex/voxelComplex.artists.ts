@@ -28,7 +28,7 @@ export const getMeshForVertex = (c: V3, scene: Scene, color: string, rootNode?: 
 
   if (rootNode) babylonMesh.parent = rootNode;
 
-  babylonMesh.material = MaterialFactory.getMaterialForUuid(scene, color, 'color-', false);
+  babylonMesh.material = MaterialFactory.getMaterialForUuid(scene, color, 'color-');
   babylonMesh.position.set(c.x, c.z, -c.y);
 };
 
@@ -40,7 +40,7 @@ export const getMeshForEdge = (v0: V3, v1: V3, scene: Scene, id: string, color?:
     cap: 0, // no cap
   });
 
-  babylonMesh.material = MaterialFactory.getMaterialForUuid(scene, color ?? id, 'color-', false);
+  babylonMesh.material = MaterialFactory.getMaterialForUuid(scene, color ?? id, 'color-');
   if (rootNode) babylonMesh.parent = rootNode;
 };
 
